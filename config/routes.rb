@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     #resources :accounts, only: [:index, :show, :create, :update]
     namespace :calcs do
       match 'discount', via: :get
+      match 'tv_model', via: :get
     end
   end
   
