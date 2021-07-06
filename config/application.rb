@@ -22,17 +22,7 @@ Bundler.require(*Rails.groups)
 module FortuneTellerApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
-    
-    # Rails 5
-
- #   config.middleware.insert_before 0, Rack::Cors do
-#      allow do
-#        origins '*'
-#        resource '*', headers: :any, methods: [:get, :post, :options]
-#      end
-#    end
-    
+    config.load_defaults 6.1    
     
     # Configuration for the application, engines, and railties goes here.
     #
