@@ -14,44 +14,130 @@
 	],
   "income":
   	{	
-		"2020": [
+		"2021": [
+					{
+						"type":"steppercent",
+                        "base":"basevalue",
+						"from":"9745",
+						"to":"14753",
+						"label":"y",
+						"var":"0.0001"
+					},
+					{
+						"type":"multiply",
+                        "base":"y",
+						"from":"0",
+						"to":"99999",
+						"label":"y1",
+						"var":"995.21"
+					},
+					{
+						"type":"absolute",
+                        "base":"y1",
+						"from":"0",
+						"to":"99999",
+						"label":"y1",
+						"var":"1400"
+					},
+					{
+						"type":"multiply",
+                        "base":"y1",
+						"from":"0",
+						"to":"99999",
+						"label":"est",
+						"labelvar":"y"
+					},
+					{
+						"type":"steppercent",
+                        "base":"basevalue",
+						"from":"14754",
+						"to":"57918",
+						"label":"z",
+						"var":"0.0001"
+					},
+					{
+						"type":"multiply",
+                        "base":"z",
+						"from":"0",
+						"to":"99999",
+						"label":"z1",
+						"var":"208.85"
+					},
+					{
+						"type":"absolute",
+                        "base":"z1",
+						"from":"1",
+						"to":"99999",
+						"label":"z1",
+						"var":"2397"
+					},
+					{
+						"type":"multiply",
+                        "base":"z1",
+						"from":"0",
+						"to":"99999",
+						"label":"est",
+						"labelvar":"z"
+					},
 					{
 						"type":"absolute",
                         "base":"basevalue",
-						"from":"1000",
-						"to":"9999",
-                        "part":"1",
-						"label":"gez",
-						"var":"120"
+						"from":"57919",
+						"to":"999999999",
+						"label":"est",
+						"var":"-15188.9386695326"	
+					},				
+					{
+						"type":"percent",
+                        "base":"basevalue",
+						"from":"57919",
+						"to":"274612",
+						"label":"est",
+						"var":"0.42"
 					},
 					{
-						"type":"steppercent",
+						"type":"absolute",
                         "base":"basevalue",
-						"from":"1000",
-						"to":"2000",
+						"from":"57919",
+						"to":"274612",
 						"label":"est",
-						"var":"0.01"
+						"var":"-9136.63"
+					},		
+					{
+						"type":"percent",
+                        "base":"basevalue",
+						"from":"274613",
+						"to":"999999999",
+						"label":"est",
+						"var":"0.45"
 					},
 					{
-						"type":"steppercent",
+						"type":"absolute",
                         "base":"basevalue",
-						"from":"2001",
-						"to":"5000",
+						"from":"274613",
+						"to":"999999999",
 						"label":"est",
-						"var":"0.10"
+						"var":"-17374.99"
+					},
+					{
+						"type":"absolute",
+                        "base":"basevalue",
+						"from":"9745",
+						"to":"999999999",
+						"label":"est",
+						"var":"-0.48"
 					},
 					{
 						"type":"percent",
                         "base":"est",
-						"from":"0",
+						"from":"16957",
 						"to":"999999999",
-                        "part":"1",
 						"label":"soli",
-						"var":"0.05"
+						"var":"0.055"
 					}
 				],
-		"Disclaimer":"Dieser Text erklärt Besonderheiten",
-        "Source":"EStG, Dejure.org 31.7.2021"
+		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
+        "Source":"§32a ESTG http://www.gesetze-im-internet.de/estg/index.html SolZG1995 ebendort. 1.8.2021."
 	},
     "incomesplitting":
     	{

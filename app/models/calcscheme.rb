@@ -83,7 +83,7 @@ class Calcscheme
     # Start calculation
     sel=self.setscheme_version.split("_")
     @content[sel[0]][sel[1]].each do |s|
-      s["part"]==1 if s["part"].blank?
+      s["part"]=1 if s["part"].blank?
       case s["type"]
         when "percent"
           # A percentage of the relevant part of the base value is added to the label category if the relevant part of the base amount is within the limits
@@ -99,11 +99,23 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d + 1) * s["var"].to_d )
           end
         when "absolute"
-          # An absolute value is added to the label category if the relevant part of the base amount is within the limits
+          # An absolute value or a labelvalue is added to the label category if the relevant part of the base amount is within the limits
           if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
             self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d
+            self.result[s["label"]] = self.result[s["label"]].to_d + self.result[s["labelvar"]].to_d
+          end
+        when "multiply"
+          # An absolute value or a labelvalue is multiplied with the label category if the relevant part of the base amount is within the limits
+          if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
+            self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * s["var"].to_d)
+            self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * self.result[s["labelvar"]].to_d)
           end
       end
+      #Helper to debug schemes
+      #puts self.result
+    end
+    self.result.each do |r|
+      self.result[r[0]]='%.2f' % r[1].round(2)
     end
     
     return "OK"
