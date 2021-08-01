@@ -1,0 +1,71 @@
+{
+  "country":"Deutschland",
+  "comment1": "Order versions from recent to old, followed by Disclaimer",
+  "input":
+  	[	
+    	{
+			"label":"basevalue",
+            "obligatory":"no"
+		},
+        {
+			"label":"prepayment",
+            "obligatory":"yes"
+		}
+	],
+  "income":
+  	{	
+		"2020": [
+					{
+						"type":"absolute",
+                        "base":"value",
+						"from":"0",
+						"to":"1200",
+                        "part":"1",
+						"label":"gez",
+						"var":"120"
+					},
+					{
+						"type":"percent",
+                        "base":"value",
+						"from":"0",
+						"to":"1200",
+                        "part":"1",
+						"label":"est",
+						"var":"0.12"
+					},
+					{
+						"type":"percent",
+                        "base":"est",
+						"from":"0",
+						"to":"999999999",
+                        "part":"1",
+						"label":"soli",
+						"var":"0.05"
+					}
+				],
+		"Disclaimer":"Dieser Text erklärt Besonderheiten",
+        "Source":"EStG, Dejure.org 31.7.2021"
+	},
+    "incomesplitting":
+    	{
+  		"2020": {
+  				"1": {"rate":"100%"},
+  				"2": {"rate":"100%"}
+  		},
+  		"2021": {
+  			"1": {"rate":"100%"},
+  			"2": {"rate":"100%"}
+  		}
+  	},
+    "interest":
+    	{
+  		"2020": {
+			"rate":"25%"
+  			},
+  		"2021": {
+			"rate":"25%"			
+  			}
+    	},
+	"property":"not implemented",
+	"other":"not implemented"
+}

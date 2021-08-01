@@ -1,10 +1,14 @@
 class Valueflow 
   
   include ActiveModel::Model
-  attr_accessor :r, :tvs
+  attr_accessor :r,:periods,:from,:to,:tvs
   # tv is label for nested valueseries
     # tvs are Timevalues
-    # r = interest rate
+    # r = interest rate per period
+    # periods = number of periods with rate r
+    # there is a two value mode that contains many periods in between (Zeitwertberechnung)
+    # from = to be used for interim storage t0=from
+    # to = to be used for interim storage t1=to
   
     #attr_accessor :order_lines, :name
 
@@ -79,7 +83,13 @@ class Valueflow
     def maxt
       return self.tvs.sort_by {|tv| tv.t}.last.t
     end
-  
+    
+    
+    # Special case for simple up and down timevalues (only two tvs)
+    def setTwoPeriodEv
+      #self.tvs.first.sv*(1+self.r)^self.periods
+      self.tvs.last.ev=self.tvs.first.sv*(1+self.r)**self.periods
+    end
   
     # Old
     def valid?

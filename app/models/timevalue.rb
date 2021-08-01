@@ -20,6 +20,17 @@ class Timevalue
     self.interest=self.sv * r
     self.ev = self.sv.to_d + self.tax.to_d + self.fee.to_d + self.interest.to_d + self.valuation.to_d + self.cto.to_d 
   end
+  
+  def update(attributes)
+    self.sv=attributes[:sv] unless attributes[:sv].nil?
+    self.tax=attributes[:tax] unless attributes[:tax].nil?
+    self.fee=attributes[:fee] unless attributes[:fee].nil?
+    self.interest=attributes[:interest] unless attributes[:interest].nil?
+    self.valuation=attributes[:valuation] unless attributes[:valuation].nil?
+    self.cto=attributes[:cto] unless attributes[:cto].nil?
+    self.t=attributes[:t] unless attributes[:t].nil?
+    self.ev=attributes[:ev] unless attributes[:ev].nil?
+  end
 
 end
 
