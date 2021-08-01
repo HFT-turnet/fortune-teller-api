@@ -5,11 +5,11 @@
   	[	
     	{
 			"label":"basevalue",
-            "obligatory":"no"
+            "obligatory":"yes"
 		},
         {
 			"label":"prepayment",
-            "obligatory":"yes"
+            "obligatory":"no"
 		}
 	],
   "income":
@@ -17,21 +17,28 @@
 		"2020": [
 					{
 						"type":"absolute",
-                        "base":"value",
-						"from":"0",
-						"to":"1200",
+                        "base":"basevalue",
+						"from":"1000",
+						"to":"9999",
                         "part":"1",
 						"label":"gez",
 						"var":"120"
 					},
 					{
-						"type":"percent",
-                        "base":"value",
-						"from":"0",
-						"to":"1200",
-                        "part":"1",
+						"type":"steppercent",
+                        "base":"basevalue",
+						"from":"1000",
+						"to":"2000",
 						"label":"est",
-						"var":"0.12"
+						"var":"0.01"
+					},
+					{
+						"type":"steppercent",
+                        "base":"basevalue",
+						"from":"2001",
+						"to":"5000",
+						"label":"est",
+						"var":"0.10"
 					},
 					{
 						"type":"percent",
