@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :calcs do
       match 'discount', via: :get
       match 'tv_model', via: :get
+      match 'tv_get' , via: :post
     end
   end
   
