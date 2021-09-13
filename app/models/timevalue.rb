@@ -1,19 +1,25 @@
 class Timevalue 
   
   include ActiveModel::Model
-  attr_accessor :sv, :tax, :fee, :interest, :valuation, :cto, :t, :ev
+  attr_accessor :label, :sv, :tax, :fee, :interest, :valuation, :cto, :t, :ev, :fromt, :tot, :inflation
   validates_presence_of :t
   validates :t, numericality: { only_integer: true }
 
   
+  # label = label of tv
+  # 
   # sv = start value (i.e. begin of month)
   # tax = tax effect
   # fee = fee effect
   # interest = interest effect
   # valuation = valuation effect
-  # cto = cash to/from owner effect
+  # cto = cash to(+)/from(-) owner effect
   # ev = value at end of period => result, not an attribute
+  #
   # t = period (i.e. end of month)
+  # fromt = t with first occurence of this value (inflation at t=0 as reference)
+  # tot = t with last occurence of this value (inflate at t=0 as reference)
+  # inflation = assumed inflation rate (decimal writing)
   
   # end value calculated on demand
   def calc_ev(r)
