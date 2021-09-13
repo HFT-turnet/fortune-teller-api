@@ -7,6 +7,11 @@ Rails.application.routes.draw do
       match 'tv_model', via: :get
       match 'tv_get' , via: :post
     end
+    namespace :public do
+      #match 'discount', via: :get
+      #match 'tv_model', via: :get
+      match 'timeslize_get' , via: :post
+    end
   end
   
 end

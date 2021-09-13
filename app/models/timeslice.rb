@@ -37,12 +37,12 @@ class Timeslice
         if tv.inflation.nil? or tv.inflation==0 then
           # Timevalue has no specific rate, check overall rate
           inflation = 0 if self.i.nil? or self.i==0
-          inflation = self.i
+          inflation = self.i.to_d
         else
-          inflation = tv.inflation
+          inflation = tv.inflation.to_d
         end
         unless inflation==0 then
-          tv.cto=(tv.cto*(1+inflation)**tdiff).round(2)
+          tv.cto=(tv.cto.to_d*(1+inflation.to_d)**tdiff).round(2)
         end
       end
     end
@@ -57,16 +57,14 @@ class Timeslice
       self.fillvars
       # Sum of all cto values in the timeslice at. current time
       # return self.tvs.sum {|tv| tv.cto }
-      return self.tvs.select {|tv| tv.fromt <= self.t and tv.tot >= self.t  }.sum {|tv| tv.cto }.round(2)
+      return self.tvs.select {|tv| tv.fromt.to_i <= self.t.to_i and tv.tot.to_i >= self.t.to_i  }.sum {|tv| tv.cto.to_d }.round(2)
     end
     
     def slice_at(tx)
       # Returns a new Timeslice at t=tx
-      tdiff=tx - self.t
-      temp=self
-      temp.t=tx
-      temp.ctoinflate(tdiff)
-      return temp
+      tdiff=tx.to_i - self.t.to_i
+      self.t=tx
+      self.ctoinflate(tdiff)
     end
   
 end
