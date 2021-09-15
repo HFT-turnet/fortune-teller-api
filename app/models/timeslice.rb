@@ -50,9 +50,9 @@ class Timeslice
     def list
       self.fillvars
       # Get all Lines at time selected in timeslice
-      return self.tvs.select {|tv| tv.fromt <= self.t and tv.tot >= self.t  }
+      return self.tvs.select {|tv| tv.fromt.to_i <= self.t.to_i and tv.tot.to_i >= self.t.to_i  }
     end
-    
+        
     def ctosum
       self.fillvars
       # Sum of all cto values in the timeslice at. current time
@@ -60,11 +60,10 @@ class Timeslice
       return self.tvs.select {|tv| tv.fromt.to_i <= self.t.to_i and tv.tot.to_i >= self.t.to_i  }.sum {|tv| tv.cto.to_d }.round(2)
     end
     
-    def slice_at(tx)
-      # Returns a new Timeslice at t=tx
-      tdiff=tx.to_i - self.t.to_i
+    def move_to(tx)
+      # Changes Timeslice to t=tx
+      tdiff=tx.to_i - t.to_i
       self.t=tx
       self.ctoinflate(tdiff)
     end
-  
 end

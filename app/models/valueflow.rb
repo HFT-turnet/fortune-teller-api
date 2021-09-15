@@ -1,9 +1,10 @@
 class Valueflow 
   
   include ActiveModel::Model
-  attr_accessor :r,:periods,:from,:to,:tvs
+  attr_accessor :label, :r,:periods,:from,:to,:tvs
   # tv is label for nested valueseries
     # tvs are Timevalues
+    # label = description / name of a valueflow
     # r = interest rate per period
     # periods = number of periods with rate r
     # there is a two value mode that contains many periods in between (Zeitwertberechnung)

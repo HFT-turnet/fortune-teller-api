@@ -9,33 +9,61 @@ class V1::PublicController < ApplicationController
 
   # Work with TIMESLICES (as in timeslize model)
     # Timeslices are driven by spending and time-morph by inclusion / exclusion and inflation
-  def timeslize_get
-    
-    # Problem: Model-Instanz = führt zu demselben Model, nicht einer zweiten kopie davon
-    
+  
+  def timeslice_get
     # params: targetyear & Json-Load as Post
+    # Return: just converted timeslice
+
     # Instantiate Header as per JSON
-    ts=Timeslice.new(timeslize_head_params)
+    ts=Timeslice.new(timeslice_head_params)
     # Load named TVs into Timeslize
-    ts.tvs_attributes=timeslize_tvs_params
-
-    # Instantiate Target instancee
-    getslize=ts
-
-    # Run Targetyear transformation
-    getslize.slice_at(params[:targetyear])
-    # Find Total Sums
-    p ts.ctosum
-    p getslize.ctosum
-    # Prepare Render
+    ts.tvs_attributes=timeslice_tvs_params
     
-    render json: getslize
+    # Run Targetyear transformation
+    ts.move_to(params[:targetyear])
+    
+    # Reduce tvs to those in the timeframe
+    output=Timeslice.new
+    output.t=ts.t
+    output.i=ts.i
+    output.tvs=ts.list
+    
+    render json: output
   end
   
-  def timeslize_series
+  def timeslice_series
     # Turn timeslize into series with interval
+    # params: targetyear
     # params: interval
     
+    # Instantiate Header as per JSON
+    ts=Timeslice.new(timeslice_head_params)
+
+    # Load named TVs into Timeslize
+    ts.tvs_attributes=timeslice_tvs_params
+    
+    # Instantiate Output
+    json=[]
+    #json << ts.as_json
+    
+    # Calc runs
+    source_t=ts.t.to_i
+    timeframe=params[:targetyear].to_i - source_t
+    runs=(timeframe/params[:interval].to_i).ceil+1
+    # Perform runs
+    runs.times do |i|
+      ts.move_to(source_t + params[:interval].to_i*(i)) unless i==0
+      
+      # Reduce tvs to those in the timeframe without deletion from original timeslice
+      output=Timeslice.new
+      output.t=ts.t
+      output.i=ts.i
+      output.tvs=ts.list
+          
+      json << output.as_json
+    end
+    
+    render json: json
   end
   
   # Work with VALUEFLOWS (as in valueflows model). Includes Financial Assets and Debt Outlook
@@ -48,11 +76,11 @@ class V1::PublicController < ApplicationController
   
   # Params definition
   
-  def timeslize_head_params
+  def timeslice_head_params
     #params.require(:tvs).permit!
     params[:public].permit(:t,:i,:tvs)
   end
-  def timeslize_tvs_params
+  def timeslice_tvs_params
     #params.require(:tvs).permit!
     params[:public].permit(tvs: [
      :label,

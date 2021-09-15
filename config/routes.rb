@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     namespace :public do
       #match 'discount', via: :get
       #match 'tv_model', via: :get
-      match 'timeslize_get' , via: :post
+      match 'timeslice_get' , via: :post
+      match 'timeslice_series' , via: :post
+      
     end
   end
   
