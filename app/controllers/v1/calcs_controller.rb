@@ -56,7 +56,7 @@ end
 
 def tshead_params
   #params.require(:tvs).permit!
-  params.permit(:r,:from,:to,:periods,:tvs)
+  params.permit(:label, :r,:from,:to,:periods,:tvs)
 end
 def tvs_params
   #params.require(:tvs).permit!

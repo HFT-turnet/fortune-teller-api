@@ -1,11 +1,15 @@
 class Valueflow 
   
   include ActiveModel::Model
-  attr_accessor :label, :r,:periods,:from,:to,:tvs
+  attr_accessor :label, :type, :r,:rm,:rf , :annuity, :periods,:from,:to,:tvs
   # tv is label for nested valueseries
     # tvs are Timevalues
     # label = description / name of a valueflow
+    # type can be "debt", "current", "asset"
     # r = interest rate per period
+    # rm = market valuation per period
+    # rf = fee rate
+    # annuity = contractual annuity / periodic cash pay (cto+interest+fee)
     # periods = number of periods with rate r
     # there is a two value mode that contains many periods in between (Zeitwertberechnung)
     # from = to be used for interim storage t0=from
@@ -16,8 +20,49 @@ class Valueflow
     def initialize(*params)
       self.tvs = []
       # Add a startingpoint
-      @tvs.push(Timevalue.new( :t=>0, :sv=>0))
+      #@tvs.push(Timevalue.new( :t=>0, :sv=>0))
       super
+    end
+    
+    def initialfix
+      # Format transition from json
+      self.r=self.r.to_d
+      self.rm=self.rm.to_d
+      self.rf=self.rf.to_d
+      self.periods=self.periods.to_i # set to 0 if not yet available
+      # Approximate end of series
+      if periods==0 then
+        # Implementation OPEN
+      end
+      # set last timevalue
+      self.getorcreate_tv_at_t(periods)
+      # Fix existing timevalues
+      self.tvs.each do |tv|
+        tv.fixvarformat
+      end
+      # Complete series
+      self.buildseries     
+    end
+    
+    def debtcalc
+      self.timesort
+      (self.mint..self.maxt).each do |i|
+        self.tvs[i].interest=(self.tvs[i].sv * self.r).round(2)
+        self.tvs[i].cto=self.tvs[i].cto-self.annuity.to_d unless i==0 #annuity only in year 1
+        self.tvs[i].setev
+        self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
+      end
+    end
+    def assetcalc
+      self.timesort
+      (self.mint..self.maxt).each do |i|
+        self.tvs[i].interest=(self.tvs[i].sv * self.r).round(2)
+        self.tvs[i].valuation=(self.tvs[i].sv * self.rm).round(2)
+        self.tvs[i].fee=(self.tvs[i].sv * self.rf).round(2)
+        self.tvs[i].cto=self.tvs[i].cto-self.annuity.to_d unless i==0 #annuity only in year 1
+        self.tvs[i].setev
+        self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
+      end
     end
     
     # Timevalue attributes
@@ -50,17 +95,22 @@ class Valueflow
       # to be implemented
     end
     
+    # Build a series to fill all timevalues between start and end
     def buildseries
       self.timesort
       (self.mint..self.maxt).each do |i|
         # Add Timevalue if not exists
         getorcreate_tv_at_t(i)
+        self.tvs[i].fixvarformat
       end
+      self.updateseries
+    end
+    
+    # Update the SV/EV pairs of a series
+    def updateseries
       self.timesort
-      
-      # Timeseries is complete, now values need to be recalculated
       (self.mint..self.maxt).each do |i|
-        self.tvs[i].calc_ev(self.r.to_d)
+        self.tvs[i].setev
         self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
       end
     end

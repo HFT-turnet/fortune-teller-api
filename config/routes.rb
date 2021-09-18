@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       #match 'tv_model', via: :get
       match 'timeslice_get' , via: :post
       match 'timeslice_series' , via: :post
-      
+      match 'valueflow_complete', via: :post
     end
   end
   

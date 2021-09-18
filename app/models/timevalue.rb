@@ -21,6 +21,27 @@ class Timevalue
   # tot = t with last occurence of this value (inflate at t=0 as reference)
   # inflation = assumed inflation rate (decimal writing)
   
+  def fixvarformat
+    self.t=self.t.to_i
+    self.sv=self.sv.to_d
+    self.tax=self.tax.to_d unless self.tax.nil?
+    self.fee=self.fee.to_d unless self.fee.nil?
+    self.interest=self.interest.to_d unless self.interest.nil?
+    self.valuation=self.valuation.to_d unless self.valuation.nil?
+    self.cto=self.cto.to_d
+    self.ev=self.ev.to_d
+  end
+  
+  def setev
+    # Check if really relevant, when series is not yet establisehd
+    checksum=sv+tax.to_d+fee.to_d+interest.to_d+valuation.to_d-cto+ev #Should be 0
+    # Front to end calculation
+    unless checksum==0 then
+      movements=tax.to_d+fee.to_d+interest.to_d+valuation.to_d-cto
+      self.ev=(sv+movements).round(2)
+    end
+  end
+  
   # end value calculated on demand
   def calc_ev(r)
     self.interest=self.sv * r
