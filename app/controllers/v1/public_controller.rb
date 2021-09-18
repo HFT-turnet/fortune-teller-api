@@ -27,6 +27,29 @@ class V1::PublicController < ApplicationController
   # Work with TIMESLICES (as in timeslize model)
     # Timeslices are driven by spending and time-morph by inclusion / exclusion and inflation
   
+    def timeslice_sample
+      # Get request to get a timeslize JSON without values
+
+      # Instantiate Header as per JSON
+      sample=Timeslice.new
+      sample.i=0.02
+      sample.t=0
+      # Load sample TVs into Timeslize
+      entries=[]
+      entries.push({"label"=>"Miete und Nebenkosten","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Verpflegung","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Transport (KFZ, Öffis)","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Anschaffungen (Kleidung, Wohnausstattg)","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Kommunikation (Internet, Handy...)","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Dienstleistungen","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Sport und Hobby","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Urlaub","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Versicherungen","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      entries.push({"label"=>"Bildung","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      sample.tvs_attributes=entries
+      render json: sample
+    end
+  
   def timeslice_get
     # params: targetyear & Json-Load as Post
     # Return: just converted timeslice

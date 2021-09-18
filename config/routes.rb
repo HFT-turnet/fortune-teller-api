@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       #match 'discount', via: :get
       #match 'tv_model', via: :get
       match 'timemorph' , via: :post
+      match 'timeslice_sample', via: :get
       match 'timeslice_get' , via: :post
       match 'timeslice_series' , via: :post
       match 'valueflow_complete', via: :post
