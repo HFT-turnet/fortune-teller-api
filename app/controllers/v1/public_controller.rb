@@ -7,10 +7,21 @@ class V1::PublicController < ApplicationController
   
   # Transformations
     # Use Timevalue Models for transformations
-  def inflate
-  end
-  
-  def deflate
+  def timemorph
+    # Inflation and Deflation
+    #information = request.raw_post
+    data_parsed = JSON.parse(request.raw_post)
+    #p data_parsed
+    jsonout=[]
+    data_parsed.each do |json|
+      ts=Valueflow.new(json)
+      ts.tvs=[]
+      ts.tvs_attributes=json["tvs"]
+  # OPEN: include check whether the relevant fields are available
+      ts.twoperiodcomplete
+      jsonout << ts.as_json
+    end
+    render json: jsonout
   end
 
   # Work with TIMESLICES (as in timeslize model)
@@ -49,7 +60,7 @@ class V1::PublicController < ApplicationController
     ts.tvs_attributes=timeslice_tvs_params
     
     # Instantiate Output
-    json=[]
+    jsonout=[]
     #json << ts.as_json
     
     # Calc runs
@@ -66,10 +77,10 @@ class V1::PublicController < ApplicationController
       output.i=ts.i
       output.tvs=ts.list
           
-      json << output.as_json
+      jsonout << output.as_json
     end
     
-    render json: json
+    render json: jsonout
   end
   
   # Work with VALUEFLOWS (as in valueflows model). Includes Financial Assets and Debt Outlook
@@ -87,10 +98,10 @@ class V1::PublicController < ApplicationController
     ts.debtcalc if ts.type=="debt"
     ts.assetcalc if ts.type=="asset"
     
-    p ts
-    ts.tvs.each do |tv|
-      p tv.sv.to_s + " " +tv.fee.to_s+ " " +tv.valuation.to_s+ " " + tv.ev.to_s
-    end
+    #p ts
+    #ts.tvs.each do |tv|
+    #  p tv.sv.to_s + " " +tv.fee.to_s+ " " +tv.valuation.to_s+ " " + tv.ev.to_s
+    #end
     render json: ts
   end  
   
@@ -112,6 +123,8 @@ class V1::PublicController < ApplicationController
   # Work with Calculation Models
   
   # Params definition
+
+ 
   
   def timeslice_head_params
     #params.require(:tvs).permit!

@@ -137,9 +137,19 @@ class Valueflow
     
     
     # Special case for simple up and down timevalues (only two tvs)
-    def setTwoPeriodEv
+    def twoperiodcomplete
       #self.tvs.first.sv*(1+self.r)^self.periods
-      self.tvs.last.ev=self.tvs.first.sv*(1+self.r)**self.periods
+      self.r=self.r.to_d
+      self.tvs.each do |tv|
+        tv.fixvarformat
+      end
+      # Set ev where it is missing
+      periods=self.tvs.last.t-self.tvs.first.t
+      if self.tvs.first.ev.blank? then
+        self.tvs.first.ev=(self.tvs.last.ev*(1+self.r)**periods).round(2)
+      else
+        self.tvs.last.ev=(self.tvs.first.ev*(1+self.r)**periods).round(2)
+      end
     end
   
     # Old
