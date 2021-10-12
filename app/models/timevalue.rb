@@ -60,13 +60,3 @@ class Timevalue
   end
 
 end
-
-
-# attr_accessor :pv, :r, :t
-# pv = present value
-# fv = future value
-# r = interest rate (in decimal)
-# t = time
-
-# test function for discounting.
-  #  self.pv * (1+self.r)**t
