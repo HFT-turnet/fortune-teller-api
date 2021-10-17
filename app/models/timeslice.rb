@@ -1,10 +1,13 @@
 class Timeslice 
   
   include ActiveModel::Model
-  attr_accessor :t, :tvs, :i
+  attr_accessor :t, :tvs, :i, :disclaimer, :source, :info
     # tvs are (named) Timevalues
     # t = point in time (typical years)
     # i = inflation
+    # info
+    # disclaimer
+    # source
 
 ## Principle definitiions
 
