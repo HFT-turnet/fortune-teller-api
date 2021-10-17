@@ -27,128 +27,125 @@ class V1::PublicController < ApplicationController
   # Work with TIMESLICES (as in timeslize model)
     # Timeslices are driven by spending and time-morph by inclusion / exclusion and inflation
   
-  def timeslice_sample
+  def get_timeslice
     # Get request to get a timeslize JSON without values
-
-    # Instantiate Header as per JSON
-    sample=Timeslice.new
-    sample.i=0.02
-    sample.t=0
-    # Load sample TVs into Timeslize
-    entries=[]
+    countrycode="DE"
+    language="de"
+    template_i=0.02
+    params[:type]="expense" if params[:type].blank?
     
+    #Incomes
     if params[:type]=="income" then
-      entries.push({"label"=>"Income","cto"=>"0","fromt"=>"0","tot"=>"2000"})
+      filepath="jsonlib/" + countrycode + "_" + language + "_incomesample.json"
+      if File.exists?(filepath) then
+        file = File.read(filepath)
+        scheme=JSON.parse(file)
+        sample=Timeslice.new(scheme)
+        sample.i=template_i
+        sample.t=0
+      end
     end
     
     if params[:type]=="expense" then
-      entries.push({"label"=>"Miete und Nebenkosten","cto"=>"0","fromt"=>"0","tot"=>"2000"}) #    Wohnung, Wasser, Strom, Gas	4	1,8%
-      entries.push({"label"=>"Verpflegung","cto"=>"0","fromt"=>"0","tot"=>"2000"})   #    Nahrungsmittel und alkoholfreie Getränke	1	1,1%   #    Alkoholische Getränke & Tabak	2	2,5%
-
-
-      entries.push({"label"=>"Transport (KFZ, Öffis)","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-      entries.push({"label"=>"Anschaffungen (Kleidung, Wohnausstattg)","cto"=>"0","fromt"=>"0","tot"=>"2000"}) #    Bekleidung & Schuhe	3	1,4% #    Möbel, Leuchten, Geräte, anderes Haushaltszubehör	5	0,8%
-      entries.push({"label"=>"Kommunikation (Internet, Handy...)","cto"=>"0","fromt"=>"0","tot"=>"2000"})   #    Post und Telekommunilkation	8	-0,7%
-
-      entries.push({"label"=>"Dienstleistungen","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-      entries.push({"label"=>"Sport und Hobby","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-      entries.push({"label"=>"Urlaub","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-      entries.push({"label"=>"Versicherungen","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-      entries.push({"label"=>"Bildung","cto"=>"0","fromt"=>"0","tot"=>"2000"})   #    Bildungswesen	10	-0,3%
-      
+      #Expenses
+      filepath="jsonlib/" + countrycode + "_" + language + "_expensesample.json"
+      if File.exists?(filepath) then
+        file = File.read(filepath)
+        scheme=JSON.parse(file)
+        sample=Timeslice.new(scheme)
+        sample.i=template_i
+        sample.t=0
+      end      
     end
-    
-#    Inflationslabel	Abteilung	2019
-#    Gesundheit	6	1,1%
-#    Verkehr	7	1,2%
-#    Freizeit, Unterhaltung, Kultur	9	0,6%
-#    Gaststätten und Beherbergung	11	2,5%
-#    Andere Waren und Dienstleistungen	12	2,2%   
-    
-    sample.tvs_attributes=entries
     render json: sample
   end
   
   def summary_report
+    @expensename="Ausgaben"
+    @incomename="Einnahmen"
+    @info="Hallo Info"
+    @disclaimer=""
     # Instantiate Header as per JSON
-    @envelope=envelope_head
+    @envelope=envelope_head    
     expenses=Timeslice.new(envelope_expenses_head) unless params[:public][:expenses].blank?
-    incomes=Timeslice.new(envelope_incomes_head) unless params[:public][:incomes].blank?
-
+    incomes=Timeslice.new(envelope_incomes_head) unless params[:public][:incomes].blank?    
     # Load named TVs into Timeslice
     expenses.tvs_attributes=envelope_expenses_tvs unless params[:public][:expenses].blank?
-    incomes.tvs_attributes=envelope_incomes_tvs unless params[:public][:incomes].blank?
-
+    incomes.tvs_attributes=envelope_incomes_tvs unless params[:public][:incomes].blank?    
 # Add an info box that allows to review API comments
-      # Backup (if needed: find a specific label in entries)
-      #a=expenses.tvs.select {|tv| tv.label == e.label}
+    # Backup (if needed: find a specific label in entries)
+    #a=expenses.tvs.select {|tv| tv.label == e.label}
     
     # Expenses First
     # freeze function leads to a freeze of timevalues and considers limits (values set to zero if not in limit)    
     expenses_t0=expenses.freeze
-    expenses_tf=expenses.move_to(40).freeze
-    
+    expenses.move_to(@envelope["to"])
+    expenses_tf=expenses.freeze
+
     # Prepare for Json_parse
     @expenselist=[]
     expenses_t0.tvs.each_with_index do |t,i|
-      @expenselist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>expenses_tf[i].cto})
+      @expenselist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>expenses_tf.tvs[i].cto})
     end
-    
-    #p @expenselist
-    
+        
   unless incomes.blank?
   # Incomes Next (as above)
     incomes_t0=incomes.freeze
-    incomes_tf=incomes.move_to(40).freeze 
-  # Prepare for Json_parse
-    @incomeslist=[]
-    incomes_t0.tvs.each_with_index do |t,i|
-      @incomeslist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>@tfuture[i].cto})
-    end
-    #p @incomeslist
-  end
+    incomes.move_to(@envelope["to"])
+    incomes_tf=incomes.freeze 
 
+  # Prepare for Json_parse
+    @incomelist=[]
+    incomes_t0.tvs.each_with_index do |t,i|
+      @incomelist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>incomes_tf.tvs[i].cto}) 
+    end
+  end
+  
+  #rendered= render template: "/v1/public/summary_report"
+  #p rendered
   end
   
   def get_envelope
     # Instantiate Header as per JSON
-    sample=Timeslice.new
-    sample.i=0.02
-    sample.t=2021
-    render json: sample
-  end
-  
-  def get_expenses
+    envelope={}
+    envelope[:environment]={}
+    envelope[:environment][:i]=0.025
+    # Datum year
+    envelope[:environment][:from]=2020
+    envelope[:environment][:to]=2040
+    countrycode="DE"
+    language="de"
+    
+    #Incomes
+    filepath="jsonlib/" + countrycode + "_" + language + "_incomesample.json"
+    if File.exists?(filepath) then
+      file = File.read(filepath)
+      scheme=JSON.parse(file)
+      sample=Timeslice.new(scheme)
+      sample.i=envelope[:environment][:i]
+      sample.t=envelope[:environment][:from]
+      envelope[:incomes]=sample
+      #else
+      #return "Error"
+    end
+    
+    #Expenses
+    filepath="jsonlib/" + countrycode + "_" + language + "_expensesample.json"
+    if File.exists?(filepath) then
+      file = File.read(filepath)
+      scheme=JSON.parse(file)
+      sample=Timeslice.new(scheme)
+      sample.i=envelope[:environment][:i]
+      sample.t=envelope[:environment][:from]
+      envelope[:expenses]=sample
+      #else
+      #return "Error"
+    end
 
-  end
-  
-  def get_incomes
-
+    render json: envelope
   end
   
   def timeslice_sample2
-    # Get request to get a timeslize JSON without values
-
-    # Instantiate Header as per JSON
-  #  sample=Timeslice.new
-  #  sample.i=0.02
-  #  sample.t=0
-    # Load sample TVs into Timeslize
- #   entries=[]
-#    entries.push({"label"=>"Miete und Nebenkosten","cto"=>"0","fromt"=>"0","tot"=>"2000"}) #    Wohnung, Wasser, Strom, Gas	4	1,8%
-  #  entries.push({"label"=>"Verpflegung","cto"=>"0","fromt"=>"0","tot"=>"2000"})   #    Nahrungsmittel und alkoholfreie Getränke	1	1,1%   #    Alkoholische Getränke & Tabak	2	2,5%
-
-
-  #  entries.push({"label"=>"Transport (KFZ, Öffis)","cto"=>"0","fromt"=>"0","tot"=>"2000"})
-  #  entries.push({"label"=>"Anschaffungen (Kleidung, Wohnausstattg)","cto"=>"0","fromt"=>"0","tot"=>"2000"}) #    Bekleidung & Schuhe	3	1,4% #    Möbel, Leuchten, Geräte, anderes Haushaltszubehör	5	0,8%
-#    entries.push({"label"=>"Kommunikation (Internet, Handy...)","cto"=>"0","fromt"=>"0","tot"=>"2000"})   #    Post und Telekommunilkation	8	-0,7%
-    
-#    Inflationslabel	Abteilung	2019
-#    Gesundheit	6	1,1%
-#    Verkehr	7	1,2%
-#    Freizeit, Unterhaltung, Kultur	9	0,6%
-#    Gaststätten und Beherbergung	11	2,5%
-#    Andere Waren und Dienstleistungen	12	2,2%   
     
  #   sample.tvs_attributes=entries
      samplemodel='{
@@ -326,7 +323,7 @@ class V1::PublicController < ApplicationController
      ).require(:tvs)
   end
   def envelope_head
-    params[:public].permit(:from,:to)
+    params[:public][:environment].permit(:from,:to,:i)
   end
   def envelope_expenses_head
     params[:public][:expenses].permit(:t,:i,:tvs) 
