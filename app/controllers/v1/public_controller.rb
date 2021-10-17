@@ -111,8 +111,8 @@ class V1::PublicController < ApplicationController
     envelope[:environment]={}
     envelope[:environment][:i]=0.025
     # Datum year
-    envelope[:environment][:from]=2020
-    envelope[:environment][:to]=2040
+    envelope[:environment][:from]=Time.current.year
+    envelope[:environment][:to]=Time.current.year+20
     countrycode="DE"
     language="de"
     
@@ -143,56 +143,6 @@ class V1::PublicController < ApplicationController
     end
 
     render json: envelope
-  end
-  
-  def timeslice_sample2
-    
- #   sample.tvs_attributes=entries
-     samplemodel='{
-  "entries":
-	{
-	"positions":[
-		{
-		"label":"Netto-Einkommen",
-		"cto_now":1000,
-		"cto_then":0,
-      	"positions":[
-			{
-      		"label":"Gehalt",
-			"cto_now":1000,
-			"cto_then":1500
-			}
-      	]
-		},
-		{
-		"label":"Kosten",
-      	"positions":[
-			{
-      		"label":"Essen",
-			"cto_now":-1000,
-			"cto_then":-1500
-			},
-			{
-      		"label":"Reisen",
-			"cto_now":-500,
-			"cto_then":-1500
-			}
-      	]
-		}
-		]
-	},
-	"environment":
-		{
-			"year_now":"2020",
-			"year_then":"2040"
-		}
-}'
-    @list=[]
-    @list << "eins"
-    @list << "zwei"
-    @list << "drei"
-    p @list
-    render json: samplemodel
   end
   
   def timeslice_get
