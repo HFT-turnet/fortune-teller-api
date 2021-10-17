@@ -1,0 +1,20 @@
+{
+	"tvs":[
+		{
+			"label":"Netto-Einkommen",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2049",
+			"inflation":"0"
+		},
+		{
+			"label":"Netto-Rente",
+			"cto":"0",
+			"fromt":"2050",
+			"tot":"2150",
+			"inflation":"0"
+		}
+	],
+	"disclaimer":"tbd",
+    "source":"tbd"
+}

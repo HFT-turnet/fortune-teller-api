@@ -1,0 +1,77 @@
+{
+	"tvs":[
+	   	{
+			"label":"Miete und Nebenkosten",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.018",
+			"valuation":"Wohnung, Wasser, Strom, Gas, 4"
+		},
+	    {
+			"label":"Verpflegung",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.015",
+			"valuation":"Nahrungsmittel und alkoholfreie Getränke 1 1,1%   #    Alkoholische Getränke & Tabak 2 2,5%"
+		},
+	    {
+			"label":"Transport (KFZ, Öffis)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.02"
+		},
+	    {
+			"label":"Anschaffungen (Kleidung, Wohnausstattg)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.014",
+			"valuation":"Bekleidung & Schuhe 3 1,4% #    Möbel, Leuchten, Geräte, anderes Haushaltszubehör 5 0,8%"
+		},
+		{
+			"label":"Kommunikation (Internet, Handy...)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"-0.007",
+			"valuation":"Post und Telekommunilkation 8"
+		},
+	    {
+			"label":"Dienstleistungen",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	   	{
+			"label":"Sport und Hobby",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Urlaub",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Versicherungen",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Bildung",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"-0.003",
+			"valuation":"Bildungswesen 10"
+		}
+	],
+	"disclaimer":"tbd",
+    "source":"Destatis Inflationsstatistik DATUM"
+}

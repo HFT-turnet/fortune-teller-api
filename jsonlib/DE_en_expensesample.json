@@ -1,0 +1,77 @@
+{
+	"tvs":[
+	   	{
+			"label":"Rent and utilities",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.018",
+			"valuation":"Wohnung, Wasser, Strom, Gas, 4"
+		},
+	    {
+			"label":"Food",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.015",
+			"valuation":"Nahrungsmittel und alkoholfreie Getränke 1 1,1%   #    Alkoholische Getränke & Tabak 2 2,5%"
+		},
+	    {
+			"label":"Transport (Car, Public)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.02"
+		},
+	    {
+			"label":"Purchases (Clothes, Furniture)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"0.014",
+			"valuation":"Bekleidung & Schuhe 3 1,4% #    Möbel, Leuchten, Geräte, anderes Haushaltszubehör 5 0,8%"
+		},
+		{
+			"label":"Communication (Internet, Mobile...)",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"-0.007",
+			"valuation":"Post und Telekommunilkation 8"
+		},
+	    {
+			"label":"Services",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	   	{
+			"label":"Sports and Leisure",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Vacation",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Insurance",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150"
+		},
+	    {
+			"label":"Education",
+			"cto":"0",
+			"fromt":"2000",
+			"tot":"2150",
+			"inflation":"-0.003",
+			"valuation":"Bildungswesen 10"
+		}
+	],
+	"disclaimer":"tbd",
+    "source":"Destatis DATUM"
+}
