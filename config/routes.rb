@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get 'public/summary_report', to: 'public#get_envelope', format: :json
     namespace :public, defaults: { format: :json }  do
       post 'summary_report', to: 'summary_report'
+      match 'timeslice' , via: :post
       #match 'timemorph' , via: :post
       #match 'timeslice_sample2', via: :get
       #match 'timeslice_get' , via: :post

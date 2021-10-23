@@ -42,7 +42,7 @@ class V1::PublicController < ApplicationController
         scheme=JSON.parse(file)
         sample=Timeslice.new(scheme)
         sample.i=template_i
-        sample.t=0
+        sample.t=Time.current.year
       end
     end
     
@@ -54,8 +54,17 @@ class V1::PublicController < ApplicationController
         scheme=JSON.parse(file)
         sample=Timeslice.new(scheme)
         sample.i=template_i
-        sample.t=0
+        sample.t=Time.current.year
       end      
+    end
+    
+    if params[:type]=="single" then
+      sample=Timeslice.new()
+      sample.i=template_i
+      sample.tvs=[]
+      #sample.tvs.push('{"label": "Value","cto":"0","fromt": "0","tot": "9999","inflation": "0"}')
+      sample.tvs.push(:label => "Value",:fromt => 0, :tot => 9999, :inflation =>0 ) 
+      sample.t=Time.current.year    
     end
     render json: sample
   end
@@ -145,7 +154,7 @@ class V1::PublicController < ApplicationController
     render json: envelope
   end
   
-  def timeslice_get
+  def timeslice
     # params: targetyear & Json-Load as Post
     # Return: just converted timeslice
 
