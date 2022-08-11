@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  # Rswag engine
+  mount Rswag::Ui::Engine => '/api-docs'
   namespace :v1 do
     # If this deviating route is in namespace, then
     get 'public/timeslice', to: 'public#get_timeslice', format: :json
