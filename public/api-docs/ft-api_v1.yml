@@ -26,9 +26,6 @@ paths:
                   type: string
                 password:    # <!--- form field name
                   type: string
-                gauth_token:    # <!--- form field name
-                  type: integer
-                  example: 123456
               required:
                 - login
                 - password
@@ -44,24 +41,21 @@ paths:
                     description: The API token.
                   userid:
                     type: integer
-                  bkrnumbername:
-                    type: string
-                    description: Initial BKR Numbername selected.
-                  bkrid:
-                    type: integer
-                    description: ID of Initial BKR selected.
   /timeslice:
     get:
       summary: Returns timeslice templates.
       description: Depending on purpose, empty or prefilled timeslice templates are provided.
       parameters:
         - in: query
-          name: include_passive
+          name: type
           schema:
             type: string
-            enum: [X]
+            enum:
+              - single
+              - expense
+              - income
           required: false
-          description: Include non-active contracts in reply
+          description: Indicate which kind of template to receive.
       tags: 
         - Public Finance
       responses:
@@ -72,12 +66,12 @@ paths:
               schema: 
                 $ref: '#/components/schemas/Timeslice'
     post:
-      summary: Creates a new contract
-      description: All contracts are provided for a given BKr.
+      summary: Uploads a timeslice
+      description: Upload of a timeslice for a specific activity.
       tags: 
         - Public Finance
       requestBody:
-        description: Data for creation of contract
+        description: Data with timeslice
         required: true
         content:
           application/json:
@@ -85,7 +79,7 @@ paths:
               $ref: '#/components/schemas/Timeslice'
       responses:
         '200':    # status code
-          description: A JSON with one contract
+          description: A JSON with a timeslice
           content:
             application/json:
               schema: 
@@ -200,22 +194,37 @@ components:
       properties:
         label:
           type: string
+          description: Name of a valueflow.
+          example: Darlehen Bank 1
         type:
-          type: integer
+          type: string
+          enum:
+            - debt
+            - current
+            - asset
         r:
           type: integer
+          description: Interest rate per period
         rm:
           type: integer
+          description: Market Valuation per period
         rf:
           type: integer
+          description: Fee rate
         annuity:
-          type: integer
+          type: number
+          format: double
+          description: periodic cash pay
         periods:
           type: integer
+          description: Number of periods counting up from from to to with rate r.
+            There is a two value mode that contains many periods in between the two values and where the tvs do not show this. 
         from:
           type: integer
+          description: Point in time
         to:
           type: integer
+          description: Point in time
         tvs:
            $ref: '#/components/schemas/Timevalue'
   securitySchemes:
