@@ -1,0 +1,238 @@
+openapi: 3.0.0
+info:
+  title: Fortune-Teller API
+  description: This API provides a number of financial core functions. All "public" functions do not require registration and do not persist data beyond logfiles. The "private" functions are focussed on cases where persistence of data is needed / is more comfortable. To ensure privacy, no clear names or E-Mail addresses are persisted, only a token-id. For further information or collaboration, check https://www.fortune-teller.me.
+  version: "22.0"
+servers:
+  - url: https://api.fortune-teller.me/v1
+    description: Production instance of the API
+  - url: https://api.fortune-teller.me/beta
+    description: Not stable Test and beta functions
+paths:
+  /auth:
+    post:
+      summary: inactive_Perform token authentication
+      description: Send login data and receive a 24h valid JWT token.
+      tags:
+        - Private Token and Data
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                login:          # <!--- form field name
+                  type: string
+                password:    # <!--- form field name
+                  type: string
+                gauth_token:    # <!--- form field name
+                  type: integer
+                  example: 123456
+              required:
+                - login
+                - password
+      responses:
+        '200':    # status code
+          description: Key User data
+          content:
+            application/json:
+              schema: 
+                properties:
+                  access_token:
+                    type: string
+                    description: The API token.
+                  userid:
+                    type: integer
+                  bkrnumbername:
+                    type: string
+                    description: Initial BKR Numbername selected.
+                  bkrid:
+                    type: integer
+                    description: ID of Initial BKR selected.
+  /timeslice:
+    get:
+      summary: Returns timeslice templates.
+      description: Depending on purpose, empty or prefilled timeslice templates are provided.
+      parameters:
+        - in: query
+          name: include_passive
+          schema:
+            type: string
+            enum: [X]
+          required: false
+          description: Include non-active contracts in reply
+      tags: 
+        - Public Finance
+      responses:
+        '200':    # status code
+          description: A JSON with a timeslice
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Timeslice'
+    post:
+      summary: Creates a new contract
+      description: All contracts are provided for a given BKr.
+      tags: 
+        - Public Finance
+      requestBody:
+        description: Data for creation of contract
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Timeslice'
+      responses:
+        '200':    # status code
+          description: A JSON with one contract
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Timeslice'
+components:
+  schemas:
+    Summary_Report:
+      type: object
+      properties:
+        environment:
+          type: object
+          properties:
+            i:
+              type: number
+              format: double
+            from:
+              type: integer
+            to:
+              type: integer
+        incomes:
+          description: a number of TVs either in array or in additional sub-structures via nesting (for hierarchical views). Example of sub-structure see below for expenses.
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Timevalue'
+        expenses:
+          description: a number of TVs either in array or in additional sub-structures via nesting (for hierarchical views). Example of direct timevalue-structure see above for incomes.
+          type: array
+          items:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/Timevalue'
+    Timeslice:
+      type: object
+      properties:
+        t:
+          type: integer
+          description: Point in time (typically years)
+          example: 2022
+        tvs:
+          $ref: '#/components/schemas/Timevalue'
+        i:
+          type: number
+          format: float
+          description: inflation
+          example: 0.012
+        disclaimer:
+          type: string
+          description: Any disclaimer or limitation of the result provided.
+        source:
+          type: string
+          description: If sources are relevant for the result rendered.
+        info:
+          type: string
+          description: Any API-information to be provided to frontends.
+      required:  
+        - t
+        - tvs
+    Timevalue:
+      description: A timevalue describes either a single value (i.e. start and end are the same) or a cashflow in a given timeframe (i.e. cashflows of a financial instrument in month X.).
+      type: object
+      properties:
+        label:
+          type: string
+          description: Descriptive text for timevalue.
+        sv:
+          type: number
+          format: double
+          description: Start Value at beginning of the respective timeframe (i.e. at the month).
+        tax:
+          type: number
+          format: double
+          description: Effect from tax.
+        fee:
+          type: number
+          format: double
+          description: Effect from fees.
+        interest:
+          type: number
+          format: double
+          description: Effect from interest.
+        valuation:
+          type: number
+          format: double
+          description: Effect from valuation.
+        cto:
+          type: number
+          format: double
+          description: Cash to/from owner (+/- depending on type of valueflow.).
+        t:
+          type: integer
+          description: Period, i.e. End of Month
+        ev:
+          type: number
+          format: double
+          description: End Value at end of the respective timeframe (i.e. at the month).
+        fromt:
+          type: integer
+          description: t with first occurence of this value. (i.e. t=0 or the startmonth / startyear)
+        tot:
+          type: integer
+          description: t with last occurence of this value. (i.e. t=0 or the startmonth / startyear)
+        inflation:
+          type: number
+          format: float
+          description: Assumed inflation rate (with reference to point in time fromt.
+      required:  
+        - sv
+    Valueflow:
+      type: object
+      properties:
+        label:
+          type: string
+        type:
+          type: integer
+        r:
+          type: integer
+        rm:
+          type: integer
+        rf:
+          type: integer
+        annuity:
+          type: integer
+        periods:
+          type: integer
+        from:
+          type: integer
+        to:
+          type: integer
+        tvs:
+           $ref: '#/components/schemas/Timevalue'
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Public Finance
+    description: Financial calculation and time series functions.
+  - name: Public Calc-Schemes
+    description: Application of a broad set of Calc-Schemes (Community managed)
+  - name: Private Token and Data
+    description: Assign, manage, delete tokens and data
+  - name: Private Finance
+    description: Timeseries-functions with data persistence
