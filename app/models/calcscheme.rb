@@ -3,9 +3,31 @@ class Calcscheme
   attr_accessor :tags, :input, :schemes_versions, :setscheme_version, :scheme, :result #, :content 
   
   # General approach. load => check existence of file and prepare scheme selection. set => set scheme to be used or pull alternatives. run => apply scheme to values given
+  # ESt: zu versteuerndes Einkommen: zve
+  
+  def listall(countrycode)
+    filepath="jsonlib/" + countrycode + "_" + "*"
+    schemes=Dir[filepath].select { |x| x.include?(".scheme.json") }
+    schemelist={}
+    schemes.each do |s|
+      file = File.read(s)
+      content=JSON.parse(file)
+      schemetable={}
+      schemetable["title"]=content["title"]
+      schemetable["inputs"]=content["input"]
+      tags=[]
+      content.each do |t|
+          tags << t[0] unless t[0]=="input" or content[t[0]].first[1].nil?
+      end
+      schemetable["calculations"]=tags
+      #puts content
+      schemelist[s.split("/")[1].split(".scheme.json").to_s]=schemetable
+    end
+    return schemelist  
+  end
   
   def load(type, countrycode)
-    filepath="jsonlib/" + countrycode + "_" + type + ".json"
+    filepath="jsonlib/" + countrycode + "_" + type + ".scheme.json"
     if File.exists?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
@@ -23,7 +45,7 @@ class Calcscheme
       
       # Get all Schemes, exclude tags that do not have a third level and the Disclaimer and Source Tags
       self.tags.each do |t|
-        if t=="input" or @content[t].first[1].nil? then
+        if t=="input" or t=="title" or @content[t].first[1].nil? then
         else
           @content[t].each do |tt|
             self.schemes_versions << (t + "_" + tt[0]).to_s unless (tt[0]=="Disclaimer" or tt[0]=="Source") 
@@ -85,6 +107,9 @@ class Calcscheme
     @content[sel[0]][sel[1]].each do |s|
       s["part"]=1 if s["part"].blank?
       case s["type"]
+        when "addition"
+          # Two amounts are added, "-1" as part can revert the amount listed as "base". No limits apply.
+          self.result[s["label"]] = self.result[s["var"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["var"]].nil?
         when "percent"
           # A percentage of the relevant part of the base value is added to the label category if the relevant part of the base amount is within the limits
           if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then

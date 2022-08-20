@@ -1,9 +1,17 @@
-class V1::TaxController < ApplicationController
-  #controller=V1::TaxController.new
+class V1::SchemeController < ApplicationController
+  #controller=V1::SchemeController.new
   #controller.income
   
-  def income
+  def test
     puts "Hallo"
+  end
+  
+  def listschemes
+    if params[:countrycode].blank? then
+      render json: "Please submit parameter 'countrycode'."
+    else
+      render json: Calcscheme.new.listall(params["countrycode"])
+    end
   end
   
   def getjson(countrycode)

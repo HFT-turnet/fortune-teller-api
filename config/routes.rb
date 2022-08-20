@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     # If this deviating route is in namespace, then
     get 'public/timeslice', to: 'public#get_timeslice', format: :json
     get 'public/summary_report', to: 'public#get_envelope', format: :json
+    namespace :scheme do
+      match 'listschemes', via: :get
+    end
     namespace :public do
       # This namespace ignores the "to" element and looks for target within the controller with the exact name, therefore deviating functions are called above.
       match 'summary_report', to: 'summary_report', via: :post
