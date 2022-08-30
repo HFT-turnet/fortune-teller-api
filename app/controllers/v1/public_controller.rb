@@ -247,7 +247,22 @@ class V1::PublicController < ApplicationController
     render json: ts.as_json
   end
   
-  # Work with Calculation Models
+  ## Work with Calculation Models
+  # How long will money last?
+  def lastingmoney
+    # Annahme: nachschüssige Auszahlung.
+    flow=Valueflow.new
+    flow.initialfix
+    flow.rm=params[:marketrate].to_d
+    flow.tvs[0].sv=params[:startfunds].to_d
+    if params[:payout].to_d < params[:startfunds].to_d * (params[:marketrate].to_d-params[:inflation].to_d)
+      render json: "Market-return above payout, would run endlessly."
+    else
+      flow.payallout(-1 * params[:payout].to_d, params[:inflation].to_d)
+      render json: flow
+    end
+  end
+  
   
   # Params definition  
   def timeslice_head_params

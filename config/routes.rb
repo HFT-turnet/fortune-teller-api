@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       # This namespace ignores the "to" element and looks for target within the controller with the exact name, therefore deviating functions are called above.
       match 'summary_report', to: 'summary_report', via: :post
       match 'timeslice' , via: :post
+      match 'lastingmoney', via: :get
       #match 'timemorph' , via: :post
       #match 'timeslice_sample2', via: :get
       #match 'timeslice_get' , via: :post

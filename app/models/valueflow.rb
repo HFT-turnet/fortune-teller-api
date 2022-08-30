@@ -53,6 +53,7 @@ class Valueflow
         self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
       end
     end
+    
     def assetcalc
       self.timesort
       (self.mint..self.maxt).each do |i|
@@ -63,6 +64,22 @@ class Valueflow
         self.tvs[i].setev
         self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
       end
+    end
+    
+    def payallout(cto, inflation)
+      return "too many values" if self.maxt>self.mint
+      remainingfunds=self.tvs[0].sv
+      t=0
+      while remainingfunds+cto>0
+        self.tvs[t].cto=cto*(1+inflation)**t
+        self.tvs[t].calc_ev(self.rm, self.r, self.rf)
+        self.tvs[t].fixvarformat
+        t+=1
+        getorcreate_tv_at_t(t)
+        self.tvs[t].sv=self.tvs[t-1].ev
+        remainingfunds=self.tvs[t].sv
+      end
+      #self.initialfix
     end
     
     # Timevalue attributes
@@ -110,6 +127,9 @@ class Valueflow
     def updateseries
       self.timesort
       (self.mint..self.maxt).each do |i|
+        #self.tvs[i].setev
+        self.tvs[i].calc_ev(self.r, self.rm, self.rf)
+        #self.tvs[i].tax=-0.25 * self.r
         self.tvs[i].setev
         self.tvs[i+1].sv=self.tvs[i].ev unless i==self.maxt
       end

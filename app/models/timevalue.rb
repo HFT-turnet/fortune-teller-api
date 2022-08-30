@@ -43,9 +43,11 @@ class Timevalue
   end
   
   # end value calculated on demand
-  def calc_ev(r)
-    self.interest=self.sv * r
-    self.ev = self.sv.to_d + self.tax.to_d + self.fee.to_d + self.interest.to_d + self.valuation.to_d + self.cto.to_d 
+  def calc_ev(rm, r, rf)
+    self.interest=self.sv.to_d * r
+    self.valuation=self.sv.to_d * rm
+    self.fee=self.sv.to_d*rf
+    self.ev = (self.sv.to_d + self.tax.to_d + self.fee.to_d + self.interest.to_d + self.valuation.to_d + self.cto.to_d ).to_d
   end
   
   def update(attributes)

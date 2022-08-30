@@ -1,6 +1,6 @@
 class Calcscheme 
   include ActiveModel::Model
-  attr_accessor :tags, :input, :schemes_versions, :setscheme_version, :scheme, :result #, :content 
+  attr_accessor :tags, :input, :schemes_versions, :setscheme_version, :scheme, :result, :debuglog #, :content 
   
   # General approach. load => check existence of file and prepare scheme selection. set => set scheme to be used or pull alternatives. run => apply scheme to values given
   # ESt: zu versteuerndes Einkommen: zve
@@ -85,6 +85,9 @@ class Calcscheme
     end
   end
   
+  def getresulttypes
+  end
+  
   def run(inputs)
     # Where inputs is a hash of values
     #inputs={}
@@ -95,6 +98,8 @@ class Calcscheme
     return "Error, inputs not provided as hash." unless inputs.is_a? Hash
     # Initiate result 
     self.result={}
+    # Initiate log for debug
+    @debuglog=[] #if debug=="yes"
     # Check whether inputs match expectation based on json definition and add to result hash
     self.input.each do |i|
       return "Error, missing input: " + i["label"].to_s if inputs[i["label"]].nil? and i["obligatory"]=="yes"
@@ -104,7 +109,7 @@ class Calcscheme
     
     # Start calculation
     sel=self.setscheme_version.split("_")
-    @content[sel[0]][sel[1]].each do |s|
+    @content[sel[0]][sel[1]].each_with_index do |s,index|
       s["part"]=1 if s["part"].blank?
       case s["type"]
         when "addition"
@@ -136,6 +141,7 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * self.result[s["labelvar"]].to_d)
           end
       end
+      @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') #if debug=="yes"
       #Helper to debug schemes
       #puts self.result
     end

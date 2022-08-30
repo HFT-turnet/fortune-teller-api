@@ -14,19 +14,43 @@ class V1::SchemeController < ApplicationController
     end
   end
   
-  def getjson(countrycode)
-    filepath="jsonlib/" + countrycode + "_tax.json"
-    if File.exists?(filepath) then
-      file = File.read(filepath)
-      scheme=JSON.parse(file)
-    else
-      return "Error"
+  def runscheme
+    # Expects params. These include the scheme, the calculation and version (if existent)
+    # Also include post-payload for the required calculation
+    
+    # if param[:debug] is set, then instead of result the debuglog is parsed back.
+    
+    # Check all required params are there
+    if params[:countrycode].blank? then
+      render json: "Please submit parameter 'countrycode'."
     end
-    #data_hash = JSON.parse(file)
-    #File.write('./sample-data.json', JSON.dump(data_hash))
+    
+    # Initialize the Scheme
+    
+    # Check inputs for Scheme are there.
+    
+    # Run Scheme
+    
+    # Feedback results, disclaimer and any error messages along the way
+    
   end
   
-  def runscheme(scheme, taxbase)
+  def runmetascheme
+    # Expects params. These include the scheme, the calculation and version (if existent)
+    # Also include post-payload for the required calculation
+    
+    # Check all required params are there
+    if params[:countrycode].blank? then
+      render json: "Please submit parameter 'countrycode'."
+    end
+    
+    # Initialize the Scheme
+    
+    # Check inputs for Scheme are there.
+    
+    # Run Scheme
+    
+    # Feedback results, disclaimer and any error messages along the way
     
   end
   
