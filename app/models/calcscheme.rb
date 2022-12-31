@@ -85,9 +85,6 @@ class Calcscheme
     end
   end
   
-  def getresulttypes
-  end
-  
   def run(inputs)
     # Where inputs is a hash of values
     #inputs={}
@@ -151,6 +148,110 @@ class Calcscheme
     
     return "OK"
   end
+  
+  # Handle Metaschemes
+  
+  # Get all Metaschemes for a countrycode
+  def meta_listall(countrycode)
+    filepath="jsonlib/" + countrycode + "_" + "*"
+    schemes=Dir[filepath].select { |x| x.include?(".meta.json") }
+    schemelist={}
+    schemes.each do |s|
+      file = File.read(s)
+      content=JSON.parse(file)
+      schemetable={}
+      schemetable["title"]=content["title"]
+      tags=[]
+      content.each do |t|
+          tags << t[0] unless t[0]=="input" or content[t[0]].first[1].nil?
+      end
+      schemetable["calculations"]=tags
+      #puts content
+      schemelist[s.split("/")[1].split(".meta.json").to_s]=schemetable
+    end
+    return schemelist  
+  end
+  
+  # Load a metascheme
+  def meta_load(type, countrycode)
+    filepath="jsonlib/" + countrycode + "_" + type + ".meta.json"
+    if File.exists?(filepath) then
+      file = File.read(filepath)
+      @content=JSON.parse(file)
+      # Initiate collections
+      self.tags=[]
+      self.schemes_versions=[]
+      
+      # Read all tags
+      @content.each do |s|
+        self.tags << s[0]
+      end
+      
+      # Get all Schemes, exclude tags that do not have a third level and the Disclaimer and Source Tags
+      self.tags.each do |t|
+        if t=="input" or t=="title" or @content[t].first[1].nil? then
+        else
+          @content[t].each do |tt|
+            self.schemes_versions << (t + "_" + tt[0]).to_s unless (tt[0]=="Disclaimer" or tt[0]=="Source") 
+          end
+        end
+      end
+      self.state="OK"
+      return "OK"
+    else
+      self.state="Error"
+      return "Error: Type or Localization not available"
+    end
+  end
+  # Once loaded, setting works with standard as above (set)
+  
+  # Go through schemes and identify input and output variables
+  # Put them in sequence to identify gaps and assumptions to be set if a variable is missing
+  # Output in a console format to allow Reading it on screen
+  def meta_listinputs
+    # Switch console output on and off
+    #temporary
+    self.meta_load("tax","DE")
+    self.set("income","2021")
+    # Check whether all is good to go on Model side
+    return "Error, not prepared. Run load and set first." if self.setscheme_version.nil? or self.state=="Error"
+    # Go through schemes to fetch input factors
+    
+    puts "--- Overview of Scheme and variable usage ---"
+    # Iterate over entries in schemes
+    
+    #Example
+    puts "Scheme 1 receives"
+    puts "Obligatory: zve, einkommen, tax"
+    puts "Voluntary: username, rate"
+    puts "Scheme 1 then provides"
+    puts "Resultvariables: taxrate, y1, z3, q1"
+    puts ""
+    puts "Scheme 2 receives"
+    puts "Obligatory: taxrate, y443, zert"
+    puts "Voluntary: ."
+    puts "MATCHED: taxrate" 
+    puts "ASSUMING: zert=12" # This would be included in the metascheme
+    puts "ASSUMING: love=0" # This would be included in the metascheme
+    puts "MISSING: y443"
+    puts "Scheme 1 then provides"
+    puts "Resultvariables: taxrate, y1, z3, q1"
+    
+    puts "--- In Summary ---"
+    puts "Required INPUT"
+    puts "List all Inputs from above, that are not matched"
+    puts "Avoid assumptions if providing INPUT"
+    puts "List all Inputs from above, that are listed as assumptions"
+  end
+  
+  def meta_run
+    # Run the scheme and provide output of each step with
+    # Each subscheme to be called individually
+    # prefix: scheme and then the variable
+    return "OK"
+  end
+  
+  # HELPERS
   
   private
   attr_accessor :content, :state
