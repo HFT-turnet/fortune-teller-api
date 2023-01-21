@@ -21,6 +21,11 @@ Rails.application.routes.draw do
       #match 'valueflow_complete', via: :post
       #match 'summary_report', via: :post
     end
+    # Manage APIKeys
+    #post '/persist/api-keys', to: 'api_keys#create'
+    #delete '/persist/api-keys', to: 'api_keys#destroy'
+    #get '/persist/api-keys', to: 'api_keys#index'
+    resources :api_keys, path: '/persist/api-keys', only: %i[index create destroy]
     namespace :beta, defaults: { format: :json }  do
       #match 'timeslice', to: 'public#get_timeslice', via: :get
     end
