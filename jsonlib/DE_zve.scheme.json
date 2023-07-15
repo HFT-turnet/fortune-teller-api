@@ -83,7 +83,7 @@
 						"type":"addition",
 					    "base":"kinderfreibetrag",
 						"part":"-1",
-						"label":"zu_versteuerndes_einkommen",
+						"label":"zv_einkommen",
 						"var":"einkommen"
 					}
 				],

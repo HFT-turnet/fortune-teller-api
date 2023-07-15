@@ -1,6 +1,6 @@
 class Calcscheme 
   include ActiveModel::Model
-  attr_accessor :tags, :input, :schemes_versions, :setscheme_version, :scheme, :result, :debuglog #, :content 
+  attr_accessor :tags, :input, :schemes_versions, :setscheme_version, :scheme, :result, :debuglog, :countrycode #, :content 
   
   # General approach. load => check existence of file and prepare scheme selection. set => set scheme to be used or pull alternatives. run => apply scheme to values given
   # ESt: zu versteuerndes Einkommen: zve
@@ -31,6 +31,7 @@ class Calcscheme
     if File.exists?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
+      @countrycode=countrycode
       # Obtain Input fields
       self.input=@content["input"]
       
@@ -64,6 +65,10 @@ class Calcscheme
   end
   
   def set(scheme, version)
+    # Check whether all is good to go on Model side
+    return "Error, not prepared. Run load first." if self.state.nil? or self.state=="Error"
+    
+    # Check for Scheme and version.
     if self.schemes_versions.include? (scheme + "_" + version).to_s then
       # Direct selection of Scheme and Version
       self.setscheme_version=(scheme + "_" + version).to_s
@@ -85,6 +90,10 @@ class Calcscheme
     end
   end
   
+  def inputhash
+    # Provide a hash for all inputs and set as input
+  end
+  
   def run(inputs)
     # Where inputs is a hash of values
     #inputs={}
@@ -99,7 +108,11 @@ class Calcscheme
     @debuglog=[] #if debug=="yes"
     # Check whether inputs match expectation based on json definition and add to result hash
     self.input.each do |i|
+      # Missing input
       return "Error, missing input: " + i["label"].to_s if inputs[i["label"]].nil? and i["obligatory"]=="yes"
+      # Try to convert value to decimal, if possible
+      inputs[i["label"]]=inputs[i["label"]].to_d unless inputs[i["label"]].is_a? Numeric or inputs[i["label"]].nil?
+      # If conversion was not possible: stop
       return "Error, input "+ i["label"].to_s + " available but not number format." unless inputs[i["label"]].is_a? Numeric or inputs[i["label"]].nil?
       self.result[i["label"]]=inputs[i["label"]] unless inputs[i["label"]].nil?
     end
@@ -178,6 +191,7 @@ class Calcscheme
     if File.exists?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
+      @countrycode=countrycode
       # Initiate collections
       self.tags=[]
       self.schemes_versions=[]
@@ -203,9 +217,31 @@ class Calcscheme
       return "Error: Type or Localization not available"
     end
   end
+  
+  # SET scheme
   # Once loaded, setting works with standard as above (set)
   
-  # Go through schemes and identify input and output variables
+  def meta_trialrun(inputs)
+    # Input is a simple hash with the provided data, but it is enhanced after each step with the results from the scheme that has been run.
+    # Start calculation by iterating over the items in the selected scheme
+    sel=self.setscheme_version.split("_")
+    @content[sel[0]][sel[1]].each_with_index do |s,index|
+      # Load Scheme
+      subscheme=Calcscheme.new
+      subscheme.load(s["scheme"], self.countrycode)
+      # Set Scheme
+      subscheme.set(s["type"], s["version"])
+      # Run Scheme
+      subscheme.run(inputs)
+      # Add Result to input
+      puts subscheme.result
+      inputs=inputs.merge(subscheme.result)
+      puts inputs
+      puts s
+    end
+  end
+  
+    # Go through schemes and identify input and output variables
   # Put them in sequence to identify gaps and assumptions to be set if a variable is missing
   # Output in a console format to allow Reading it on screen
   def meta_listinputs
@@ -245,6 +281,9 @@ class Calcscheme
   end
   
   def meta_run
+    # Ensure the variable hash includes all needed variables
+    # Post those variables that will be assumed
+    
     # Run the scheme and provide output of each step with
     # Each subscheme to be called individually
     # prefix: scheme and then the variable
@@ -255,5 +294,9 @@ class Calcscheme
   
   private
   attr_accessor :content, :state
+  
+  def get_variables
+    
+  end
   
 end

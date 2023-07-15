@@ -8,14 +8,12 @@
 					{
 						"scheme":"zve",
                         "type":"zve",
-						"version":"2021",
-						"var1":"10"			
+						"version":"2021"		
 					},
 					{
 						"scheme":"tax",
                         "type":"income",
-						"version":"2021",
-						"var1":"10"	
+						"version":"2021"
 					}
 				],
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
