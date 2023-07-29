@@ -1,6 +1,6 @@
 class Calcscheme 
   include ActiveModel::Model
-  attr_accessor :tags, :input, :output, :metadata, :schemelines, :schemes_versions, :setscheme_version, :scheme, :result, :debuglog, :countrycode #, :content 
+  attr_accessor :tags, :input, :output, :metadata, :schemelines, :schemes_versions, :setscheme_version, :scheme, :result, :debuglog, :countrycode, :country, :title, :comment1 #, :content 
   
   # General approach. load => check existence of file and prepare scheme selection. set => set scheme to be used or pull alternatives. run => apply scheme to values given
   # ESt: zu versteuerndes Einkommen: zve
@@ -31,6 +31,9 @@ class Calcscheme
     if File.exists?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
+      @country=@content["country"]
+      @title=@content["title"]
+      @comment1=@content["comment1"]
       @countrycode=countrycode
       # Obtain Input fields
       self.input=@content["input"]
