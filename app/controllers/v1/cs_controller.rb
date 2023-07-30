@@ -56,7 +56,7 @@ class V1::CsController < ApplicationController
     definition.load(params[:countrycode], params[:schemetype])
     # Check all required scheme-level params are there
     check2=check_scheme(definition, params[:scheme], params[:version])
-    puts definition
+    #puts definition
     unless check2=="OK"
       render json: check2
       return # or should we continue
@@ -64,10 +64,102 @@ class V1::CsController < ApplicationController
     
     # Convert parameters to input
     inputs={}
+    if params[:c].blank?
+      render json: "Input parameters must be provided as json payload." 
+      return
+    end
     params[:c].each { |key,value| inputs[key]=value }
     
     # Run Scheme, this automatically checks whether necessary inputs have been provided.
-    check3=definition.run(inputs)
+    check3=definition.run(inputs, params[:debug])
+    unless check3=="OK"
+      render json: check3
+      return 
+    end
+    
+    # Feedback results, disclaimer and any error messages along the way
+    render json: definition.result unless params[:debug]=="x"
+    
+    # Output Debugging information if debug is requested.
+    render json: {
+              :result => definition.result,
+              :debuglog => definition.debuglog
+              } if params[:debug]=="x"
+  end
+  
+  def get_metaschemetype
+    check=check_metaschemetype(params[:countrycode], params[:metaschemetype])
+    if check=="OK"
+      definition=Calcscheme.new
+      definition.meta_load(params[:countrycode],params[:metaschemetype])
+      render json: {:country => definition.country,
+                    :title => definition.title,
+                    :comment1 => definition.comment1, 
+                    :input => "You need to call /{metascheme}/{version} with GET to obtain Inputs",
+                    :versions => definition.schemes_versions}
+    else
+      render json: check
+    end
+  end
+  
+  def get_metascheme
+    # Check all required file-level params are there
+    check1=check_metaschemetype(params[:countrycode], params[:metaschemetype])
+    unless check1=="OK"
+      render json: check1
+      return
+    end
+    
+    # Initialize the definition
+    definition=Calcscheme.new
+    definition.meta_load(params[:countrycode], params[:metaschemetype])
+    # Check all required scheme-level params are there
+    check2=check_scheme(definition, params[:metascheme], params[:version])
+    #puts definition
+    unless check2=="OK"
+      render json: check2
+      return # or should we continue
+    end
+    render json: {:country => definition.country,
+                  :title => definition.title,
+                  :comment1 => definition.comment1, 
+                  :selected => definition.setscheme_version,
+                  :input => definition.meta_inputs
+                  }
+  end
+  
+  def run_metascheme
+    # Expects params. These include the scheme, the calculation and version.
+    # Also include post-payload for the required calculation
+        
+    # Check all required file-level params are there
+    check1=check_metaschemetype(params[:countrycode], params[:metaschemetype])
+    unless check1=="OK"
+      render json: check1
+      return
+    end
+    
+    # Initialize the definition
+    definition=Calcscheme.new
+    definition.meta_load(params[:countrycode], params[:metaschemetype])
+    # Check all required scheme-level params are there
+    check2=check_scheme(definition, params[:metascheme], params[:version])
+    #puts definition
+    unless check2=="OK"
+      render json: check2
+      return # or should we continue
+    end
+    
+    # Convert parameters to input
+    inputs={}
+    if params[:c].blank?
+      render json: "Input parameters must be provided as json payload." 
+      return
+    end
+    params[:c].each { |key,value| inputs[key]=value }
+    
+    # Run Scheme, this automatically checks whether necessary inputs have been provided.
+    check3=definition.meta_run(inputs)
     unless check3=="OK"
       render json: check3
       return 
@@ -77,35 +169,16 @@ class V1::CsController < ApplicationController
     render json: definition.result
   end
   
-  def runmetascheme
-    # Expects params. These include the scheme, the calculation and version (if existent)
-    # Also include post-payload for the required calculation
-    
-    # Check all required params are there
-    if params[:countrycode].blank? then
-      render json: "Please submit parameter 'countrycode'."
-    end
-    
-    # Initialize the Scheme
-    
-    # Check inputs for Scheme are there.
-    
-    # Run Scheme
-    
-    # Feedback results, disclaimer and any error messages along the way  
-  end
-  
   private
   def check_schemetype(countrycode, type)
     if countrycode.blank? then
       return "Please submit parameter 'countrycode'."
     elsif type.blank? then
-      return "Please submit the 'scheme': /countrycode/type."
+      return "Please submit the 'schemetype': /countrycode/type."
     else
       return Calcscheme.new.load(countrycode, type)
     end
   end
-  
   def check_scheme(definition, scheme, version)
     if scheme.blank? then
       return "Please submit parameter 'scheme'."
@@ -115,5 +188,13 @@ class V1::CsController < ApplicationController
       return definition.set(scheme, version)
     end
   end
-  
+  def check_metaschemetype(countrycode, type)
+    if countrycode.blank? then
+      return "Please submit parameter 'countrycode'."
+    elsif type.blank? then
+      return "Please submit the 'metaschemetype': /countrycode/type."
+    else
+      return Calcscheme.new.meta_load(countrycode, type)
+    end
+  end
 end

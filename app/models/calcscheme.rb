@@ -98,11 +98,7 @@ class Calcscheme
     end
   end
   
-  def inputhash
-    # Provide a hash for all inputs and set as input
-  end
-  
-  def run(inputs)
+  def run(inputs, xdebug)
     # Where inputs is a hash of values
     #inputs={}
     #inputs["basevalue"]=1000
@@ -159,7 +155,7 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * self.result[s["labelvar"]].to_d)
           end
       end
-      @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') #if debug=="yes"
+      @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') if xdebug=="x"
       #Helper to debug schemes
       #puts self.result
     end
@@ -168,7 +164,6 @@ class Calcscheme
     end
     self.result["disclaimer"]=@content[sel[0]]["Disclaimer"] unless @content[sel[0]]["Disclaimer"].nil?
     self.result["source"]=@content[sel[0]]["Source"] unless @content[sel[0]]["Source"].nil?
-    
     return "OK"
   end
   
@@ -202,6 +197,10 @@ class Calcscheme
       file = File.read(filepath)
       @content=JSON.parse(file)
       @countrycode=countrycode
+      @country=@content["country"]
+      @title=@content["title"]
+      @comment1=@content["comment1"]
+      # Due to inputs being defined on scheme level, these can only be added later, when the setting has been done.
       # Initiate collections
       self.tags=[]
       self.schemes_versions=[]
@@ -228,34 +227,9 @@ class Calcscheme
     end
   end
   
-  # SET scheme
+  # SET scheme for Metascheme:
   # Once loaded, setting works with standard as above (set)
   
-  # TEST ONLY
-  def meta_trialrun(inputs)
-    # Input is a simple hash with the provided data, but it is enhanced after each step with the results from the scheme that has been run.
-    # Start calculation by iterating over the items in the selected scheme
-    sel=self.setscheme_version.split("_")
-    @content[sel[0]][sel[1]].each_with_index do |s,index|
-      # Load Scheme
-      subscheme=Calcscheme.new
-      subscheme.load(s["scheme"], self.countrycode)
-      # Set Scheme
-      subscheme.set(s["type"], s["version"])
-      # Run Scheme
-      subscheme.run(inputs)
-      # Add Result to input
-      puts subscheme.result
-      inputs=inputs.merge(subscheme.result)
-      puts inputs
-      puts s
-    end
-  end
-  # TEST ONLY END
-  
-    # Go through schemes and identify input and output variables
-  # Put them in sequence to identify gaps and assumptions to be set if a variable is missing
-  # Output in a console format to allow Reading it on screen
   def meta_consistency(detail)
     # Switch console output on and off
     #temporary
@@ -271,7 +245,7 @@ class Calcscheme
     sel=self.setscheme_version.split("_")
     @content[sel[0]][sel[1]].each_with_index do |s,index|
       subscheme=Calcscheme.new
-      subscheme.load(s["scheme"], self.countrycode)
+      subscheme.load(self.countrycode, s["scheme"])
       # Set Scheme
       subscheme.set(s["type"], s["version"])
       input_sequence << (self.countrycode + "|" + s["scheme"] + "|" + s["type"] + "|" + s["version"])
@@ -316,8 +290,42 @@ class Calcscheme
     puts "List all Inputs from above, that are listed as assumptions"
   end
   
-  def meta_inputs_needed
-    # List array with must-inputs
+  def meta_inputs
+    # Requires metascheme to be loaded and version to be set.
+    # Check whether all is good to go on Model side
+    return "Error, not prepared. Run load and set first." if self.setscheme_version.nil? or self.state=="Error"
+    inputs={}
+    inputs["obligatory"]=[]
+    inputs["optional"]=[]
+    # Load the schemes in sequence of the metascheme
+    # Get their inputs and check whether they are covered by previous input or output
+    # If they are not covered, add the label to one of the two input categories: obligatory and optional
+    available_info=[] # This is an array that includes the available input (obligatory and results.)
+    sel=self.setscheme_version.split("_")
+    @content[sel[0]][sel[1]].each_with_index do |s,index|
+      # Load Scheme
+      subscheme=Calcscheme.new
+      subscheme.load(self.countrycode, s["scheme"])
+      # Set Scheme (needed for outputs)
+      subscheme.set(s["type"], s["version"])
+      # Get Input and check inclusion
+      subscheme.input.each do |i|
+        if i["obligatory"]=="yes"
+          # Check if the obligatory information is available, otherwise include it in the inputs requirements
+          inputs["obligatory"] << i["label"] unless i["label"].in?(available_info)
+          # Record that this information is available after the scheme
+          available_info << (i["label"]) unless i["label"].in?(available_info)
+        else
+          inputs["optional"] << i["label"] unless i["label"].in?(inputs["optional"])
+        end
+      end
+      # Now all Outputs of this schemetype are added to the available info:
+      subscheme.output.each do |o|
+        available_info.push(o)
+      end
+    end
+    # Return the joined inputs field with category.
+    return inputs
   end
   
   def meta_run(inputs)
@@ -329,18 +337,21 @@ class Calcscheme
     @content[sel[0]][sel[1]].each_with_index do |s,index|
       # Load Scheme
       subscheme=Calcscheme.new
-      subscheme.load(s["scheme"], self.countrycode)
+      subscheme.load(self.countrycode, s["scheme"])
       # Set Scheme
       subscheme.set(s["type"], s["version"])
       # Run Scheme
-      subscheme.run(inputs)
+      debug=""
+      check=subscheme.run(inputs,debug)
+      unless check=="OK" then
+        return check
+      end
       # Add Result to input
       #puts subscheme.result
-      inputs=inputs.merge(subscheme.result)
-      #puts inputs
-      #puts s
+      inputs=inputs.merge(subscheme.result) unless subscheme.result.nil?
     end
     @result=inputs
+    puts @result
     return "OK"
   end
   

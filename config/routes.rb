@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     # CalcSchemes
     match 'cs/(:countrycode)/listschemes', to: 'cs#listschemes', via: :get
     match 'cs/(:countrycode)/listmeta', to: 'cs#listmeta', via: :get
+    match 'cs/(:countrycode)/meta/(:metaschemetype)', to: 'cs#get_metaschemetype', via: :get
+    match 'cs/(:countrycode)/meta/(:metaschemetype)/(:metascheme)/(:version)', to: 'cs#get_metascheme', via: :get
+    match 'cs/(:countrycode)/meta/(:metaschemetype)/(:metascheme)/(:version)', to: 'cs#run_metascheme', via: :post
     match 'cs/(:countrycode)/(:schemetype)', to: 'cs#get_schemetype', via: :get
     match 'cs/(:countrycode)/(:schemetype)/(:scheme)/(:version)', to: 'cs#run_scheme', via: :post
     
