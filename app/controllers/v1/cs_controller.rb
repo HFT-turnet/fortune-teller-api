@@ -27,7 +27,7 @@ class V1::CsController < ApplicationController
     if check=="OK"
       # Do the work
       definition=Calcscheme.new
-      definition.load(params[:schemetype], params[:countrycode])
+      definition.load(params[:countrycode],params[:schemetype])
       render json: {:country => definition.country,
                     :title => definition.title,
                     :comment1 => definition.comment1, 
@@ -39,7 +39,7 @@ class V1::CsController < ApplicationController
   end
   
   def run_scheme
-    # Expects params. These include the scheme, the calculation and version (if existent)
+    # Expects params. These include the scheme, the calculation and version.
     # Also include post-payload for the required calculation
     
     # if param[:debug] is set, then instead of result the debuglog is parsed back.
@@ -53,7 +53,7 @@ class V1::CsController < ApplicationController
     
     # Initialize the definition
     definition=Calcscheme.new
-    definition.load(params[:schemetype], params[:countrycode])
+    definition.load(params[:countrycode], params[:schemetype])
     # Check all required scheme-level params are there
     check2=check_scheme(definition, params[:scheme], params[:version])
     puts definition
@@ -61,14 +61,20 @@ class V1::CsController < ApplicationController
       render json: check2
       return # or should we continue
     end
-    render json: "success"
     
-    # Check inputs for Scheme are there.
+    # Convert parameters to input
+    inputs={}
+    params[:c].each { |key,value| inputs[key]=value }
     
-    # Run Scheme
+    # Run Scheme, this automatically checks whether necessary inputs have been provided.
+    check3=definition.run(inputs)
+    unless check3=="OK"
+      render json: check3
+      return 
+    end
     
     # Feedback results, disclaimer and any error messages along the way
-    
+    render json: definition.result
   end
   
   def runmetascheme
@@ -96,7 +102,7 @@ class V1::CsController < ApplicationController
     elsif type.blank? then
       return "Please submit the 'scheme': /countrycode/type."
     else
-      return Calcscheme.new.load(type, countrycode)
+      return Calcscheme.new.load(countrycode, type)
     end
   end
   

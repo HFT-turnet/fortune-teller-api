@@ -26,7 +26,7 @@ class Calcscheme
     return schemelist  
   end
   
-  def load(type, countrycode)
+  def load(countrycode, type)
     filepath="jsonlib/" + countrycode + "_" + type + ".scheme.json"
     if File.exists?(filepath) then
       file = File.read(filepath)
@@ -166,6 +166,8 @@ class Calcscheme
     self.result.each do |r|
       self.result[r[0]]='%.2f' % r[1].round(2)
     end
+    self.result["disclaimer"]=@content[sel[0]]["Disclaimer"] unless @content[sel[0]]["Disclaimer"].nil?
+    self.result["source"]=@content[sel[0]]["Source"] unless @content[sel[0]]["Source"].nil?
     
     return "OK"
   end
@@ -194,7 +196,7 @@ class Calcscheme
   end
   
   # Load a metascheme
-  def meta_load(type, countrycode)
+  def meta_load(countrycode, type)
     filepath="jsonlib/" + countrycode + "_" + type + ".meta.json"
     if File.exists?(filepath) then
       file = File.read(filepath)
