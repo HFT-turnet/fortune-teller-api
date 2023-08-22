@@ -3,7 +3,7 @@ class V1::CsController < ApplicationController
   #controller.income
   
   def test
-    puts "Hallo"
+    puts "Hall"
   end
   
   def listschemes
