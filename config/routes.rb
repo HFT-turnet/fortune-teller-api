@@ -27,6 +27,9 @@ Rails.application.routes.draw do
     match 'cs/(:countrycode)/meta/(:metaschemetype)/(:metascheme)/(:version)', to: 'cs#run_metascheme', via: :post
     match 'cs/(:countrycode)/(:schemetype)', to: 'cs#get_schemetype', via: :get
     match 'cs/(:countrycode)/(:schemetype)/(:scheme)/(:version)', to: 'cs#run_scheme', via: :post
+	
+	# Temporary: CalcSchemes Admin
+	match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
     
     # Manage APIKeys
     #post '/persist/api-keys', to: 'api_keys#create'
