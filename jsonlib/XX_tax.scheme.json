@@ -12,11 +12,11 @@
       "obligatory": "no"
     },
     {
-      "label": "basevalue",
+      "label": "sonderausgaben",
       "obligatory": "no"
     },
     {
-      "label": "prepayment",
+      "label": "vorsorgeaufwendungen",
       "obligatory": "no"
     }
   ],
