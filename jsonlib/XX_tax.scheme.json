@@ -20,6 +20,10 @@
       "obligatory": "no"
     },
 	{
+	  "label": "zv_einkommen",
+	  "obligatory": "no"
+	},
+	{
 	  "label":"timeshare",
 	  "obligatory":"no"
 	}
