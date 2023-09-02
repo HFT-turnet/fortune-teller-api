@@ -132,8 +132,8 @@ class Calcscheme
 		when "additionIf"
 			# Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
 			if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
-            self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d + s["var"].to_d)
-            self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d + self.result[s["labelvar"]].to_d)
+            self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d
+            self.result[s["label"]] = self.result[s["label"]].to_d +  self.result[s["labelvar"]].to_d
 			end
         when "percent"
           # A percentage of the relevant part of the base value is added to the label category if the relevant part of the base amount is within the limits
@@ -146,7 +146,7 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + ( (s["to"].to_d-s["from"].to_d + 1) * s["var"].to_d )
           end
           if (self.result[s["base"]].to_d ) >= s["from"].to_d and (self.result[s["base"]].to_d ) <= s["to"].to_d then
-            self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d + 1) * s["var"].to_d )
+            self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * s["var"].to_d )
           end
         when "absolute"
           # An absolute value or a labelvalue is added to the label category if the relevant part of the base amount is within the limits
