@@ -50,10 +50,12 @@
 		"explain": "If sv_ost=1 then sv_alv will receive this value."
 	   },
 	   {
-		"type":"multiply",
-        "base":"sv_alv_west",
+		"type":"additionIf",
+        "base":"sv_west",
+		"from":"1",
+		"to":"1",
 		"label":"sv_alv",
-		"labelvar":"sv_west",
+		"labelvar":"sv_alv_west",
 		"explain": "If sv_west=1 then sv_alv will receive this value."
 	   }
   	],
