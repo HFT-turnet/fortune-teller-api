@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   # Rswag engine
   # out of date: mount Rswag::Ui::Engine => '/api-docs'
-  get "/documentation" => redirect("https://www.thoerni.de")
+  get "/documentation" => redirect("https://documenter.getpostman.com/view/2458761/2s9Y5cuLP2")
   namespace :v1 do
     # If this deviating route is in namespace, then
     get 'public/timeslice', to: 'public#get_timeslice', format: :json
