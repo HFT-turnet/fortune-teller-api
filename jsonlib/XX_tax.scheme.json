@@ -1,7 +1,7 @@
 {
   "country": "Deutschland",
-  "title": "Zu versteuerndes Einkommen",
-  "comment1": "zu versteuerndes Einkommen.",
+  "title": "ESt Schemata privat",
+  "comment1": "Berechnung zvE und Tarif",
   "input": [
     {
       "label": "bruttogehalt",
@@ -18,7 +18,11 @@
     {
       "label": "vorsorgeaufwendungen",
       "obligatory": "no"
-    }
+    },
+	{
+	  "label":"timeshare",
+	  "obligatory":"no"
+	}
   ],
   "EstZve": {
     "2022": [
@@ -89,71 +93,22 @@
         "label": "zv_einkommen",
         "var": "einkommen"
       }
-    ],
-    "2021": [
+  	],
+    "Disclaimer": "This is a development version scheme do not use.",
+    "Source": ".1"
+  },
+  "Est": {
+    "2022": [
       {
         "type": "addition",
         "base": "werbungskosten",
         "part": "-1",
         "label": "einkuenfte",
-        "var": "bruttogehalt"
-      },
-      {
-        "type": "addition",
-        "base": "betriebsausgaben",
-        "part": "-1",
-        "label": "gewinn",
-        "var": "einnahmen"
-      },
-      {
-        "type": "addition",
-        "base": "gewinn",
-        "label": "summe_der_einkuenfte",
-        "var": "einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "OPEN",
-        "label": "gesamtbetrag_der_einkuenfte",
-        "var": "summe_der_einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "sonderausgaben",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "gesamtbetrag_der_einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "vorsorgeaufwendungen",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "gesamtbetrag_der_einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "aussergew_belastungen",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "gesamtbetrag_der_einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "sonstige_betraege",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "gesamtbetrag_der_einkuenfte"
-      },
-      {
-        "type": "addition",
-        "base": "kinderfreibetrag",
-        "part": "-1",
-        "label": "zv_einkommen",
-        "var": "einkommen"
-      }
-    ],
+        "var": "bruttogehalt",
+		"explain": "Negative werbungskosten plus Einkünfte"
+	  }
+	],
     "Disclaimer": "This is a development version scheme do not use.",
-    "Source": ".1"
+    "Source": ".1e"
   }
 }
