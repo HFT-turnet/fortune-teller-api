@@ -41,10 +41,12 @@
 	 	"explain": "SV West-Berechnung"
 	  },
 	  {
-		"type":"multiply",
-        "base":"sv_alv_ost",
+		"type":"additionIf",
+        "base":"sv_ost",
+		"from": "1",
+		"to":"1",
 		"label":"sv_alv",
-		"labelvar":"sv_ost",
+		"labelvar":"sv_alv_ost",
 		"explain": "If sv_ost=1 then sv_alv will receive this value."
 	   },
 	   {
