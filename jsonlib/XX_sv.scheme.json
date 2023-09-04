@@ -31,7 +31,7 @@
 	  },
       {
         "type": "steppercent",
-        "base": "bruttogehalt",
+        "base": "bruttogehalt12",
         "from": "0",
 		"to":"85200",
         "label": "sv_alv_ost",
@@ -40,7 +40,7 @@
       },
 	  {
         "type": "steppercent",
-        "base": "bruttogehalt",
+        "base": "bruttogehalt12",
         "from": "0",
 		"to":"87600",
         "label": "sv_alv_west",
@@ -52,7 +52,7 @@
         "base":"sv_ost",
 		"from": "1",
 		"to":"1",
-		"label":"sv_alv",
+		"label":"sv_alv12",
 		"labelvar":"sv_alv_ost",
 		"explain": "If sv_ost=1 then sv_alv will receive this value."
 	   },
@@ -61,10 +61,17 @@
         "base":"sv_west",
 		"from":"1",
 		"to":"1",
-		"label":"sv_alv",
+		"label":"sv_alv12",
 		"labelvar":"sv_alv_west",
 		"explain": "If sv_west=1 then sv_alv will receive this value."
-	   }
+	   },
+	   {
+        "type": "multiply",
+        "base": "sv_alv12",
+        "label": "sv_alv",
+        "labelvar": "timeshare",
+	 	"explain": "Runterrechnung auf Timeshare-Quote."
+		}
   	],
     "Disclaimer": "This is a development version scheme do not use. Wenn Variablen sv_ost und sv_west nicht gesetzt wurden, stimmt sv_alv nicht.",
     "Source": ".1"
