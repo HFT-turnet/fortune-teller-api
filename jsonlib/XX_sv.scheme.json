@@ -68,6 +68,8 @@
 	   {
         "type": "multiply",
         "base": "sv_alv12",
+		"from":"0",
+		"to":"200000",
         "label": "sv_alv",
         "labelvar": "timeshare",
 	 	"explain": "Runterrechnung auf Timeshare-Quote."
