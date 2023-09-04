@@ -164,9 +164,9 @@ class Calcscheme
           # The base-value is divided by an absolute value or a labelvalue. No condition considered. If the labelvalue is 0, division is done by 1. The result is added to the label provided.
 		  divider=s["var"].to_d unless s["var"].to_d==0 # Absolute value given
 		  divider=self.result[s["labelvar"]].to_d unless self.result[s["labelvar"]].to_d==0 # Labelvalue given
-		  divider=1 if divider==0 # No impact = no division.
+		  divider=1 if divider.to_d==0 # No impact = no division.
           self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d / divider)
-		end
+		#end
       end
       @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') if xdebug=="x"
       #Helper to debug schemes
