@@ -34,7 +34,7 @@
         "base": "bruttogehalt12",
         "from": "0",
 		"to":"85200",
-        "label": "sv_alv_ost",
+        "label": "sv_alv_ost12",
         "var": "0.013",
 	 	"explain": "SV Ost-Berechnung"
       },
@@ -62,7 +62,7 @@
 		"from":"1",
 		"to":"1",
 		"label":"sv_alv12",
-		"labelvar":"sv_alv_west",
+		"labelvar":"sv_alv_west12",
 		"explain": "If sv_west=1 then sv_alv will receive this value."
 	   },
 	   {
