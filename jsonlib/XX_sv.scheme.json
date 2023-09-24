@@ -24,7 +24,7 @@
 	  "obligatory": "no"
 	}
   ],
-  "Alv": {
+  "ALV": {
     "2023": [
 	  {
         "type": "divide",
@@ -147,8 +147,5 @@
 		],
 	  "Disclaimer": "GKV Berechnung inklusive Krankentagegeld. Developmentversion, nicht für produktiven Einsatz.",
 	  "Source": ".1"
-	},
-  "PV": {
-
-  }
+	}
 }
