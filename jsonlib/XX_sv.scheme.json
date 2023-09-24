@@ -122,8 +122,8 @@
 			"base": "bruttogehalt12",
 			"from": "0",
 			"to":"59850",
-			"label": "sv_gkv_an_zusatzprozent",
-			"labelvar": "sv_gkv_an_zusatz12",
+			"label": "sv_gkv_an_zusatz12",
+			"labelvar": "sv_gkv_an_zusatzprozent",
 			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
 		  },
 		  {
