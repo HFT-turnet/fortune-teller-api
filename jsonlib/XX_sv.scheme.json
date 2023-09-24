@@ -7,6 +7,10 @@
       "label": "bruttogehalt",
       "obligatory": "yes"
     },
+	{
+		"label":"timeshare",
+		"obligatory":"no"
+	},
     {
       "label": "sv_west",
       "obligatory": "no"
@@ -16,8 +20,8 @@
       "obligatory": "no"
     },
 	{
-	  "label":"timeshare",
-	  "obligatory":"no"
+	  "label": "zusatzbeitrag",
+	  "obligatory": "no"
 	}
   ],
   "Alv": {
@@ -79,139 +83,72 @@
     "Source": ".1"
   },
   "GKV": {
-    "2022": [
-      {
-        "type": "steppercent",
-        "base": "werbungskosten",
-        "part": "-1",
-        "label": "sv_",
-        "var": "0.013",
-		"explain": "Negative werbun"
-	  }
-	],
-	"2021": [
-					{
-						"type":"steppercent",
-                        "base":"zv_einkommen",
-						"from":"9745",
-						"to":"14753",
-						"label":"y",
-						"var":"0.0001"
-					},
-					{
-						"type":"multiply",
-                        "base":"y",
-						"from":"0",
-						"to":"99999",
-						"label":"y1",
-						"var":"995.21"
-					},
-					{
-						"type":"absolute",
-                        "base":"y1",
-						"from":"0",
-						"to":"99999",
-						"label":"y1",
-						"var":"1400"
-					},
-					{
-						"type":"multiply",
-                        "base":"y1",
-						"from":"0",
-						"to":"99999",
-						"label":"est",
-						"labelvar":"y"
-					},
-					{
-						"type":"steppercent",
-                        "base":"zv_einkommen",
-						"from":"14754",
-						"to":"57918",
-						"label":"z",
-						"var":"0.0001"
-					},
-					{
-						"type":"multiply",
-                        "base":"z",
-						"from":"0",
-						"to":"99999",
-						"label":"z1",
-						"var":"208.85"
-					},
-					{
-						"type":"absolute",
-                        "base":"z1",
-						"from":"1",
-						"to":"99999",
-						"label":"z1",
-						"var":"2397"
-					},
-					{
-						"type":"multiply",
-                        "base":"z1",
-						"from":"0",
-						"to":"99999",
-						"label":"est",
-						"labelvar":"z"
-					},
-					{
-						"type":"absolute",
-                        "base":"zv_einkommen",
-						"from":"57919",
-						"to":"999999999",
-						"label":"est",
-						"var":"-15188.9386695326"	
-					},				
-					{
-						"type":"percent",
-                        "base":"zv_einkommen",
-						"from":"57919",
-						"to":"274612",
-						"label":"est",
-						"var":"0.42"
-					},
-					{
-						"type":"absolute",
-                        "base":"zv_einkommen",
-						"from":"57919",
-						"to":"274612",
-						"label":"est",
-						"var":"-9136.63"
-					},		
-					{
-						"type":"percent",
-                        "base":"zv_einkommen",
-						"from":"274613",
-						"to":"999999999",
-						"label":"est",
-						"var":"0.45"
-					},
-					{
-						"type":"absolute",
-                        "base":"zv_einkommen",
-						"from":"274613",
-						"to":"999999999",
-						"label":"est",
-						"var":"-17374.99"
-					},
-					{
-						"type":"absolute",
-                        "base":"zv_einkommen",
-						"from":"9745",
-						"to":"999999999",
-						"label":"est",
-						"var":"-0.48"
-					},
-					{
-						"type":"percent",
-                        "base":"est",
-						"from":"16957",
-						"to":"999999999",
-						"label":"soli",
-						"var":"0.055"
-					}
-	],
-    "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
-	"Source":"§32a ESTG http://www.gesetze-im-internet.de/estg/index.html SolZG1995 ebendort. 1.8.2021."
+	"2023": [
+		{
+		  "type": "divide",
+		  "base": "bruttogehalt",
+		  "label": "bruttogehalt12",
+		  "labelvar": "timeshare",
+		   "explain": "Hochrechnung auf 12 Monate."
+		},
+		{
+		  "type": "steppercent",
+		  "base": "bruttogehalt12",
+		  "from": "0",
+		  "to":"59850",
+		  "label": "sv_gkv_an_base12",
+		  "var": "0.073",
+		   "explain": "GKV Arbeitnehmer Regelsatz."
+		},
+		{
+			"type":"addition",
+			"base":"zusatzbeitrag",
+			"part":"0.5",
+			"label":"sv_gkv_an_zusatzprozent",
+			"labelvar":"zusatzbeitrag",
+			"explain": "Wenn ein Prozentwert als Zusatzbeitrag gemeldet wurde, wird dieser verwendet 50% wegen anteiliger Beteiligung AN und AG."
+		},
+		{
+		  "type":"additionIf",
+		  "base":"zusatzbeitrag",
+		  "from": "0.0001",
+		  "to":"1",
+		  "label":"sv_gkv_an_zusatzprozent",
+		  "var":"0.0085",
+		  "explain": "Hinzurechnung durchschnittlicher Zusatzbeitrag, wenn kein Zusatzbeitrag gemeldet."
+		 },
+		 {
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"59850",
+			"label": "sv_gkv_an_zusatzprozent",
+			"labelvar": "sv_gkv_an_zusatz12",
+			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
+		  },
+		  {
+			"type":"addition",
+			"base":"sv_gkv_an_base12",
+			"from":"1",
+			"to":"1",
+			"label":"sv_gkv_an12",
+			"labelvar":"sv_gkv_an_zusatz12",
+			"explain": "Add Baseamount and Zusatzbeitrag, 12 months basis."
+		   },
+		 {
+		  "type": "multiply",
+		  "base": "sv_gkv_an12",
+		  "from":"0",
+		  "to":"200000",
+		  "label": "sv_gkv_an",
+		  "labelvar": "timeshare",
+		   "explain": "Runterrechnung auf Timeshare-Quote."
+		  }
+		],
+	  "Disclaimer": "GKV Berechnung inklusive Krankentagegeld. Developmentversion, nicht für produktiven Einsatz.",
+	  "Source": ".1"
+	},
+  "PV": {
+
   }
 }

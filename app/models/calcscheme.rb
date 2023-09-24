@@ -129,12 +129,12 @@ class Calcscheme
         when "addition"
           # Two amounts are added, "-1" as part can revert the amount listed as "base". No limits apply.
           self.result[s["label"]] = self.result[s["var"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["var"]].nil?
-		when "additionIf"
-			# Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
-			if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
+		    when "additionIf"
+			    # Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
+			    if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
             self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d
             self.result[s["label"]] = self.result[s["label"]].to_d +  self.result[s["labelvar"]].to_d
-			end
+			    end
         when "percent"
           # A percentage of the relevant part of the base value is added to the label category if the relevant part of the base amount is within the limits
           if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
