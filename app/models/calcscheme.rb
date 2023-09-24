@@ -127,8 +127,13 @@ class Calcscheme
       s["part"]=1 if s["part"].blank?
       case s["type"]
         when "addition"
-          # Two amounts are added, "-1" as part can revert the amount listed as "base". No limits apply.
-          self.result[s["label"]] = self.result[s["var"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["var"]].nil?
+          # Two amounts are added, "-1" as part can revert the amount listed as "base". 
+          # label works cumulative to prior allocations of the label.
+          # Variant 1: var is given: label = variable + base * part
+          # Variant 2: labelvar is given: label = labelvar + base * part
+          # No limits apply.
+          self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless s["var"].nil?
+          self.result[s["label"]] = self.result[s["label"]].to_d + self.result[s["labelvar"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["labelvar"]].nil?
 		    when "additionIf"
 			    # Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
 			    if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
@@ -143,10 +148,12 @@ class Calcscheme
         when "steppercent"
           # A percentage of the limit range or the range between low limit and base value is added to the label category if the relevant part of the base amount is above or within the limits. NO consideration of the relevant part.
           if self.result[s["base"]].to_d > s["to"].to_d then
-            self.result[s["label"]] = self.result[s["label"]].to_d + ( (s["to"].to_d-s["from"].to_d + 1) * s["var"].to_d )
+            self.result[s["label"]] = self.result[s["label"]].to_d + ( (s["to"].to_d-s["from"].to_d + 1) * s["var"].to_d ) unless s["var"].to_d==0
+            self.result[s["label"]] = self.result[s["label"]].to_d + ( (s["to"].to_d-s["from"].to_d + 1) * self.result[s["labelvar"]].to_d ) unless self.result[s["labelvar"]].to_d==0
           end
           if (self.result[s["base"]].to_d ) >= s["from"].to_d and (self.result[s["base"]].to_d ) <= s["to"].to_d then
-            self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * s["var"].to_d )
+            self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * s["var"].to_d ) unless s["var"].to_d==0
+            self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * self.result[s["labelvar"]].to_d ) unless self.result[s["labelvar"]].to_d==0
           end
         when "absolute"
           # An absolute value or a labelvalue is added to the label category if the relevant part of the base amount is within the limits

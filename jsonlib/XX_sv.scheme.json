@@ -85,37 +85,37 @@
   "GKV": {
 	"2023": [
 		{
-		  "type": "divide",
-		  "base": "bruttogehalt",
-		  "label": "bruttogehalt12",
-		  "labelvar": "timeshare",
-		   "explain": "Hochrechnung auf 12 Monate."
+			"type": "divide",
+			"base": "bruttogehalt",
+			"label": "bruttogehalt12",
+			"labelvar": "timeshare",
+			"explain": "Hochrechnung auf 12 Monate."
 		},
 		{
-		  "type": "steppercent",
-		  "base": "bruttogehalt12",
-		  "from": "0",
-		  "to":"59850",
-		  "label": "sv_gkv_an_base12",
-		  "var": "0.073",
-		   "explain": "GKV Arbeitnehmer Regelsatz."
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"59850",
+			"label": "sv_gkv_an_base12",
+			"var": "0.073",
+			"explain": "GKV Arbeitnehmer Regelsatz."
 		},
 		{
 			"type":"addition",
 			"base":"zusatzbeitrag",
 			"part":"0.5",
 			"label":"sv_gkv_an_zusatzprozent",
-			"labelvar":"zusatzbeitrag",
+			"var":"0",
 			"explain": "Wenn ein Prozentwert als Zusatzbeitrag gemeldet wurde, wird dieser verwendet 50% wegen anteiliger Beteiligung AN und AG."
 		},
 		{
-		  "type":"additionIf",
-		  "base":"zusatzbeitrag",
-		  "from": "0",
-		  "to":"0",
-		  "label":"sv_gkv_an_zusatzprozent",
-		  "var":"0.0085",
-		  "explain": "Hinzurechnung durchschnittlicher Zusatzbeitrag, wenn kein Zusatzbeitrag gemeldet."
+		  	"type":"additionIf",
+		  	"base":"zusatzbeitrag",
+		  	"from": "0",
+		  	"to":"0",
+		  	"label":"sv_gkv_an_zusatzprozent",
+		  	"var":"0.0085",
+		  	"explain": "Hinzurechnung durchschnittlicher Zusatzbeitrag, wenn kein Zusatzbeitrag gemeldet."
 		 },
 		 {
 			"type": "steppercent",
@@ -123,26 +123,24 @@
 			"from": "0",
 			"to":"59850",
 			"label": "sv_gkv_an_zusatz12",
-			"labelvar": "sv_gkv_an_zusatzprozent",
+			"labelvar":"sv_gkv_an_zusatzprozent",
 			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
 		  },
 		  {
 			"type":"addition",
 			"base":"sv_gkv_an_base12",
-			"from":"1",
-			"to":"1",
 			"label":"sv_gkv_an12",
 			"labelvar":"sv_gkv_an_zusatz12",
 			"explain": "Add Baseamount and Zusatzbeitrag, 12 months basis."
-		   },
+		 },
 		 {
-		  "type": "multiply",
-		  "base": "sv_gkv_an12",
-		  "from":"0",
-		  "to":"200000",
-		  "label": "sv_gkv_an",
-		  "labelvar": "timeshare",
-		   "explain": "Runterrechnung auf Timeshare-Quote."
+		  	"type": "multiply",
+		  	"base": "sv_gkv_an12",
+		  	"from":"0",
+		  	"to":"200000",
+		  	"label": "sv_gkv_an",
+		  	"labelvar": "timeshare",
+		   	"explain": "Runterrechnung auf Timeshare-Quote."
 		  }
 		],
 	  "Disclaimer": "GKV Berechnung inklusive Krankentagegeld. Developmentversion, nicht für produktiven Einsatz.",
