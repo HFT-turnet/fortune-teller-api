@@ -22,6 +22,18 @@
 	{
 	  "label": "zusatzbeitrag",
 	  "obligatory": "no"
+	},
+	{
+		"label": "kinderlos",
+		"obligatory": "no"
+	},	
+	{
+	  "label": "kinderunter25",
+	  "obligatory": "no"
+	},
+	{
+	  "label": "pv_sachsen",
+	  "obligatory": "no"
 	}
   ],
   "ALV": {
@@ -82,6 +94,64 @@
     "Disclaimer": "This is a development version scheme do not use. Wenn Variablen sv_ost und sv_west nicht gesetzt wurden, stimmt sv_alv nicht.",
     "Source": ".1"
   },
+  "DRV": {
+    "2023": [
+	  {
+        "type": "divide",
+        "base": "bruttogehalt",
+        "label": "bruttogehalt12",
+        "labelvar": "timeshare",
+	 	"explain": "Hochrechnung auf 12 Monate."
+	  },
+      {
+        "type": "steppercent",
+        "base": "bruttogehalt12",
+        "from": "0",
+		"to":"85200",
+        "label": "sv_drv_ost12",
+        "var": "0.093",
+	 	"explain": "SV Ost-Berechnung"
+      },
+	  {
+        "type": "steppercent",
+        "base": "bruttogehalt12",
+        "from": "0",
+		"to":"87600",
+        "label": "sv_drv_west12",
+        "var": "0.093",
+	 	"explain": "SV West-Berechnung"
+	  },
+	  {
+		"type":"additionIf",
+        "base":"sv_ost",
+		"from": "1",
+		"to":"1",
+		"label":"sv_drv12",
+		"labelvar":"sv_drv_ost12",
+		"explain": "If sv_ost=1 then sv_drv will receive this value."
+	   },
+	   {
+		"type":"additionIf",
+        "base":"sv_west",
+		"from":"1",
+		"to":"1",
+		"label":"sv_drv12",
+		"labelvar":"sv_drv_west12",
+		"explain": "If sv_west=1 then sv_drv will receive this value."
+	   },
+	   {
+        "type": "multiply",
+        "base": "sv_drv12",
+		"from":"0",
+		"to":"200000",
+        "label": "sv_drv",
+        "labelvar": "timeshare",
+	 	"explain": "Runterrechnung auf Timeshare-Quote."
+		}
+  	],
+    "Disclaimer": "Nur zu Demozwecken. Berechnung allgemeine Rentenversicherung, nicht Knappschaft. Wenn Variablen sv_ost und sv_west nicht gesetzt wurden, stimmt sv_alv nicht.",
+    "Source": ".1"
+  },
   "GKV": {
 	"2023": [
 		{
@@ -136,5 +206,97 @@
 		],
 	  "Disclaimer": "GKV Berechnung inklusive Krankentagegeld. Developmentversion, nicht für produktiven Einsatz.",
 	  "Source": ".1"
-	}
+  },
+  "PV": {
+	"2023": [
+		{
+			"type": "divide",
+			"base": "bruttogehalt",
+			"label": "bruttogehalt12",
+			"labelvar": "timeshare",
+			"explain": "Hochrechnung auf 12 Monate."
+		},
+		{
+			"type": "absolute",
+			"base": "sv_pv_an_beitragsatz",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.017",
+			"explain": "Beitragssatz Basis AN mit Kindern (generell) (nicht Sachsen)."
+		},
+		{
+			"type": "additionIf",
+			"base": "kinderlos",
+			"from": "1",
+			"to": "1",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.006",
+			"explain": "Kinderlose zahlen 0,6% Zuschlag."
+		},
+		{
+			"type": "absolute",
+			"base": "kinderunter25",
+			"from": "1",
+			"to": "99",
+			"label": "kinderunter25",
+			"var": "-1",
+			"explain": "Erstes Kind bereits eingerechnet in Beitragssatz."
+		},
+		{
+			"type": "multiply",
+			"base": "kinderunter25",
+			"from":"1",
+			"to":"4",
+			"label": "sv_pv_abzugkinder",
+			"var": "-0.0025",
+			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
+		},
+		{
+			"type": "absolute",
+			"base": "kinderunter25",
+			"from":"5",
+			"to":"99",
+			"label": "sv_pv_abzugkinder",
+			"var": "-0.01",
+			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
+		},
+		{
+			"type": "absolute",
+			"base": "sv_pv_an_beitragsatz",
+			"from":"0",
+			"to":"1",
+			"label": "sv_pv_an_beitragsatz",
+			"labelvar": "sv_pv_abzugkinder",
+			"explain": "Ermittlung Beitragssatz"
+		},
+		{
+			"type": "absolute",
+			"base": "pv_sachsen",
+			"from":"1",
+			"to":"1",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.005",
+			"explain": "In Sachsen tragen AN einen halben Prozentpunkt mehr."
+		},
+		 {
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"59850",
+			"label": "sv_pv_an12",
+			"labelvar":"sv_pv_an_beitragsatz",
+			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
+		  },
+		 {
+		  	"type": "multiply",
+		  	"base": "sv_pv_an12",
+		  	"from":"0",
+		  	"to":"200000",
+		  	"label": "sv_pv_an",
+		  	"labelvar": "timeshare",
+		   	"explain": "Runterrechnung auf Timeshare-Quote."
+		  }
+		],
+	  "Disclaimer": "PV Berechnung Arbeitnehmer. Developmentversion, nicht für produktiven Einsatz.",
+	  "Source": ".1"
+  }
 }
