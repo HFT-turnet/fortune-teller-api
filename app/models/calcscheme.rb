@@ -126,6 +126,11 @@ class Calcscheme
     @content[sel[0]][sel[1]].each_with_index do |s,index|
       s["part"]=1 if s["part"].blank?
       case s["type"]
+        when "baseordefault"
+          # No limits considered. If the base value exists, it is taken over to the part defined. Else the var value / labelvar is taken.
+          self.result[s["label"]] = s["part"].to_d * self.result[s["base"]].to_d unless self.result[s["base"]].to_d==0
+          self.result[s["label"]] = s["var"].to_d if self.result[s["base"]].to_d==0 and self.result[s["labelvar"]].to_d==0
+          self.result[s["label"]] = self.result[s["labelvar"]].to_d if self.result[s["base"]].to_d==0 and s["var"].to_d==0
         when "addition"
           # Two amounts are added, "-1" as part can revert the amount listed as "base". 
           # label works cumulative to prior allocations of the label.

@@ -101,22 +101,13 @@
 			"explain": "GKV Arbeitnehmer Regelsatz."
 		},
 		{
-			"type":"addition",
+			"type":"baseordefault",
 			"base":"zusatzbeitrag",
 			"part":"0.5",
 			"label":"sv_gkv_an_zusatzprozent",
-			"var":"0",
-			"explain": "Wenn ein Prozentwert als Zusatzbeitrag gemeldet wurde, wird dieser verwendet 50% wegen anteiliger Beteiligung AN und AG."
+			"var":"0.0085",
+			"explain": "Wenn ein Prozentwert als Zusatzbeitrag gemeldet wurde, wird dieser verwendet 50% wegen anteiliger Beteiligung AN und AG. Sonst Durchschnittlihcer Zusatzbeitrag."
 		},
-		{
-		  	"type":"additionIf",
-		  	"base":"zusatzbeitrag",
-		  	"from": "0",
-		  	"to":"0",
-		  	"label":"sv_gkv_an_zusatzprozent",
-		  	"var":"0.0085",
-		  	"explain": "Hinzurechnung durchschnittlicher Zusatzbeitrag, wenn kein Zusatzbeitrag gemeldet."
-		 },
 		 {
 			"type": "steppercent",
 			"base": "bruttogehalt12",
