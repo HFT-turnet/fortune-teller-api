@@ -20,7 +20,7 @@
 			"label":"prepayment",
             "obligatory":"no"
 		}
-	],
+	], 
   "zve":
   	{	
 		"2021": [
@@ -29,54 +29,54 @@
                         "base":"werbungskosten",
 						"part":"-1",
 						"label":"einkuenfte",
-						"var":"bruttogehalt"
+						"labelvar":"bruttogehalt"
 					},
 					{
 						"type":"addition",
                         "base":"betriebsausgaben",
 						"part":"-1",
 						"label":"gewinn",
-						"var":"einnahmen"
+						"labelvar":"einnahmen"
 					},
 					{
 						"type":"addition",
                         "base":"gewinn",
 						"label":"summe_der_einkuenfte",
-						"var":"einkuenfte"
+						"labelvar":"einkuenfte"
 					},
 					{
 						"type":"addition",
                         "base":"OPEN",
 						"label":"gesamtbetrag_der_einkuenfte",
-						"var":"summe_der_einkuenfte"
+						"labelvar":"summe_der_einkuenfte"
 					},
 					{
 						"type":"addition",
 					    "base":"sonderausgaben",
 						"part":"-1",
 						"label":"einkommen",
-						"var":"gesamtbetrag_der_einkuenfte"
+						"labelvar":"gesamtbetrag_der_einkuenfte"
 					},
 					{
 						"type":"addition",
 					    "base":"vorsorgeaufwendungen",
 						"part":"-1",
 						"label":"einkommen",
-						"var":"gesamtbetrag_der_einkuenfte"
+						"labelvar":"gesamtbetrag_der_einkuenfte"
 					},
 					{
 						"type":"addition",
 					    "base":"aussergew_belastungen",
 						"part":"-1",
 						"label":"einkommen",
-						"var":"gesamtbetrag_der_einkuenfte"
+						"labelvar":"gesamtbetrag_der_einkuenfte"
 					},
 					{
 						"type":"addition",
 					    "base":"sonstige_betraege",
 						"part":"-1",
 						"label":"einkommen",
-						"var":"gesamtbetrag_der_einkuenfte"
+						"labelvar":"gesamtbetrag_der_einkuenfte"
 					}
 					,
 					{
@@ -84,7 +84,7 @@
 					    "base":"kinderfreibetrag",
 						"part":"-1",
 						"label":"zv_einkommen",
-						"var":"einkommen"
+						"labelvar":"einkommen"
 					}
 				],
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
