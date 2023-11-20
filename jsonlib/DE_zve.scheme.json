@@ -61,22 +61,19 @@
 						"type":"addition",
 					    "base":"vorsorgeaufwendungen",
 						"part":"-1",
-						"label":"einkommen",
-						"labelvar":"gesamtbetrag_der_einkuenfte"
+						"label":"einkommen"
 					},
 					{
 						"type":"addition",
 					    "base":"aussergew_belastungen",
 						"part":"-1",
-						"label":"einkommen",
-						"labelvar":"gesamtbetrag_der_einkuenfte"
+						"label":"einkommen"
 					},
 					{
 						"type":"addition",
 					    "base":"sonstige_betraege",
 						"part":"-1",
-						"label":"einkommen",
-						"labelvar":"gesamtbetrag_der_einkuenfte"
+						"label":"einkommen"
 					}
 					,
 					{
