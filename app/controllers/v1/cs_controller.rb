@@ -47,7 +47,7 @@ class V1::CsController < ApplicationController
     # Check all required file-level params are there
     check1=check_schemetype(params[:countrycode], params[:schemetype])
     unless check1=="OK"
-      jsoncheck="{'error': '#{check1}'}"
+      jsoncheck='{"error": "#{check1}"}'
       render json: jsoncheck
       return
     end
