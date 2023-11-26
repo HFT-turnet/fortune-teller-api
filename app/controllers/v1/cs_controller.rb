@@ -60,7 +60,7 @@ class V1::CsController < ApplicationController
     #puts definition
     unless check2=="OK"
       if check2.first(10)=="Corrected:"
-        jsonnotice='{"notice": "'+check2+'"}'
+        jsonnotice=check2
       else
         jsoncheck='{"error": "'+check2+'"}'
         render json: jsoncheck
@@ -86,9 +86,10 @@ class V1::CsController < ApplicationController
       return 
     end
     
-    jsonnotice='{"notice": ""}' if jsonnotice.blank?
+    # If there is a jsonnotice, add it to the result
+    definition.result[:notice]=jsonnotice if jsonnotice.present?
     # Feedback results, disclaimer and any error messages along the way
-    render json: definition.result.to_json + jsonnotice.to_json unless params[:debug]=="x"
+    render json: definition.result unless params[:debug]=="x"
     
     # Output Debugging information if debug is requested.
     render json: {
@@ -158,7 +159,7 @@ class V1::CsController < ApplicationController
     #puts definition
     unless check2=="OK"
       if check2.first(10)=="Corrected:"
-        jsonnotice='{"notice": "'+check2+'"}'
+        jsonnotice=check2
       else
         jsoncheck='{"error": "'+check2+'"}'
         render json: jsoncheck
@@ -182,13 +183,11 @@ class V1::CsController < ApplicationController
       render json: jsoncheck
       return 
     end
-    
-    jsonnotice='{"notice": ""}' if jsonnotice.blank?
-    # Feedback results, disclaimer and any error messages along the way
-    render json: definition.result.to_json + jsonnotice.to_json
 
     # Feedback results, disclaimer and any error messages along the way
-    #render json: definition.result
+    # If there is a jsonnotice, add it to the result
+    definition.result[:notice]=jsonnotice if jsonnotice.present?
+    render json: definition.result
   end
   
   private
