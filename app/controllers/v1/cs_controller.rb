@@ -59,9 +59,13 @@ class V1::CsController < ApplicationController
     check2=check_scheme(definition, params[:scheme], params[:version])
     #puts definition
     unless check2=="OK"
-      jsoncheck='{"error": "'+check2+'"}'
-      render json: jsoncheck
-      return # or should we continue
+      if check2.first(10)=="Corrected:"
+        jsonnotice='{"notice": "'+check2+'"}'
+      else
+        jsoncheck='{"error": "'+check2+'"}'
+        render json: jsoncheck
+        return
+      end
     end
     
     # Convert parameters to input
@@ -82,8 +86,9 @@ class V1::CsController < ApplicationController
       return 
     end
     
+    jsonnotice='{"notice": ""}' if jsonnotice.blank?
     # Feedback results, disclaimer and any error messages along the way
-    render json: definition.result unless params[:debug]=="x"
+    render json: definition.result.to_json + jsonnotice.to_json unless params[:debug]=="x"
     
     # Output Debugging information if debug is requested.
     render json: {
