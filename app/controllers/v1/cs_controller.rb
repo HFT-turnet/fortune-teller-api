@@ -59,14 +59,17 @@ class V1::CsController < ApplicationController
     check2=check_scheme(definition, params[:scheme], params[:version])
     #puts definition
     unless check2=="OK"
-      render json: check2
+      jsoncheck='{"error": "'+check2+'"}'
+      render json: jsoncheck
       return # or should we continue
     end
     
     # Convert parameters to input
     inputs={}
     if params[:c].blank?
-      render json: "Input parameters must be provided as json payload." 
+      #render json: "Input parameters must be provided as json payload." 
+      jsoncheck='{"error": "Input parameters must be provided as json payload."}'
+      render json: jsoncheck
       return
     end
     params[:c].each { |key,value| inputs[key]=value }
@@ -74,7 +77,8 @@ class V1::CsController < ApplicationController
     # Run Scheme, this automatically checks whether necessary inputs have been provided.
     check3=definition.run(inputs, params[:debug])
     unless check3=="OK"
-      render json: check3
+      jsoncheck='{"error": "'+check3+'"}'
+      render json: jsoncheck
       return 
     end
     
@@ -136,7 +140,8 @@ class V1::CsController < ApplicationController
     # Check all required file-level params are there
     check1=check_metaschemetype(params[:countrycode], params[:metaschemetype])
     unless check1=="OK"
-      render json: check1
+      jsoncheck='{"error": "'+check1+'"}'
+      render json: jsoncheck
       return
     end
     
@@ -147,14 +152,16 @@ class V1::CsController < ApplicationController
     check2=check_scheme(definition, params[:metascheme], params[:version])
     #puts definition
     unless check2=="OK"
-      render json: check2
+      jsoncheck='{"error": "'+check2+'"}'
+      render json: jsoncheck
       return # or should we continue
     end
     
     # Convert parameters to input
     inputs={}
     if params[:c].blank?
-      render json: "Input parameters must be provided as json payload." 
+      jsoncheck='{"error": "Input parameters must be provided as json payload."}'
+      render json: jsoncheck
       return
     end
     params[:c].each { |key,value| inputs[key]=value }
@@ -162,7 +169,8 @@ class V1::CsController < ApplicationController
     # Run Scheme, this automatically checks whether necessary inputs have been provided.
     check3=definition.meta_run(inputs)
     unless check3=="OK"
-      render json: check3
+      jsoncheck='{"error": "'+check3+'"}'
+      render json: jsoncheck
       return 
     end
     
