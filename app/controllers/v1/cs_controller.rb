@@ -88,7 +88,7 @@ class V1::CsController < ApplicationController
     
     jsonnotice='{"notice": ""}' if jsonnotice.blank?
     # Feedback results, disclaimer and any error messages along the way
-    render json: definition.result.to_json + jsonnotice.to_json unless params[:debug]=="x"
+    render json: definition.result + jsonnotice unless params[:debug]=="x"
     
     # Output Debugging information if debug is requested.
     render json: {
