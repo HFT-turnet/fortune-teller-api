@@ -1,6 +1,6 @@
 {
   "country":"Deutschland",
-  "title":"Zu versteuerndes Einkommen",
+  "title":"Einkuenfte",
   "comment1": "zu versteuerndes Einkommen.",
   "input":
   	[	
@@ -13,9 +13,75 @@
             "obligatory":"no"
 		}
 	], 
-  "zve":
+  "summe_einkuenfte":
   	{	
-		"2021": [
+		"2023": [
+					{
+						"type":"addition",
+                        "base":"werbungskosten",
+						"part":"-1",
+						"label":"einkuenfte",
+						"labelvar":"bruttogehalt"
+					},
+					{
+						"type":"addition",
+                        "base":"betriebsausgaben",
+						"part":"-1",
+						"label":"gewinn",
+						"labelvar":"einnahmen"
+					},
+					{
+						"type":"addition",
+                        "base":"gewinn",
+						"label":"summe_der_einkuenfte",
+						"labelvar":"einkuenfte"
+					},
+					{
+						"type":"addition",
+                        "base":"OPEN",
+						"label":"gesamtbetrag_der_einkuenfte",
+						"labelvar":"summe_der_einkuenfte"
+					},
+					{
+						"type":"addition",
+					    "base":"sonderausgaben",
+						"part":"-1",
+						"label":"einkommen",
+						"labelvar":"gesamtbetrag_der_einkuenfte"
+					},
+					{
+						"type":"addition",
+					    "base":"vorsorgeaufwendungen",
+						"part":"-1",
+						"label":"einkommen"
+					},
+					{
+						"type":"addition",
+					    "base":"aussergew_belastungen",
+						"part":"-1",
+						"label":"einkommen"
+					},
+					{
+						"type":"addition",
+					    "base":"sonstige_betraege",
+						"part":"-1",
+						"label":"einkommen"
+					}
+					,
+					{
+						"type":"addition",
+					    "base":"kinderfreibetrag",
+						"part":"-1",
+						"label":"zv_einkommen",
+						"labelvar":"einkommen"
+					}
+				],
+		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
+        "Source":"."
+	}
+"gesamtbetrag_einkuenfte":
+  	{	
+		"2023": [
 					{
 						"type":"addition",
                         "base":"werbungskosten",

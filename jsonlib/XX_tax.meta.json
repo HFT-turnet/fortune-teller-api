@@ -1,0 +1,52 @@
+{
+  "country":"Deutschland",
+  "title":"Hauptberechnung Einkommensteuer",
+  "comment1": "Only suited for simple tax cases. No guarantee for correctness. Use at your own risk.",
+  "income":
+  	{	
+		"2023": [
+					{
+						"scheme":"einkuenfte",
+                        "type":"summe_einkuenfte",
+						"version":"2023"		
+					},
+					{
+						"scheme":"einkuenfte",
+                        "type":"gesamtbetrag_einkuenfte",
+						"version":"2023"		
+					},
+					{
+						"scheme":"sonderausgaben",
+                        "type":"sa_vorsorgeaufwendungen",
+						"version":"2023"		
+					},
+					{
+						"scheme":"sonderausgaben",
+                        "type":"sa_sonstige",
+						"version":"2023"	
+					},
+					{
+						"scheme":"zve",
+                        "type":"einkommen",
+						"version":"2023"		
+					},
+					{
+						"scheme":"zve",
+                        "type":"zve",
+						"version":"2023"		
+					},
+					{
+						"scheme":"tax",
+                        "type":"est_tarif",
+						"version":"2023"
+					},
+					{
+						"scheme":"tax",
+						"type":"festsetzung",
+						"version":"2023"
+					}
+				],
+		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
+        "Source":"ESTG http://www.gesetze-im-internet.de/estg/index.html"
+	}
+}
