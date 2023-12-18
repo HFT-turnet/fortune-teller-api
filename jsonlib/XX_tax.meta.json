@@ -7,22 +7,22 @@
 		"2023": [
 					{
 						"scheme":"einkuenfte",
-                        "type":"summe_einkuenfte",
+                        "type":"summeEinkuenfte",
 						"version":"2023"		
 					},
 					{
 						"scheme":"einkuenfte",
-                        "type":"gesamtbetrag_einkuenfte",
+                        "type":"gesamtbetragEinkuenfte",
 						"version":"2023"		
 					},
 					{
 						"scheme":"sonderausgaben",
-                        "type":"sa_vorsorgeaufwendungen",
+                        "type":"saVorsorgeaufwendungen",
 						"version":"2023"		
 					},
 					{
 						"scheme":"sonderausgaben",
-                        "type":"sa_sonstige",
+                        "type":"saSonstige",
 						"version":"2023"	
 					},
 					{
@@ -37,7 +37,7 @@
 					},
 					{
 						"scheme":"tax",
-                        "type":"est_tarif",
+                        "type":"estTarif",
 						"version":"2023"
 					},
 					{

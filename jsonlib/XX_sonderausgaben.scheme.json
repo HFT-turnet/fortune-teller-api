@@ -13,7 +13,7 @@
             "obligatory":"no"
 		}
 	], 
-  	"summeEinkuenfte":
+  	"saVorsorgeaufwendungen":
   	{	
 		"2023": [
 					{
@@ -34,7 +34,7 @@
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
         "Source":"."
 	},
-	"gesamtbetragEinkuenfte":
+	"saSonstige":
   	{	
 		"2023": [
 					{

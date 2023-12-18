@@ -67,7 +67,7 @@ class V1::CsController < ApplicationController
         return
       end
     end
-    
+
     # Convert parameters to input
     inputs={}
     if params[:c].blank?
@@ -85,7 +85,7 @@ class V1::CsController < ApplicationController
       render json: jsoncheck
       return 
     end
-    
+
     # If there is a jsonnotice, add it to the result
     definition.result[:notice]=jsonnotice if jsonnotice.present?
     # Feedback results, disclaimer and any error messages along the way

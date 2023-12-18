@@ -101,7 +101,7 @@
     "Disclaimer": "This is a development version scheme do not use.",
     "Source": ".1"
   },
-  "Est": {
+  "estTarif": {
     "2022": [
       {
         "type": "addition",
@@ -236,5 +236,26 @@
 	],
     "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
 	"Source":"§32a ESTG http://www.gesetze-im-internet.de/estg/index.html SolZG1995 ebendort. 1.8.2021."
+  },
+  "festsetzung":
+	{	
+	  "2023": [
+				  {
+					  "type":"addition",
+					  "base":"werbungskosten",
+					  "part":"-1",
+					  "label":"einkuenfte",
+					  "labelvar":"bruttogehalt"
+				  },
+				  {
+					  "type":"addition",
+					  "base":"betriebsausgaben",
+					  "part":"-1",
+					  "label":"gewinn",
+					  "labelvar":"einnahmen"
+				  }
+			  ],
+	  "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
+	  "Source":"."
   }
 }

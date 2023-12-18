@@ -13,7 +13,7 @@
             "obligatory":"no"
 		}
 	], 
-  	"summeEinkuenfte":
+  	"einkommen":
   	{	
 		"2023": [
 					{
@@ -34,7 +34,7 @@
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
         "Source":"."
 	},
-	"gesamtbetragEinkuenfte":
+	"zve":
   	{	
 		"2023": [
 					{
