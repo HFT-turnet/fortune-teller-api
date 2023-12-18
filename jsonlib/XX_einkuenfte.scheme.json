@@ -11,6 +11,14 @@
         {
 			"label":"werbungskosten",
             "obligatory":"no"
+		},
+        {
+			"label":"einkuenfte",
+            "obligatory":"no"
+		},
+        {
+			"label":"einnahmen",
+            "obligatory":"no"
 		}
 	], 
   	"summeEinkuenfte":
