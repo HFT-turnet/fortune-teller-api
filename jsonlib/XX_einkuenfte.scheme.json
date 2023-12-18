@@ -40,15 +40,7 @@
 					{
 						"type":"addition",
                         "base":"einkuenfte",
-						"part":"-1",
 						"label":"gesamtbetrag_einkuenfte",
-						"labelvar":"einnahmen"
-					},
-					{
-						"type":"addition",
-                        "base":"betriebsausgaben",
-						"part":"-1",
-						"label":"gewinn",
 						"labelvar":"einnahmen"
 					}
 				],
