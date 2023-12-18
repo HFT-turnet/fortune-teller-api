@@ -28,90 +28,7 @@
 	  "obligatory":"no"
 	}
   ],
-  "EstZve": {
-    "2022": [
-      {
-        "type": "addition",
-        "base": "werbungskosten",
-        "part": "-1",
-        "label": "einkuenfte",
-        "var": "bruttogehalt",
-		"explain": "Negative werbungskosten plus Einkünfte"
-      },
-      {
-        "type": "addition",
-        "base": "betriebsausgaben",
-        "part": "-1",
-        "label": "gewinn",
-        "var": "einnahmen",
-		"explain": "Negative Betriebsausgaben plus Einnahmen"
-      },
-      {
-        "type": "addition",
-        "base": "gewinn",
-        "label": "summe_der_einkuenfte",
-        "var": "einkuenfte",
-		"explain": "Gewinn plus Einkünfte"
-      },
-      {
-        "type": "addition",
-        "base": "OPEN",
-        "label": "gesamtbetrag_der_einkuenfte",
-        "var": "summe_der_einkuenfte",
-		"explain": "ungenutzt: gesamtbetrag = summe"
-      },
-      {
-        "type": "addition",
-        "base": "sonderausgaben",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "gesamtbetrag_der_einkuenfte",
-		"explain": "Abzug Sonderausgaben"
-      },
-      {
-        "type": "addition",
-        "base": "vorsorgeaufwendungen",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "einkommen",
-		"explain": "Abzug Vorsorgeaufwand"
-      },
-      {
-        "type": "addition",
-        "base": "aussergew_belastungen",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "einkommen"
-      },
-      {
-        "type": "addition",
-        "base": "sonstige_betraege",
-        "part": "-1",
-        "label": "einkommen",
-        "var": "einkommen"
-      },
-      {
-        "type": "addition",
-        "base": "kinderfreibetrag",
-        "part": "-1",
-        "label": "zv_einkommen",
-        "var": "einkommen"
-      }
-  	],
-    "Disclaimer": "This is a development version scheme do not use.",
-    "Source": ".1"
-  },
   "estTarif": {
-    "2022": [
-      {
-        "type": "addition",
-        "base": "werbungskosten",
-        "part": "-1",
-        "label": "einkuenfte",
-        "var": "bruttogehalt",
-		"explain": "Negative werbungskosten plus Einkünfte"
-	  }
-	],
 	"2021": [
 					{
 						"type":"steppercent",
@@ -252,6 +169,13 @@
 					  "base":"betriebsausgaben",
 					  "part":"-1",
 					  "label":"gewinn",
+					  "labelvar":"einnahmen"
+				  },
+				  {
+					  "type":"addition",
+					  "base":"betriebsausgaben",
+					  "part":"-1",
+					  "label":"est_per",
 					  "labelvar":"einnahmen"
 				  }
 			  ],

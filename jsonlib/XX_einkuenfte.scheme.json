@@ -39,10 +39,10 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
+                        "base":"einkuenfte",
 						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
+						"label":"gesamtbetrag_einkuenfte",
+						"labelvar":"einnahmen"
 					},
 					{
 						"type":"addition",
