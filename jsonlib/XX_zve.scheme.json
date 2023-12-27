@@ -1,15 +1,27 @@
 {
   "country":"Deutschland",
-  "title":"Einkuenfte",
-  "comment1": "zu versteuerndes Einkommen.",
+  "title":"Zu versteuerndes Einkommen",
+  "comment1": "Ermittlung des zu versteuernden Einkommens.",
   "input":
   	[	
     	{
-			"label":"bruttogehalt",
+			"label":"einkommen",
             "obligatory":"yes"
 		},
         {
-			"label":"werbungskosten",
+			"label":"außergew_belastungen",
+            "obligatory":"no"
+		},
+		{
+			"label":"zuzurechnendes_einkommen",
+            "obligatory":"no"
+		},
+		{
+			"label":"kinderfreibetraege",
+            "obligatory":"no"
+		},
+		{
+			"label":"haerteausgleich",
             "obligatory":"no"
 		}
 	], 
@@ -18,20 +30,19 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
+                        "base":"außergew_belastungen",
 						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
+						"label":"einkommen",
+						"labelvar":"none"
 					},
 					{
 						"type":"addition",
-                        "base":"betriebsausgaben",
-						"part":"-1",
-						"label":"gewinn",
-						"labelvar":"einnahmen"
+                        "base":"zuzurechnendes_einkommen",
+						"label":"einkommen",
+						"labelvar":"none"
 					}
 				],
-		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
+		"Disclaimer":"Test: Grobe Berechnung.",
         "Source":"."
 	},
 	"zve":
@@ -39,17 +50,17 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
+                        "base":"kinderfreibetraege",
 						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
+						"label":"zv_einkommen",
+						"labelvar":"einkommen"
 					},
 					{
 						"type":"addition",
-                        "base":"betriebsausgaben",
+                        "base":"haerteausgleich",
 						"part":"-1",
-						"label":"gewinn",
-						"labelvar":"einnahmen"
+						"label":"zv_einkommen",
+						"labelvar":"none"
 					}
 				],
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",

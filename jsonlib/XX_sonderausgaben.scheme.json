@@ -1,15 +1,27 @@
 {
   "country":"Deutschland",
-  "title":"Einkuenfte",
-  "comment1": "zu versteuerndes Einkommen.",
+  "title":"Sonderausgaben",
+  "comment1": "Work through differnt kinds and update the cumulative Value: Einkommen",
   "input":
   	[	
     	{
-			"label":"bruttogehalt",
+			"label":"gesamtbetrag_einkuenfte",
             "obligatory":"yes"
 		},
+		{
+			"label":"einkommen",
+            "obligatory":"no"
+		},
         {
-			"label":"werbungskosten",
+			"label":"sv_rente_pflicht",
+            "obligatory":"no"
+		},
+        {
+			"label":"sv_rente_freiwillig",
+            "obligatory":"no"
+		},
+        {
+			"label":"sa_sonstige",
             "obligatory":"no"
 		}
 	], 
@@ -18,20 +30,19 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
-						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
+                        "base":"sv_rente_pflicht",
+						"label":"sv_rente_abziehbar",
+						"labelvar":"sv_rente_freiwillig"
 					},
 					{
 						"type":"addition",
-                        "base":"betriebsausgaben",
+                        "base":"sv_rente_abziehbar",
 						"part":"-1",
-						"label":"gewinn",
-						"labelvar":"einnahmen"
+						"label":"einkommen",
+						"labelvar":"gesamtbetrag_einkuenfte"
 					}
 				],
-		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
+		"Disclaimer":"Testmodus. Inherent assumption: 100% of max value can be deducted.",
         "Source":"."
 	},
 	"saSonstige":
@@ -39,20 +50,19 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
-						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
+                        "base":"sa_sonstige",
+						"label":"sa_abziehbar",
+						"labelvar":"sv_rente_freiwillig"
 					},
 					{
 						"type":"addition",
-                        "base":"betriebsausgaben",
+                        "base":"sa_abziehbar",
 						"part":"-1",
-						"label":"gewinn",
-						"labelvar":"einnahmen"
+						"label":"einkommen",
+						"labelvar":"nolabel"
 					}
 				],
-		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
+		"Disclaimer":"Testmodus, many types of expenses are not considered.",
         "Source":"."
 	}
 }

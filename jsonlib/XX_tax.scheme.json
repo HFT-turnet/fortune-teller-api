@@ -1,31 +1,19 @@
 {
   "country": "Deutschland",
-  "title": "ESt Schemata privat",
-  "comment1": "Berechnung zvE und Tarif",
+  "title": "Tax Calculation",
+  "comment1": "Berechnung Tarif und verbleibende Zahllast.",
   "input": [
-    {
-      "label": "bruttogehalt",
-      "obligatory": "no"
-    },
-    {
-      "label": "werbungskosten",
-      "obligatory": "no"
-    },
-    {
-      "label": "sonderausgaben",
-      "obligatory": "no"
-    },
-    {
-      "label": "vorsorgeaufwendungen",
-      "obligatory": "no"
-    },
 	{
 	  "label": "zv_einkommen",
 	  "obligatory": "no"
 	},
 	{
-	  "label":"timeshare",
+	  "label":"tarifliche_est",
 	  "obligatory":"no"
+	},
+	{
+		"label":"haushaltsnaheDL",
+		"obligatory":"no"
 	}
   ],
   "estTarif": {
@@ -59,7 +47,7 @@
                         "base":"y1",
 						"from":"0",
 						"to":"99999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"labelvar":"y"
 					},
 					{
@@ -91,7 +79,7 @@
                         "base":"z1",
 						"from":"0",
 						"to":"99999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"labelvar":"z"
 					},
 					{
@@ -99,7 +87,7 @@
                         "base":"zv_einkommen",
 						"from":"57919",
 						"to":"999999999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"-15188.9386695326"	
 					},				
 					{
@@ -107,7 +95,7 @@
                         "base":"zv_einkommen",
 						"from":"57919",
 						"to":"274612",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"0.42"
 					},
 					{
@@ -115,7 +103,7 @@
                         "base":"zv_einkommen",
 						"from":"57919",
 						"to":"274612",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"-9136.63"
 					},		
 					{
@@ -123,7 +111,7 @@
                         "base":"zv_einkommen",
 						"from":"274613",
 						"to":"999999999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"0.45"
 					},
 					{
@@ -131,7 +119,7 @@
                         "base":"zv_einkommen",
 						"from":"274613",
 						"to":"999999999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"-17374.99"
 					},
 					{
@@ -139,12 +127,12 @@
                         "base":"zv_einkommen",
 						"from":"9745",
 						"to":"999999999",
-						"label":"est",
+						"label":"tarifliche_est",
 						"var":"-0.48"
 					},
 					{
 						"type":"percent",
-                        "base":"est",
+                        "base":"tarifliche_est",
 						"from":"16957",
 						"to":"999999999",
 						"label":"soli",
@@ -158,25 +146,18 @@
 	{	
 	  "2023": [
 				  {
+					  "comment":"temporary fix. It should ",
 					  "type":"addition",
-					  "base":"werbungskosten",
-					  "part":"-1",
-					  "label":"einkuenfte",
-					  "labelvar":"bruttogehalt"
+					  "base":"haushaltsnaheDL",
+					  "label":"est_abzuege",
+					  "labelvar":"none"
 				  },
 				  {
 					  "type":"addition",
-					  "base":"betriebsausgaben",
+					  "base":"est_abzuege",
 					  "part":"-1",
-					  "label":"gewinn",
-					  "labelvar":"einnahmen"
-				  },
-				  {
-					  "type":"addition",
-					  "base":"betriebsausgaben",
-					  "part":"-1",
-					  "label":"est_per",
-					  "labelvar":"einnahmen"
+					  "label":"est",
+					  "labelvar":"tarifliche_est"
 				  }
 			  ],
 	  "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",

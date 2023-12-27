@@ -139,6 +139,8 @@ class Calcscheme
           # No limits apply.
           self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless s["var"].nil?
           self.result[s["label"]] = self.result[s["label"]].to_d + self.result[s["labelvar"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["labelvar"]].nil?
+          # If both vartypes have not been defined, consider them zero
+          self.result[s["label"]] = self.result[s["label"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) if s["var"].nil? and self.result[s["labelvar"]].nil?
 		    when "additionIf"
 			    # Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
 			    if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
