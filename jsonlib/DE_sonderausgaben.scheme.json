@@ -21,6 +21,10 @@
             "obligatory":"no"
 		},
         {
+			"label":"sa_spenden",
+            "obligatory":"no"
+		},
+        {
 			"label":"sa_sonstige",
             "obligatory":"no"
 		}
@@ -69,10 +73,17 @@
   	{	
 		"2023": [
 					{
-						"type":"addition",
-                        "base":"sa_sonstige",
+						"type":"percent",
+						"base":"gesamtbetrag_einkuenfte",
+						"label":"sa_spenden_obergrenze",
+						"var":"0.2"
+					},
+					{
+						"text":"Spenden 10b mit Obergrenze",
+						"type":"minof",
+                        "base":"sa_spenden",
 						"label":"sa_abziehbar",
-						"labelvar":"sv_rente_freiwillig"
+						"labelvar":"sa_spenden_obergrenze"
 					},
 					{
 						"type":"addition",
