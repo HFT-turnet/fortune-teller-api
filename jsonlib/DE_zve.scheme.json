@@ -1,79 +1,66 @@
 {
   "country":"Deutschland",
   "title":"Zu versteuerndes Einkommen",
-  "comment1": "zu versteuerndes Einkommen.",
+  "comment1": "Ermittlung des zu versteuernden Einkommens.",
   "input":
   	[	
     	{
-			"label":"bruttogehalt",
+			"label":"einkommen",
             "obligatory":"yes"
 		},
         {
-			"label":"werbungskosten",
+			"label":"außergew_belastungen",
+            "obligatory":"no"
+		},
+		{
+			"label":"zuzurechnendes_einkommen",
+            "obligatory":"no"
+		},
+		{
+			"label":"kinderfreibetraege",
+            "obligatory":"no"
+		},
+		{
+			"label":"haerteausgleich",
             "obligatory":"no"
 		}
 	], 
-  "zve":
+  	"einkommen":
   	{	
-		"2021": [
+		"2023": [
 					{
 						"type":"addition",
-                        "base":"werbungskosten",
-						"part":"-1",
-						"label":"einkuenfte",
-						"labelvar":"bruttogehalt"
-					},
-					{
-						"type":"addition",
-                        "base":"betriebsausgaben",
-						"part":"-1",
-						"label":"gewinn",
-						"labelvar":"einnahmen"
-					},
-					{
-						"type":"addition",
-                        "base":"gewinn",
-						"label":"summe_der_einkuenfte",
-						"labelvar":"einkuenfte"
-					},
-					{
-						"type":"addition",
-                        "base":"OPEN",
-						"label":"gesamtbetrag_der_einkuenfte",
-						"labelvar":"summe_der_einkuenfte"
-					},
-					{
-						"type":"addition",
-					    "base":"sonderausgaben",
+                        "base":"außergew_belastungen",
 						"part":"-1",
 						"label":"einkommen",
-						"labelvar":"gesamtbetrag_der_einkuenfte"
+						"labelvar":"none"
 					},
 					{
 						"type":"addition",
-					    "base":"vorsorgeaufwendungen",
-						"part":"-1",
-						"label":"einkommen"
-					},
-					{
-						"type":"addition",
-					    "base":"aussergew_belastungen",
-						"part":"-1",
-						"label":"einkommen"
-					},
-					{
-						"type":"addition",
-					    "base":"sonstige_betraege",
-						"part":"-1",
-						"label":"einkommen"
+                        "base":"zuzurechnendes_einkommen",
+						"label":"einkommen",
+						"labelvar":"none"
 					}
-					,
+				],
+		"Disclaimer":"Test: Grobe Berechnung.",
+        "Source":"."
+	},
+	"zve":
+  	{	
+		"2023": [
 					{
 						"type":"addition",
-					    "base":"kinderfreibetrag",
+                        "base":"kinderfreibetraege",
 						"part":"-1",
 						"label":"zv_einkommen",
 						"labelvar":"einkommen"
+					},
+					{
+						"type":"addition",
+                        "base":"haerteausgleich",
+						"part":"-1",
+						"label":"zv_einkommen",
+						"labelvar":"none"
 					}
 				],
 		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",

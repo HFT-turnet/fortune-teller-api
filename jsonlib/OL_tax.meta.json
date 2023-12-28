@@ -1,0 +1,22 @@
+{
+  "country":"Deutschland",
+  "title":"Several Tax schemes",
+  "comment1": "Lists schemes to be run and defines assumptions, if values not provided",
+  "income":
+  	{	
+		"2021": [
+					{
+						"scheme":"zve",
+                        "type":"zve",
+						"version":"2021"		
+					},
+					{
+						"scheme":"tax",
+                        "type":"income",
+						"version":"2021"
+					}
+				],
+		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
+        "Source":"§32a ESTG http://www.gesetze-im-internet.de/estg/index.html SolZG1995 ebendort. 1.8.2021. "
+	}
+}
