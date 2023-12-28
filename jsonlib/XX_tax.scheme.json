@@ -17,12 +17,12 @@
 	}
   ],
   "estTarif": {
-	"2021": [
+	"2024": [
 					{
 						"type":"steppercent",
                         "base":"zv_einkommen",
-						"from":"9745",
-						"to":"14753",
+						"from":"11604",
+						"to":"17005",
 						"label":"y",
 						"var":"0.0001"
 					},
@@ -32,10 +32,10 @@
 						"from":"0",
 						"to":"99999",
 						"label":"y1",
-						"var":"995.21"
+						"var":"922.98"
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"y1",
 						"from":"0",
 						"to":"99999",
@@ -53,8 +53,8 @@
 					{
 						"type":"steppercent",
                         "base":"zv_einkommen",
-						"from":"14754",
-						"to":"57918",
+						"from":"17006",
+						"to":"66760",
 						"label":"z",
 						"var":"0.0001"
 					},
@@ -64,10 +64,10 @@
 						"from":"0",
 						"to":"99999",
 						"label":"z1",
-						"var":"208.85"
+						"var":"181.19"
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"z1",
 						"from":"1",
 						"to":"99999",
@@ -80,65 +80,176 @@
 						"from":"0",
 						"to":"99999",
 						"label":"tarifliche_est",
-						"labelvar":"z"
+						"labelvar":"z",
+						"explain":"The y calculation already provided the amount of 1025.38, so it does not need to be added again."
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"zv_einkommen",
-						"from":"57919",
+						"from":"66761",
 						"to":"999999999",
 						"label":"tarifliche_est",
-						"var":"-15188.9386695326"	
+						"var":"-17437.3610778967",
+						"explain":"in this range, the y and z calculation are irrelevant and need to be deducted."
 					},				
 					{
 						"type":"percent",
                         "base":"zv_einkommen",
-						"from":"57919",
-						"to":"274612",
+						"from":"66761",
+						"to":"277825",
 						"label":"tarifliche_est",
 						"var":"0.42"
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"zv_einkommen",
-						"from":"57919",
-						"to":"274612",
+						"from":"66761",
+						"to":"277825",
 						"label":"tarifliche_est",
-						"var":"-9136.63"
+						"var":"-10602,13"
 					},		
 					{
 						"type":"percent",
                         "base":"zv_einkommen",
-						"from":"274613",
+						"from":"277825",
 						"to":"999999999",
 						"label":"tarifliche_est",
 						"var":"0.45"
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"zv_einkommen",
-						"from":"274613",
+						"from":"277826",
 						"to":"999999999",
 						"label":"tarifliche_est",
-						"var":"-17374.99"
+						"var":"-18936,88"
 					},
 					{
-						"type":"absolute",
+						"type":"addabsolute",
                         "base":"zv_einkommen",
-						"from":"9745",
+						"from":"11604",
 						"to":"999999999",
 						"label":"tarifliche_est",
 						"var":"-0.48"
-					},
-					{
-						"type":"percent",
-                        "base":"tarifliche_est",
-						"from":"16957",
-						"to":"999999999",
-						"label":"soli",
-						"var":"0.055"
 					}
 	],
+	"2023": [
+		{
+			"type":"steppercent",
+			"base":"zv_einkommen",
+			"from":"10908",
+			"explain":"Different to the tax law, the lower boundary needs to be set as the upper boundary of the previous step.",
+			"to":"15999",
+			"label":"y",
+			"var":"0.0001"
+		},
+		{
+			"type":"multiply",
+			"base":"y",
+			"from":"0",
+			"to":"99999",
+			"label":"y1",
+			"var":"979.18"
+		},
+		{
+			"type":"addabsolute",
+			"base":"y1",
+			"from":"0",
+			"to":"99999",
+			"label":"y1",
+			"var":"1400"
+		},
+		{
+			"type":"multiply",
+			"base":"y1",
+			"from":"0",
+			"to":"99999",
+			"label":"tarifliche_est",
+			"labelvar":"y"
+		},
+		{
+			"type":"steppercent",
+			"base":"zv_einkommen",
+			"from":"16000",
+			"to":"62809",
+			"label":"z",
+			"var":"0.0001"
+		},
+		{
+			"type":"multiply",
+			"base":"z",
+			"from":"0",
+			"to":"99999",
+			"label":"z1",
+			"var":"192.59"
+		},
+		{
+			"type":"addabsolute",
+			"base":"z1",
+			"from":"1",
+			"to":"99999",
+			"label":"z1",
+			"var":"2397"
+		},
+		{
+			"type":"multiply",
+			"base":"z1",
+			"from":"0",
+			"to":"99999",
+			"label":"tarifliche_est",
+			"labelvar":"z",
+			"explain":"The y calculation already provided the amount of 966,53, so it does not need to be added again."
+		},
+		{
+			"type":"addabsolute",
+			"base":"zv_einkommen",
+			"from":"62810",
+			"to":"999999999",
+			"label":"tarifliche_est",
+			"var":"-16407.1093847852",
+			"explain":"in this range, the y and z calculation are irrelevant and need to be deducted."
+		},				
+		{
+			"type":"percent",
+			"base":"zv_einkommen",
+			"from":"62809",
+			"to":"277825",
+			"label":"tarifliche_est",
+			"var":"0.42"
+		},
+		{
+			"type":"addabsolute",
+			"base":"zv_einkommen",
+			"from":"62809",
+			"to":"277825",
+			"label":"tarifliche_est",
+			"var":"-9972.98"
+		},		
+		{
+			"type":"percent",
+			"base":"zv_einkommen",
+			"from":"277825",
+			"to":"999999999",
+			"label":"tarifliche_est",
+			"var":"0.45"
+		},
+		{
+			"type":"addabsolute",
+			"base":"zv_einkommen",
+			"from":"277826",
+			"to":"999999999",
+			"label":"tarifliche_est",
+			"var":"-18307.73"
+		},
+		{
+			"type":"addabsolute",
+			"base":"zv_einkommen",
+			"from":"10908",
+			"to":"999999999",
+			"label":"tarifliche_est",
+			"var":"-0.48"
+		}
+],
     "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
 	"Source":"§32a ESTG http://www.gesetze-im-internet.de/estg/index.html SolZG1995 ebendort. 1.8.2021."
   },
@@ -158,6 +269,14 @@
 					  "part":"-1",
 					  "label":"est",
 					  "labelvar":"tarifliche_est"
+				  },
+				  {
+					  "type":"percent",
+					  "base":"est",
+					  "from":"17543",
+					  "to":"999999999",
+					  "label":"soli",
+					  "var":"0.055"
 				  }
 			  ],
 	  "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",

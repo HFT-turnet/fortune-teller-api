@@ -141,12 +141,6 @@ class Calcscheme
           self.result[s["label"]] = self.result[s["label"]].to_d + self.result[s["labelvar"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) unless self.result[s["labelvar"]].nil?
           # If both vartypes have not been defined, consider them zero
           self.result[s["label"]] = self.result[s["label"]].to_d + ( s["part"].to_d * self.result[s["base"]].to_d) if s["var"].nil? and self.result[s["labelvar"]].nil?
-		    when "additionIf"
-			    # Label and Var / Labelvar are added and saved as label, if the basevalue (inlcuding part) is within the range.
-			    if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
-            self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d
-            self.result[s["label"]] = self.result[s["label"]].to_d +  self.result[s["labelvar"]].to_d
-			    end
         when "percent"
           # A percentage of the relevant part of the base value is added to the label category if the relevant part of the base amount is within the limits
           if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
@@ -162,7 +156,7 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * s["var"].to_d ) unless s["var"].to_d==0
             self.result[s["label"]] = self.result[s["label"]].to_d + ( (self.result[s["base"]].to_d - s["from"].to_d) * self.result[s["labelvar"]].to_d ) unless self.result[s["labelvar"]].to_d==0
           end
-        when "absolute"
+        when "addabsolute"
           # An absolute value or a labelvalue is added to the label category if the relevant part of the base amount is within the limits
           if (self.result[s["base"]].to_d * s["part"].to_d) >= s["from"].to_d and (self.result[s["base"]].to_d * s["part"].to_d) <= s["to"].to_d then
             self.result[s["label"]] = self.result[s["label"]].to_d + s["var"].to_d
@@ -174,14 +168,14 @@ class Calcscheme
             self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * s["var"].to_d)
             self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d * self.result[s["labelvar"]].to_d)
           end
-		when "divide"
-          # The base-value is divided by an absolute value or a labelvalue. No condition considered. If the labelvalue is 0, division is done by 1. The result is added to the label provided.
-		  divider=s["var"].to_d unless s["var"].to_d==0 # Absolute value given
-		  divider=self.result[s["labelvar"]].to_d unless self.result[s["labelvar"]].to_d==0 # Labelvalue given
-		  divider=1 if divider.to_d==0 # No impact = no division.
-          self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d / divider)
+		    when "divide"
+            # The base-value is divided by an absolute value or a labelvalue. No condition considered. If the labelvalue is 0, division is done by 1. The result is added to the label provided.
+		        divider=s["var"].to_d unless s["var"].to_d==0 # Absolute value given
+		        divider=self.result[s["labelvar"]].to_d unless self.result[s["labelvar"]].to_d==0 # Labelvalue given
+		        divider=1 if divider.to_d==0 # No impact = no division.
+            self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d / divider)
 		#end
-      end
+        end
       @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') if xdebug=="x"
       #Helper to debug schemes
       #puts self.result

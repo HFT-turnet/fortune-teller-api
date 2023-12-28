@@ -64,7 +64,7 @@
 	 	"explain": "SV West-Berechnung"
 	  },
 	  {
-		"type":"additionIf",
+		"type":"addabsolute",
         "base":"sv_ost",
 		"from": "1",
 		"to":"1",
@@ -73,7 +73,7 @@
 		"explain": "If sv_ost=1 then sv_alv will receive this value."
 	   },
 	   {
-		"type":"additionIf",
+		"type":"addabsolute",
         "base":"sv_west",
 		"from":"1",
 		"to":"1",
@@ -122,7 +122,7 @@
 	 	"explain": "SV West-Berechnung"
 	  },
 	  {
-		"type":"additionIf",
+		"type":"addabsolute",
         "base":"sv_ost",
 		"from": "1",
 		"to":"1",
@@ -131,7 +131,7 @@
 		"explain": "If sv_ost=1 then sv_drv will receive this value."
 	   },
 	   {
-		"type":"additionIf",
+		"type":"addabsolute",
         "base":"sv_west",
 		"from":"1",
 		"to":"1",
@@ -217,14 +217,14 @@
 			"explain": "Hochrechnung auf 12 Monate."
 		},
 		{
-			"type": "absolute",
+			"type": "addabsolute",
 			"base": "sv_pv_an_beitragsatz",
 			"label": "sv_pv_an_beitragsatz",
 			"var": "0.017",
 			"explain": "Beitragssatz Basis AN mit Kindern (generell) (nicht Sachsen)."
 		},
 		{
-			"type": "additionIf",
+			"type": "addabsolute",
 			"base": "kinderlos",
 			"from": "1",
 			"to": "1",
@@ -233,7 +233,7 @@
 			"explain": "Kinderlose zahlen 0,6% Zuschlag."
 		},
 		{
-			"type": "absolute",
+			"type": "addabsolute",
 			"base": "kinderunter25",
 			"from": "1",
 			"to": "99",
@@ -251,7 +251,7 @@
 			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
 		},
 		{
-			"type": "absolute",
+			"type": "addabsolute",
 			"base": "kinderunter25",
 			"from":"5",
 			"to":"99",
@@ -260,7 +260,7 @@
 			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
 		},
 		{
-			"type": "absolute",
+			"type": "addabsolute",
 			"base": "sv_pv_an_beitragsatz",
 			"from":"0",
 			"to":"1",
@@ -269,7 +269,7 @@
 			"explain": "Ermittlung Beitragssatz"
 		},
 		{
-			"type": "absolute",
+			"type": "addabsolute",
 			"base": "pv_sachsen",
 			"from":"1",
 			"to":"1",
