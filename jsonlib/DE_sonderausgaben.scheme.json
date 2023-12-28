@@ -32,7 +32,7 @@
 						"type":"addition",
 						"base":"sv_drv",
 						"label":"sv_rente_pflicht_doppelt",
-						"labelvar":"sv_rente_pflicht"
+						"labelvar":"sv_drv"
 					},
 					{
 						"type":"addition",
