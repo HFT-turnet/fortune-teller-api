@@ -73,10 +73,10 @@
   	{	
 		"2023": [
 					{
-						"type":"percent",
+						"type":"divide",
 						"base":"gesamtbetrag_einkuenfte",
 						"label":"sa_spenden_obergrenze",
-						"var":"0.2"
+						"var":"5"
 					},
 					{
 						"text":"Spenden 10b mit Obergrenze",
