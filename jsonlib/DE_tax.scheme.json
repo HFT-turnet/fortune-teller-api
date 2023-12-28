@@ -14,6 +14,10 @@
 	{
 		"label":"haushaltsnaheDL",
 		"obligatory":"no"
+	},
+	{
+		"label":"handwerkerDL",
+		"obligatory":"no"
 	}
   ],
   "estTarif": {
@@ -257,12 +261,35 @@
 	{	
 	  "2023": [
 				  {
-					  "comment":"temporary fix. It should ",
-					  "type":"addition",
+					  "type":"minof",
 					  "base":"haushaltsnaheDL",
-					  "label":"est_abzuege",
-					  "labelvar":"none"
+					  "label":"haushaltsnaheDL_limit",
+					  "var":"20000"
 				  },
+				  {
+					"type":"minof",
+					"base":"handwerkerDL",
+					"label":"handwerkerDL_limit",
+					"var":"6000"
+				  },
+				  {
+					"type":"addition",
+					"base":"handwerkerDL_limit",
+					"label":"DLausgaben",
+					"labelvar":"haushaltsnaheDL_limit"
+				},
+				{
+					"type":"divide",
+					"base":"DLausgaben",
+					"label":"est_zumabzug",
+					"var":"5"
+				},
+				  {
+					"type":"minof",
+					"base":"est_zumabzug",
+					"label":"est_abzuege",
+					"labelvar":"tarifliche_est"
+				  },				  
 				  {
 					  "type":"addition",
 					  "base":"est_abzuege",
