@@ -25,8 +25,20 @@
   	{	
 		"2023": [
 					{
+						"type":"maxof",
+						"base":"werbungskosten",
+						"label":"wk_ansatz",
+						"var":"1000"
+					},
+					{
+						"type":"minof",
+						"base":"bruttogehalt",
+						"label":"wk_absetzbar",
+						"var":"wk_ansatz"
+					},
+					{
 						"type":"addition",
-                        "base":"werbungskosten",
+                        "base":"wk_absetzbar",
 						"part":"-1",
 						"label":"einkuenfte",
 						"labelvar":"bruttogehalt"
