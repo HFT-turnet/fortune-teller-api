@@ -20,6 +20,14 @@
 			"label":"sv_rente_freiwillig",
             "obligatory":"no"
 		},
+		{
+			"label":"sv_gkv_an",
+            "obligatory":"no"
+		},
+		{
+			"label":"sv_pv_an",
+            "obligatory":"no"
+		},
         {
 			"label":"sa_spenden",
             "obligatory":"no"
@@ -64,6 +72,20 @@
 						"part":"-1",
 						"label":"einkommen",
 						"labelvar":"gesamtbetrag_einkuenfte"
+					},
+					{
+						"type":"addition",
+						"base":"sv_gkv_an",
+						"part":"-1",
+						"label":"einkommen",
+						"labelvar":"none"
+					},
+					{
+						"type":"addition",
+						"base":"sv_pv_an",
+						"part":"-1",
+						"label":"einkommen",
+						"labelvar":"none"
 					}
 				],
 		"Disclaimer":"Testing only. Overly simplified: AG and AN contribution are considered equal.",
