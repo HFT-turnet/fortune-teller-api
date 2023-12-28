@@ -30,9 +30,29 @@
 		"2023": [
 					{
 						"type":"addition",
-                        "base":"sv_rente_pflicht",
-						"label":"sv_rente_abziehbar",
+						"base":"sv_drv",
+						"label":"sv_rente_pflicht_doppelt",
+						"labelvar":"sv_rente_pflicht"
+					},
+					{
+						"type":"addition",
+                        "base":"sv_rente_pflicht_doppelt",
+						"label":"sa_rente_total",
 						"labelvar":"sv_rente_freiwillig"
+					},
+					{
+						"type":"minof",
+                        "base":"sa_rente_total",
+						"label":"sa_rente_abziehbar",
+						"var":"22800",
+						"explain":"this ignores people that have to carry health insurance themselves, they have a different limit."
+					},
+					{
+						"type":"addition",
+                        "base":"sv_drv",
+						"part":"-1",
+						"label":"sa_rente_abziehbar",
+						"labelvar":"none"
 					},
 					{
 						"type":"addition",
@@ -42,7 +62,7 @@
 						"labelvar":"gesamtbetrag_einkuenfte"
 					}
 				],
-		"Disclaimer":"Testmodus. Inherent assumption: 100% of max value can be deducted.",
+		"Disclaimer":"Testing only. Overly simplified: AG and AN contribution are considered equal.",
         "Source":"."
 	},
 	"saSonstige":

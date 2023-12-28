@@ -175,6 +175,14 @@ class Calcscheme
 		        divider=1 if divider.to_d==0 # No impact = no division.
             self.result[s["label"]] = self.result[s["label"]].to_d + (self.result[s["base"]].to_d / divider)
 		#end
+        when "minof"
+            # Takes the minimum of the base and the var or labelvar and adds it to the label provided.
+            comparevalue=s["var"].to_d+self.result[s["labelvar"]].to_d
+            self.result[s["label"]] = self.result[s["label"]].to_d + [self.result[s["base"]].to_d, comparevalue.to_d].min 
+        when "maxof"
+            # Takes the minimum of the base and the var or labelvar and adds it to the label provided.
+            comparevalue=s["var"].to_d+self.result[s["labelvar"]].to_d
+            self.result[s["label"]] = self.result[s["label"]].to_d + [self.result[s["base"]].to_d, comparevalue.to_d].max
         end
       @debuglog[index] = self.result.map{|k,v| "#{k}=#{v}"}.join(' | ') if xdebug=="x"
       #Helper to debug schemes
