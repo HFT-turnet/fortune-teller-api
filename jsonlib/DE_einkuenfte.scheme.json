@@ -34,7 +34,7 @@
 						"type":"minof",
 						"base":"bruttogehalt",
 						"label":"wk_absetzbar",
-						"var":"wk_ansatz"
+						"labelvar":"wk_ansatz"
 					},
 					{
 						"type":"addition",
