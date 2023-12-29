@@ -68,7 +68,7 @@
 					},
 					{
 						"type":"addition",
-                        "base":"sv_rente_abziehbar",
+                        "base":"sa_rente_abziehbar",
 						"part":"-1",
 						"label":"einkommen",
 						"labelvar":"gesamtbetrag_einkuenfte"
