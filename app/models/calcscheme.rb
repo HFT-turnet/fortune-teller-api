@@ -28,7 +28,7 @@ class Calcscheme
   
   def load(countrycode, type)
     filepath="jsonlib/" + countrycode + "_" + type + ".scheme.json"
-    if File.exists?(filepath) then
+    if File.exist?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
       @country=@content["country"]
@@ -222,7 +222,7 @@ class Calcscheme
   # Load a metascheme
   def meta_load(countrycode, type)
     filepath="jsonlib/" + countrycode + "_" + type + ".meta.json"
-    if File.exists?(filepath) then
+    if File.exist?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
       @countrycode=countrycode
@@ -398,7 +398,7 @@ class Calcscheme
   # MANIPULATE SCHEMES
   def create_schemefile(type, countrycode)
     filepath="jsonlib/" + countrycode + "_" + type + ".scheme.json"
-    if not File.exists?(filepath) then
+    if not File.exist?(filepath) then
       file = File.open(filepath,"w")
       # Create metadata and frame
       metadata={}
@@ -412,7 +412,7 @@ class Calcscheme
   end
   def load_scheme_edit(type, countrycode, scheme, version)
     filepath="jsonlib/" + countrycode + "_" + type + ".scheme.json"
-    if File.exists?(filepath) then
+    if File.exist?(filepath) then
       file = File.read(filepath)
       @content=JSON.parse(file)
       self.metadata={}

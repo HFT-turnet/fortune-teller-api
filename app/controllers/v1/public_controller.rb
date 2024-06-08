@@ -37,7 +37,7 @@ class V1::PublicController < ApplicationController
     #Incomes
     if params[:type]=="income" then
       filepath="jsonlib/" + countrycode + "_" + language + "_incomesample.json"
-      if File.exists?(filepath) then
+      if File.exist?(filepath) then
         file = File.read(filepath)
         scheme=JSON.parse(file)
         sample=Timeslice.new(scheme)
@@ -49,7 +49,7 @@ class V1::PublicController < ApplicationController
     if params[:type]=="expense" then
       #Expenses
       filepath="jsonlib/" + countrycode + "_" + language + "_expensesample.json"
-      if File.exists?(filepath) then
+      if File.exist?(filepath) then
         file = File.read(filepath)
         scheme=JSON.parse(file)
         sample=Timeslice.new(scheme)
@@ -127,7 +127,7 @@ class V1::PublicController < ApplicationController
     
     #Incomes
     filepath="jsonlib/" + countrycode + "_" + language + "_incomesample.json"
-    if File.exists?(filepath) then
+    if File.exist?(filepath) then
       file = File.read(filepath)
       scheme=JSON.parse(file)
       sample=Timeslice.new(scheme)
@@ -140,7 +140,7 @@ class V1::PublicController < ApplicationController
     
     #Expenses
     filepath="jsonlib/" + countrycode + "_" + language + "_expensesample.json"
-    if File.exists?(filepath) then
+    if File.exist?(filepath) then
       file = File.read(filepath)
       scheme=JSON.parse(file)
       sample=Timeslice.new(scheme)
