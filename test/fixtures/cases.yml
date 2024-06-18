@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  byear: 1
+  dyear: 1
+  sex: 1
+
+two:
+  id: 1
+  byear: 1
+  dyear: 1
+  sex: 1

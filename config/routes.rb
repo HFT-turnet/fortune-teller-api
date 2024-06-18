@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get 'public/summary_report', to: 'public#get_envelope', format: :json
     namespace :public do
       # This namespace ignores the "to" element and looks for target within the controller with the exact name, therefore deviating functions are called above.
-      match 'summary_report', to: 'summary_report', via: :post
+      match 'summary_report', via: :post
       match 'timeslice' , via: :post
       match 'lastingmoney', via: :get
       #match 'timemorph' , via: :post

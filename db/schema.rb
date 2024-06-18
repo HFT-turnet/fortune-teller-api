@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_21_091649) do
-  create_table "api_keys", force: :cascade do |t|
+ActiveRecord::Schema[7.1].define(version: 2024_06_18_201735) do
+  create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
     t.string "token_digest", null: false
@@ -21,13 +21,48 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_21_091649) do
     t.index ["token_digest"], name: "index_api_keys_on_token_digest", unique: true
   end
 
-  create_table "persistaccounts", force: :cascade do |t|
+  create_table "cases", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "external_id"
+    t.integer "byear"
+    t.integer "dyear"
+    t.integer "sex"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cvalues", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "case_id"
+    t.integer "t"
+    t.integer "cvaluetype"
+    t.string "label"
+    t.decimal "cto", precision: 14, scale: 2
+    t.decimal "ev", precision: 14, scale: 2
+    t.integer "fromt"
+    t.integer "tot"
+    t.decimal "interest", precision: 6, scale: 4
+    t.decimal "inflation", precision: 6, scale: 4
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "persistaccounts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "randname", null: false
     t.string "password_digest"
     t.date "lastaction"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["randname"], name: "index_persistaccounts_on_randname", unique: true
+  end
+
+  create_table "simulations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "case_id"
+    t.integer "valuetype"
+    t.integer "sourcetype"
+    t.integer "sourceid"
+    t.integer "t"
+    t.decimal "value", precision: 14, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

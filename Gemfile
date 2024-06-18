@@ -4,32 +4,34 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 #ruby '3.1.2'
 #07/22: Ruby 3.1.2 and Rails 7.0.3
 #12/22: Ruby 3.1.3 and Rails 7.0.4
+#06/24: Ruby 3.3.1 and Rails 7.1.3
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 #gem 'rails', '~> 6.1.4', '>= 6.1.3.2'
-gem 'rails', '~>7.0.4'
+gem 'rails', '~>7.1.3'
 gem 'active_model_serializers'
 # old: gem 'jsonapi-rails'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+#gem 'sqlite3', '~> 1.4'
+gem 'mysql2'
 
 # Use Puma as the app server
-gem 'puma', '~> 5.0'
+gem 'puma'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
+gem 'jbuilder' #, '~> 2.7'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 
 # Use Active Model has_secure_password
-gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt' #, '~> 3.1.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.4.4', require: false
+gem 'bootsnap' #, '>= 1.4.4', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
@@ -40,7 +42,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'listen', '~> 3.3'
+  gem 'listen' #, '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
