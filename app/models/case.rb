@@ -2,6 +2,7 @@ class Case < ApplicationRecord
     before_save :generate_external_uuid
     has_many :simulations
     has_many :cvalues
+    has_many :cslices
 
     # Data extraction
     def timeline(frequency)
@@ -19,7 +20,7 @@ class Case < ApplicationRecord
             hashkey=[]
             hashkey << key[0]
             hashkey << key[1]
-            result[hashkey]=value.to_d if refrange.include?key.first
+            result[hashkey]='%.2f' % value.to_d if refrange.include?key.first
         end
         return result
     end

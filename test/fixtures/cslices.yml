@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  t: 1
+  i: 9.99
+  disclaimer: MyString
+  source: MyString
+  info: MyString
+
+two:
+  t: 1
+  i: 9.99
+  disclaimer: MyString
+  source: MyString
+  info: MyString

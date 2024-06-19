@@ -2,6 +2,7 @@ class Cvalue < ApplicationRecord
     before_save :write_to_simulation
     belongs_to :case
     has_many :simulations
+    belongs_to :cslice, optional: true
 
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
@@ -40,7 +41,13 @@ class Cvalue < ApplicationRecord
                 @priorvalue=newvalue
             end
         end
+    end
 
+    # Instance functions
+    def timemorph_cto(t)
+        morved_cto=self.cto*(1+self.inflation)**(t-self.t)
+        morved_cto=0 if t>self.tot or t<self.fromt
+        return '%.2f' % morved_cto
     end
 
     # Write to simulation

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_18_201735) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_19_213509) do
   create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -30,8 +30,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_201735) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cslices", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "cvaluetype"
+    t.string "label"
+    t.integer "case_id"
+    t.integer "t"
+    t.decimal "i", precision: 6, scale: 4
+    t.string "disclaimer"
+    t.string "source"
+    t.string "info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cvalues", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "case_id"
+    t.integer "cslice_id"
     t.integer "t"
     t.integer "cvaluetype"
     t.string "label"
