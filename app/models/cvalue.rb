@@ -6,6 +6,16 @@ class Cvalue < ApplicationRecord
 
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
+    def cvaluetype_text
+        case self.cvaluetype
+        when 1
+            return "Income"
+        when 2
+            return "Expense"
+        when 3
+            return "Cashbalance"
+        end
+    end
 
     # Simulation depending on valuetype
     def simulate_cashbalance

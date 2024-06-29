@@ -5,6 +5,19 @@ class Cslice < ApplicationRecord
     has_many :cvalues
     has_many :simulations
 
+    ## DEFINITIONS
+    # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
+    def cvaluetype_text
+        case self.cvaluetype
+        when 1
+            return "Income"
+        when 2
+            return "Expense"
+        when 3
+            return "Cashbalance"
+        end
+    end
+
     def sync_cvalues
         # Sync the cvalues with the cslice
         self.cvalues.each do |cvalue|

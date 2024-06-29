@@ -29,9 +29,22 @@ Rails.application.routes.draw do
     match 'cs/(:countrycode)/(:schemetype)', to: 'cs#get_schemetype', via: :get
     match 'cs/(:countrycode)/(:schemetype)/(:scheme)/(:version)', to: 'cs#run_scheme', via: :post
 	
-	# Temporary: CalcSchemes Admin
-	match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
+	  # Temporary: CalcSchemes Admin
+	  match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
     
+    # Simulation
+    namespace :simulation do
+        # Case Management
+        post 'case', action: "case_create"
+        get 'case/(:case_id)', action: "case_show"
+        patch 'case/(:case_id)', action: "case_update"
+        delete 'case/(:case_id)', action: "case_destroy"
+        #match 'case/(:id)', to: :case_update, via: :post
+        #match 'case/(:id)', to: :case_destroy, via: :delete
+        # Assumptions (CValues, CSlices, CFlows, CPensionFlows)
+        # Simulation Results and details
+    end
+
     # Manage APIKeys
     #post '/persist/api-keys', to: 'api_keys#create'
     #delete '/persist/api-keys', to: 'api_keys#destroy'
