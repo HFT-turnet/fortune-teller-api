@@ -32,7 +32,7 @@ production:
   username: <%= Rails.application.credentials[:db_production_login] %>
   password: <%= Rails.application.credentials[:db_production_password] %>
  # host: localhost
-  socket: /tmp/mysql.sock
+  host: localhost
   variables:
      sql_mode: TRADITIONAL
 
