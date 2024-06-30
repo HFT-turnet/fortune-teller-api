@@ -14,10 +14,23 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: ft_api_development
+  database: <%= Rails.application.credentials[:db_development_database] %>
   pool: 5
-  username: rails
-  password: rails
+  username: <%= Rails.application.credentials[:db_development_login] %>
+  password: <%= Rails.application.credentials[:db_development_password] %>
+ # host: localhost
+  socket: /tmp/mysql.sock
+  variables:
+     sql_mode: TRADITIONAL
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: <%= Rails.application.credentials[:db_production_database] %>
+  pool: 5
+  username: <%= Rails.application.credentials[:db_production_login] %>
+  password: <%= Rails.application.credentials[:db_production_password] %>
  # host: localhost
   socket: /tmp/mysql.sock
   variables:
