@@ -37,7 +37,20 @@ class V1::SimulationController < ApplicationController
     # Show existing case and all attached data
     def case_show
         #render json: @case.as_json(except: [:id, :created_at, :updated_at])
-        
+        # Being rendederd with json.jbuilder in Views.
+    end
+
+    # Simulate the case
+    def simulate
+        # If frequency is provided, take the value, otherwise in steps of 5 years.
+        frequency=params[:frequency] || 5 
+        render json: @case.timeline(frequency)
+    end
+
+    def simulate_detail
+        # If frequency is provided, take the value, otherwise in steps of 5 years.
+        render json: "No year provided for detail" if params[:t].to_i==0
+        render json: @case.details(params[:t].to_i)
     end
 
 

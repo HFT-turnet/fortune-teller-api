@@ -34,6 +34,28 @@ class Simulation < ApplicationRecord
             return "Pension Points (Non-Currency)"
         end
     end
+    def self.valuetype_text(valuetype)
+        case valuetype
+        when 1
+            return "Income"
+        when 2
+            return "Expense"
+        when 3
+            return "Cash_Balance_Move"
+        when 10
+            return "Automatic Savings Balance"
+        when 11
+            return "Savings Balance (Cash)"
+        when 12
+            return "Debt Balance (Cash)"
+        when 13
+            return "Assets Balance (Monetary)"
+        when 14
+            return "Assets Balance (Non-Monetary)"
+        when 15
+            return "Pension Points (Non-Currency)"
+        end
+    end
 
     # Sourcetype
     # 0: Internal automatism

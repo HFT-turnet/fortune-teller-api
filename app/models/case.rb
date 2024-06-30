@@ -25,18 +25,31 @@ class Case < ApplicationRecord
         data=simulationdata.order(:t).group(:t, :valuetype).sum(:value)
         # Output to be limited to the frequency
         refrange=[]
-        (data.first[0][0]..data.keys.last[0]).step(frequency) do |selectyears|
+        (data.first[0][0]..data.keys.last[0]).step(frequency.to_i) do |selectyears|
             refrange << selectyears
         end
         refrange << data.keys.last[0] unless refrange.last==data.keys.last[0]
+        # Build result hash, several entries per year to be aggregated as array.
         result={}
         data.each do |key, value|
-            hashkey=[]
-            hashkey << key[0]
-            hashkey << key[1]
-            result[hashkey]='%.2f' % value.to_d if refrange.include?key.first
+            # Is the year in the frequency?
+            if refrange.include?key.first
+                line={}
+                line[:valuetype]=key[1]
+                line[:valuetype_text]=Simulation.valuetype_text(key[1])
+                line[:value]='%.2f' % value.to_d
+                result[key.first] ||= [] # Create an array for the year if it does not exist
+                result[key.first] << line
+                #result[key.first]=line if result[key.first].nil?
+                #result[key.first]<<line unless result[key.first].nil?
+            end
+
+            # Old model
+            #hashkey=[]
+            #hashkey << key[0]
+            #hashkey << key[1]
+            #result[hashkey]='%.2f' % value.to_d if refrange.include?key.first
         end
-        # Hash with year, valuetype.
         return result
     end
 

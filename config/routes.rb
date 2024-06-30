@@ -43,6 +43,10 @@ Rails.application.routes.draw do
         #match 'case/(:id)', to: :case_destroy, via: :delete
         # Assumptions (CValues, CSlices, CFlows, CPensionFlows)
         # Simulation Results and details
+        get 'case/(:case_id)/simulate', action: "simulate"
+        get 'case/(:case_id)/simulate_detail', action: "simulate_detail"
+        #match 'case/(:id)/simulate', to: :simulate, via: :get
+        #match 'case/(:id)/simulate_cashbalance', to: :simulate_cashbalance, via: :get
     end
 
     # Manage APIKeys
