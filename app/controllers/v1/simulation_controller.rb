@@ -31,7 +31,9 @@ class V1::SimulationController < ApplicationController
         #@case.cpensionflows.destroy_all
         # Destroy the case
         @case.destroy
-        render json: "Case with id #{@case.external_id} destroyed."
+        message={}
+        message["message"]="Case with id #{@case.external_id} destroyed."
+        render json: message
     end
 
     # Show existing case and all attached data
