@@ -57,7 +57,7 @@ class V1::SimulationController < ApplicationController
     private
     def findcase
         @case=Case.find_by_external_id(params[:case_id])
-        render json: "Case not found." unless @case
+        render json: "'error'=>'Case not found.'" unless @case
     end
     def case_permitted_params
         params.permit(:byear, :dyear, :sex)
