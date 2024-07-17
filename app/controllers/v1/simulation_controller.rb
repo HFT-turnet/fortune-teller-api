@@ -42,6 +42,58 @@ class V1::SimulationController < ApplicationController
         # Being rendederd with json.jbuilder in Views.
     end
 
+    # Create an entry in the case
+    def entry_create
+        case params[:type]
+            when "Cvalue"
+                # Enter a value in a point in time = Cvalue
+                # i.e. receive an amount X in year Y
+                entry=Cvalue.create(
+                    case_id: @case.id,
+                    cvaluetype: params[:cvalue]["cvaluetype"],
+                    label: params[:cvalue]["label"],
+                    cto:  params[:cvalue]["cto"],
+                    ev:  params[:cvalue]["ev"],
+                    t:  params[:cvalue]["t"],
+                    fromt:  params[:cvalue]["fromt"],
+                    tot:  params[:cvalue]["tot"],
+                    interest:  params[:cvalue]["interest"]
+                )
+                # Check some logic on the new entry.
+                entry.ev=0 if entry.cvaluetype<3
+                entry.cto=0 if entry.cvaluetype>2
+                entry.save
+            when "Cslice"
+                # Enter a recurring value = Cslice
+                # i.e. pay an amount X every year from year Y to year Z
+                cslice=Cslice.create(
+                    case_id: @case.id,
+                    cvaluetype: params[:cslice]["cvaluetype"],
+                    label: params[:cslice]["label"],
+                    t: params[:cslice]["t"],
+                    disclaimer: params[:cslice]["disclaimer"],
+                    source: params[:cslice]["source"],
+                    info: params[:cslice]["info"]
+                )
+                cslice.save
+                # Create all Cvalues in the slice:
+                params[:cslice]["cvalues"].each do |v|
+                    entry=cslice.cvalues.create(
+                        case_id: @case.id,
+                        cvaluetype: v["cvaluetype"],
+                        label: v["label"],
+                        cto:  v["cto"],
+                        ev:  v["ev"],
+                        t:  v["t"],
+                        fromt:  v["fromt"],
+                        tot:  v["tot"],
+                        interest:  v["interest"]
+                    )
+                    entry.save
+                end
+        end
+    end
+
     # Simulate the case
     def simulate
         # If frequency is provided, take the value, otherwise in steps of 5 years.

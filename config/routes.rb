@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         get 'case/(:case_id)', action: "case_show"
         patch 'case/(:case_id)', action: "case_update"
         delete 'case/(:case_id)', action: "case_destroy"
+        post 'case/(:case_id)/entry', action: "entry_create"
         #match 'case/(:id)', to: :case_update, via: :post
         #match 'case/(:id)', to: :case_destroy, via: :delete
         # Assumptions (CValues, CSlices, CFlows, CPensionFlows)
