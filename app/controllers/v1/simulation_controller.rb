@@ -88,8 +88,13 @@ class V1::SimulationController < ApplicationController
                         t:  v["t"],
                         fromt:  v["fromt"],
                         tot:  v["tot"],
+                        inflation:  v["inflation"],
                         interest:  v["interest"]
                     )
+                    # Check some logic on the new entry.
+                    entry.ev=0 if entry.cvaluetype<3
+                    entry.cto=0 if entry.cvaluetype>2
+                    entry.inflation=0 if entry.inflation.nil?
                     entry.save
                 end
                 cslice.sync_cvalues
