@@ -63,6 +63,7 @@ class V1::SimulationController < ApplicationController
                 entry.ev=0 if entry.cvaluetype<3
                 entry.cto=0 if entry.cvaluetype>2
                 entry.save
+                entry.simulate_cashbalance
             when "Cslice"
                 # Enter a recurring value = Cslice
                 # i.e. pay an amount X every year from year Y to year Z
@@ -91,6 +92,8 @@ class V1::SimulationController < ApplicationController
                     )
                     entry.save
                 end
+                cslice.sync_cvalues
+                cslice.simulate
         end
     end
 
