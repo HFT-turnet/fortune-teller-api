@@ -92,8 +92,6 @@ class V1::SimulationController < ApplicationController
                         interest:  v["interest"]
                     )
                     # Check some logic on the new entry.
-                    entry.ev=0 if entry.cvaluetype<3
-                    entry.cto=0 if entry.cvaluetype>2
                     entry.inflation=0 if entry.inflation.nil?
                     entry.save
                 end
