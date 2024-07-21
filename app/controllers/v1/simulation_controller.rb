@@ -98,6 +98,9 @@ class V1::SimulationController < ApplicationController
                 cslice.sync_cvalues
                 cslice.simulate
         end
+        # Simulate the Cashbalance
+        @case.simulate_cashbalance
+        return "OK."
     end
 
     # Simulate the case
