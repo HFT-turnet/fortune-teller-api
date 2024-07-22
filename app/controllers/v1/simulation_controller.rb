@@ -103,6 +103,24 @@ class V1::SimulationController < ApplicationController
         return "OK."
     end
 
+    # Remove entries
+    def cvalue_destroy
+        # Only execute, if the entry is not part of something bigger.
+        if @case.cvalues.find(params[:cvalue_id]).cslice_id.nil?
+            @case.cvalues.find(params[:cvalue_id]).destroy
+            @case.simulations.where(sourcetype: 1, sourceid: params[:cvalue_id]).destroy_all
+            @case.simulate_cashbalance
+        end
+        return "OK."
+    end
+
+    def cslice_destroy
+        @case.cslices.find(params[:cslice_id]).destroy
+        @case.cvalues.where(cslice_id: params[:cslice_id]).destroy_all
+        @case.simulations.where(sourcetype: 2, sourceid: params[:cslice_id]).destroy_all
+        @case.simulate_cashbalance
+    end
+
     # Simulate the case
     def simulate
         # If frequency is provided, take the value, otherwise in steps of 5 years.
