@@ -42,6 +42,11 @@ class V1::SimulationController < ApplicationController
         # Being rendederd with json.jbuilder in Views.
     end
 
+    def case_entries
+        # Show all objects in the case
+        render json: @case.as_json(include: [:cvalues, :cslices])
+    end
+
     # Create an entry in the case
     def entry_create
         case params[:type]

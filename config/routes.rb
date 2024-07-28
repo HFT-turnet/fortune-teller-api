@@ -31,7 +31,11 @@ Rails.application.routes.draw do
 	
 	  # Temporary: CalcSchemes Admin
 	  match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
-    
+
+    # Pension Calculator
+    match 'pension/sample', to: 'pension#sample_input', via: :get
+    match 'pension/(:ptype)/payout', to: 'pension#route_payout', via: :post
+
     # Simulation
     namespace :simulation do
         # Case Management
@@ -39,6 +43,7 @@ Rails.application.routes.draw do
         get 'case/(:case_id)', action: "case_show"
         patch 'case/(:case_id)', action: "case_update"
         delete 'case/(:case_id)', action: "case_destroy"
+        get 'case/(:case_id)/entries', action: "case_entries"
         post 'case/(:case_id)/entry', action: "entry_create"
         delete 'case/(:case_id)/cvalue/(:cvalue_id)', action: "cvalue_destroy"
         delete 'case/(:case_id)/cslice/(:cslice_id)', action: "cslice_destroy"
