@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_19_213509) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_02_193110) do
   create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -57,6 +57,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_213509) do
     t.decimal "inflation", precision: 6, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pensionfactors", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "ptype"
+    t.string "provider"
+    t.string "factor"
+    t.string "subgroup"
+    t.integer "year"
+    t.decimal "value", precision: 10, scale: 2
   end
 
   create_table "persistaccounts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

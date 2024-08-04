@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   # Rswag engine
   # out of date: mount Rswag::Ui::Engine => '/api-docs'
   get "/documentation" => redirect("https://documenter.getpostman.com/view/2458761/2s9Y5cuLP2")
-  namespace :v1 do
+  namespace :v1, :defaults => { :format => 'json' } do
     # If this deviating route is in namespace, then
-    get 'public/timeslice', to: 'public#get_timeslice', format: :json
-    get 'public/summary_report', to: 'public#get_envelope', format: :json
+    get 'public/timeslice', to: 'public#get_timeslice' #, format: :json
+    get 'public/summary_report', to: 'public#get_envelope' #, format: :json
     namespace :public do
       # This namespace ignores the "to" element and looks for target within the controller with the exact name, therefore deviating functions are called above.
       match 'summary_report', via: :post
@@ -33,8 +33,10 @@ Rails.application.routes.draw do
 	  match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
 
     # Pension Calculator
-    match 'pension/sample', to: 'pension#sample_input', via: :get
-    match 'pension/(:ptype)/payout', to: 'pension#route_payout', via: :post
+    namespace :pension do
+        get 'sample', action: 'sample_input'
+        post '(:ptype)/payout', action: 'route_payout'
+    end
 
     # Simulation
     namespace :simulation do
