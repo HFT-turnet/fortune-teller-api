@@ -14,4 +14,18 @@ class Pensionfactor < ApplicationRecord
     end
     return value 
   end
+  def self.drv_punkte_aus_svgehalt(sv_gehaelter, provider)
+    minyear=sv_gehaelter.map{|k,v| k[:year]}.compact.min
+    maxyear=sv_gehaelter.map{|k,v| k[:year]}.compact.max
+    drv_bbmg=Pensionfactor.where("year >= ? AND year <= ? AND provider = ? AND factor='bbmg'", minyear, maxyear, provider)
+    drv_av_gehalt=Pensionfactor.where("year >= ? AND year <= ? AND provider = ? AND factor='av_gehalt'", minyear, maxyear, provider)
+    sv_gehaelter.each do |geh|
+      # Add a sv_value column that takes the min of the drv_bbmg entry and the actual value.
+      geh[:sv_value]=[geh[:value].to_d, drv_bbmg.where(:year=>geh[:year]).first.value.to_d].min
+      # Add a drv_points column that takes the sv_value and divides it by the drv_av_gehalt.
+      geh[:drv_points]=(geh[:sv_value]/drv_av_gehalt.where(:year=>geh[:year]).first.value).to_d
+    end
+    # Summe der so ermittelten Punkte zurückgeben.
+    return sv_gehaelter.map{|k,v| k[:drv_points]}.sum.round(2)
+  end
 end

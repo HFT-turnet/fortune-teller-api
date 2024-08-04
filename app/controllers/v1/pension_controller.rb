@@ -132,26 +132,55 @@ class V1::PensionController < ApplicationController
             # Get all status entries from the hash, remove the nils and take the max year.
             rentenpunkte_kum_maxjahr=rentenpunkte.map{|k,v| k[:year] if k[:type]=="status"}.compact!.max
             rentenpunkte_kum_max=rentenpunkte.map{|k,v| k[:value] if (k[:type]=="status" and k[:year]==rentenpunkte_kum_maxjahr) }.compact!.sum
+            # Addition of all contributions after the last status entry.
+            rentenpunkte_iso_nachmaxjahr=rentenpunkte.map{|k,v| k[:year] if k[:type]=="contribution" and k[:year]>rentenpunkte_kum_maxjahr}.compact!.max
             rentenpunkte_iso_nachmax=rentenpunkte.map{|k,v| k[:value] if k[:type]=="contribution" and k[:year]>rentenpunkte_kum_maxjahr}.compact!.sum
             entgeltpunkte=rentenpunkte_kum_max.to_d+rentenpunkte_iso_nachmax.to_d
+            # The below variable is necessary to clarify the max in the following steps.
+            rentenpunktemaxjahr=rentenpunkte_iso_nachmaxjahr || rentenpunkte_kum_maxjahr
             @assumptions << "Rentenpunkte aus Statusmeldung ("+rentenpunkte_kum_maxjahr.to_s+"): " + rentenpunkte_kum_max.to_s
             @assumptions << "Rentenpunkte aus darauf folgenden Einzeljahren: " + rentenpunkte_iso_nachmax.to_s
-            @assumptions << "Annahmenbedingte Entgeltpunkte: " + entgeltpunkte.to_s
         end
-
+        # SV-Gehälter are used to refine rentenpunkte after the last status or to estimate them.
+        unless sv_gehaelter.nil?
+            # Check whether there are rentenpunkte to work with.
+            if entgeltpunkte.nil?
+                # Use SV-Gehälter as leading
+                sv_gehaelter_nach_punkten=sv_gehaelter.clone
+                sv_gehaelter_nach_punkten.delete_if { |k,v| k[:year] > regularstart } # No consideration beyond the target retirement age. 
+                # Now we have a hash with the years before the retirement age.
+                additionalpoints=Pensionfactor.drv_punkte_aus_svgehalt(sv_gehaelter_nach_punkten, provider)
+                entgeltpunkte=additionalpoints unless additionalpoints.nil?
+                @assumptions << "Rentenpunkte aus SV-Gehältern: " + additionalpoints.to_s
+            else
+                # Use SV Gehälter for refinement.
+                sv_gehaelter_nach_punkten=sv_gehaelter.clone
+                sv_gehaelter_nach_punkten.delete_if { |k,v| k[:year] <= rentenpunktemaxjahr }  # Only those later than the points.
+                sv_gehaelter_nach_punkten.delete_if { |k,v| k[:year] > regularstart } # No consideration beyond the target retirement age. 
+                # Now we have a hash with the years after the last points entry.
+                additionalpoints=Pensionfactor.drv_punkte_aus_svgehalt(sv_gehaelter_nach_punkten, provider)
+                entgeltpunkte=entgeltpunkte+additionalpoints unless additionalpoints.nil?
+                @assumptions << "Rentenpunkte aus SV-Gehältern: " + additionalpoints.to_s
+            end
+        end
+        # Estimate beyond the known values (with points, rather than with SV-Gehälter)
+        # We need the last year with data.
+        # We know the retirement age.
+        # We need an assumption on the approach.
+        # We could do nothing.
+        # We could assume that the latest addition in points is the best iteration for the remaining years.
+        # Or we take the average of all points and take this as assumption (we are missing working years)
+        # Or we take one point to reflect the social average.
+        
         # Replace modeldata with assumptions and log assumptions.
         entgeltpunkte=1 if entgeltpunkte.nil?
         
         # OFFEN: Regularstart: Korrektur bei 35 und 40 Jahren Beitragszeit
         
-        #entgeltpunkte=drv_punkterechner(params[:drv][:rentenpunkte], regularstart, annahme_rentenanpassung) unless params[:drv][:rentenpunkte].nil?
-
-
 
         # Rentenwert: Lookup in table per year. This value does not need to be versioned.
-        #rentenwert=37.60
         rentenwert=Pensionfactor.drv_rentenwert(regularstart, provider, annahme_rentenanpassung)
-        @assumptions << "Abgeleiteter Rentenwert: " + rentenwert.to_s
+        @assumptions << "Abgeleiteter Rentenwert: " + rentenwert.round(2).to_s
 
         # Zugangsfaktoren: Hash - the variance is stated in years.
         # This seems to be stable for the DRV. Therefore it is hardcoded here.
