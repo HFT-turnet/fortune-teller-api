@@ -1,0 +1,32 @@
+{
+  "country":"Deutschland",
+  "title":"Berechnung alle SVen",
+  "comment1": "No guarantee for correctness. Use at your own risk.",
+  "allsv":
+  	{	
+		"2023": [
+					{
+						"scheme":"sv",
+                        "type":"ALV",
+						"version":"2023"		
+					},
+					{
+						"scheme":"sv",
+                        "type":"DRV",
+						"version":"2023"
+					},
+					{
+						"scheme":"sv",
+                        "type":"GKV",
+						"version":"2023"
+					},
+					{
+						"scheme":"sv",
+                        "type":"PV",
+						"version":"2023"
+					}
+				],
+		"Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
+        "Source":"Diverse Sozialgesetze."
+	}
+}
