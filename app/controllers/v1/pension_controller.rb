@@ -152,6 +152,7 @@ class V1::PensionController < ApplicationController
                 additionalpoints=Pensionfactor.drv_punkte_aus_svgehalt(sv_gehaelter_nach_punkten, provider)
                 entgeltpunkte=additionalpoints unless additionalpoints.nil?
                 @assumptions << "Rentenpunkte aus SV-Gehältern: " + additionalpoints.to_s
+                rentenpunktemaxjahr=[sv_gehaelter.map{|k,v| k[:year]}.max, regularstart].min
             else
                 # Use SV Gehälter for refinement.
                 sv_gehaelter_nach_punkten=sv_gehaelter.clone
@@ -159,6 +160,7 @@ class V1::PensionController < ApplicationController
                 sv_gehaelter_nach_punkten.delete_if { |k,v| k[:year] > regularstart } # No consideration beyond the target retirement age. 
                 # Now we have a hash with the years after the last points entry.
                 additionalpoints=Pensionfactor.drv_punkte_aus_svgehalt(sv_gehaelter_nach_punkten, provider)
+                rentenpunktemaxjahr=[[sv_gehaelter.map{|k,v| k[:year]}.max,rentenpunktemaxjahr].max, regularstart].min
                 entgeltpunkte=entgeltpunkte+additionalpoints unless additionalpoints.nil?
                 @assumptions << "Rentenpunkte aus SV-Gehältern: " + additionalpoints.to_s
             end
@@ -170,7 +172,12 @@ class V1::PensionController < ApplicationController
         # We could do nothing.
         # We could assume that the latest addition in points is the best iteration for the remaining years.
         # Or we take the average of all points and take this as assumption (we are missing working years)
+
         # Or we take one point to reflect the social average.
+        missingyears=regularstart-rentenpunktemaxjahr
+        @assumptions << "Geschätzte Rentenpunkte nach bekannten Werten: " + missingyears.to_s
+        entgeltpunkte=entgeltpunkte+missingyears if missingyears>0
+        @assumptions << "Geschätzte Rentenpunkte: " + entgeltpunkte.to_s
         
         # Replace modeldata with assumptions and log assumptions.
         entgeltpunkte=1 if entgeltpunkte.nil?
