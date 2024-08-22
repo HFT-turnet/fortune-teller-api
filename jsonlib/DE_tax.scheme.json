@@ -135,7 +135,33 @@
 						"to":"999999999",
 						"label":"tarifliche_est",
 						"var":"-0.48"
+					},
+					{
+						"type":"percent",
+						"base":"tarifliche_est",
+						"from":"33916",
+						"to":"999999999",
+						"label":"soli",
+						"var":"0.055",
+						"explain":"Soli is calculated above 18130 ESt. But there is a transition zone: if 11,9% on the difference between est and the free area is less.",
+						"explain2":"This break-even is at x EUR upwards: 5,5%*ESt = 11,9%*(ESt-18130): ESt = 18130/(1-0,055/0,119) = 18130/0,535 = 33915,887"
+					},
+					{
+						"type":"addition",
+						"base":"tarifliche_est",
+						"label":"soli_transition",
+						"var":"-18130"
+					},
+					{
+						"type":"percent",
+						"base":"soli_transition",
+						"from":"1",
+						"to":"15786",
+						"label":"soli",
+						"var":"0.119",
+						"explain":"33916 - 18130 = 15786."	
 					}
+
 	],
 	"2023": [
 		{
@@ -252,6 +278,31 @@
 			"to":"999999999",
 			"label":"tarifliche_est",
 			"var":"-0.48"
+		},
+		{
+			"type":"percent",
+			"base":"tarifliche_est",
+			"from":"32799",
+			"to":"999999999",
+			"label":"soli",
+			"var":"0.055",
+			"explain":"Soli is calculated above 18130 ESt. But there is a transition zone: if 11,9% on the difference between est and the free area is less.",
+			"explain2":"This break-even is at x EUR upwards: 5,5%*ESt = 11,9%*(ESt-17543): ESt=17543/(1-0,055/0,119) = 17543/0,535 = 32798,13"
+		},
+		{
+			"type":"addition",
+			"base":"tarifliche_est",
+			"label":"soli_transition",
+			"var":"-17543"
+		},
+		{
+			"type":"percent",
+			"base":"soli_transition",
+			"from":"1",
+			"to":"15256",
+			"label":"soli",
+			"var":"0.119",
+			"explain":"32799 - 17543= 15256."	
 		}
 ],
     "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.Soli ist eine Grobberechnung Stand 2021.",
@@ -300,11 +351,29 @@
 				  {
 					  "type":"percent",
 					  "base":"est",
-					  "from":"17543",
+					  "from":"32799",
 					  "to":"999999999",
 					  "label":"soli",
-					  "var":"0.055"
+					  "var":"0.055",
+					  "explain":"Soli is calculated above 18130 ESt. But there is a transition zone: if 11,9% on the difference between est and the free area is less.",
+					  "explain2":"This break-even is at x EUR upwards: 5,5%*ESt = 11,9%*(ESt-17543): ESt=17543/(1-0,055/0,119) = 17543/0,535 = 32798,13"
+				  },
+				  {
+					  "type":"addition",
+					  "base":"est",
+					  "label":"soli_transition",
+					  "var":"-17543"
+				  },
+				  {
+					  "type":"percent",
+					  "base":"soli_transition",
+					  "from":"1",
+					  "to":"15256",
+					  "label":"soli",
+					  "var":"0.119",
+					  "explain":"32799 - 17543= 15256."	
 				  }
+
 			  ],
 	  "Disclaimer":"Frei recherchierte Formelwerte und API-Lösung im Beta-Modus. Die berechneten Werte enthalten einige Sonderregelungen nicht.",
 	  "Source":"."

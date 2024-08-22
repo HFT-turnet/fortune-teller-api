@@ -24,10 +24,6 @@
 	  "obligatory": "no"
 	},
 	{
-		"label": "kinderlos",
-		"obligatory": "no"
-	},	
-	{
 	  "label": "kinderunter25",
 	  "obligatory": "no"
 	},
@@ -37,6 +33,60 @@
 	}
   ],
   "ALV": {
+	"2024": [
+	{
+		"type": "divide",
+		"base": "bruttogehalt",
+		"label": "bruttogehalt12",
+		"labelvar": "timeshare",
+		"explain": "Hochrechnung auf 12 Monate."
+	},
+	{
+		"type": "steppercent",
+		"base": "bruttogehalt12",
+		"from": "0",
+		"to":"89400",
+		"label": "sv_alv_ost12",
+		"var": "0.013",
+		"explain": "SV Ost-Berechnung"
+	},
+	{
+		"type": "steppercent",
+		"base": "bruttogehalt12",
+		"from": "0",
+		"to":"90600",
+		"label": "sv_alv_west12",
+		"var": "0.013",
+		"explain": "SV West-Berechnung"
+	},
+	{
+		"type":"addabsolute",
+		"base":"sv_ost",
+		"from": "1",
+		"to":"1",
+		"label":"sv_alv12",
+		"labelvar":"sv_alv_ost12",
+		"explain": "If sv_ost=1 then sv_alv will receive this value."
+	},
+	{
+		"type":"addabsolute",
+		"base":"sv_west",
+		"from":"1",
+		"to":"1",
+		"label":"sv_alv12",
+		"labelvar":"sv_alv_west12",
+		"explain": "If sv_west=1 then sv_alv will receive this value."
+	},
+	{
+		"type": "multiply",
+		"base": "sv_alv12",
+		"from":"0",
+		"to":"200000",
+		"label": "sv_alv",
+		"labelvar": "timeshare",
+		"explain": "Runterrechnung auf Timeshare-Quote."
+		}
+  	],
     "2023": [
 	  {
         "type": "divide",
@@ -95,6 +145,60 @@
     "Source": ".1"
   },
   "DRV": {
+	"2024": [
+		{
+			"type": "divide",
+			"base": "bruttogehalt",
+			"label": "bruttogehalt12",
+			"labelvar": "timeshare",
+			"explain": "Hochrechnung auf 12 Monate."
+		},
+		{
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"89400",
+			"label": "sv_drv_ost12",
+			"var": "0.093",
+			"explain": "SV Ost-Berechnung"
+		},
+		{
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"90600",
+			"label": "sv_drv_west12",
+			"var": "0.093",
+			"explain": "SV West-Berechnung"
+		},
+		{
+			"type":"addabsolute",
+			"base":"sv_ost",
+			"from": "1",
+			"to":"1",
+			"label":"sv_drv12",
+			"labelvar":"sv_drv_ost12",
+			"explain": "If sv_ost=1 then sv_drv will receive this value."
+		},
+		{
+			"type":"addabsolute",
+			"base":"sv_west",
+			"from":"1",
+			"to":"1",
+			"label":"sv_drv12",
+			"labelvar":"sv_drv_west12",
+			"explain": "If sv_west=1 then sv_drv will receive this value."
+		},
+		{
+			"type": "multiply",
+			"base": "sv_drv12",
+			"from":"0",
+			"to":"200000",
+			"label": "sv_drv",
+			"labelvar": "timeshare",
+			"explain": "Runterrechnung auf Timeshare-Quote."
+		}
+	],
     "2023": [
 	  {
         "type": "divide",
@@ -153,6 +257,57 @@
     "Source": ".1"
   },
   "GKV": {
+	"2024": [
+		{
+			"type": "divide",
+			"base": "bruttogehalt",
+			"label": "bruttogehalt12",
+			"labelvar": "timeshare",
+			"explain": "Hochrechnung auf 12 Monate."
+		},
+		{
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"62100",
+			"label": "sv_gkv_an_base12",
+			"var": "0.073",
+			"explain": "GKV Arbeitnehmer Regelsatz."
+		},
+		{
+			"type":"baseordefault",
+			"base":"zusatzbeitrag",
+			"part":"0.5",
+			"label":"sv_gkv_an_zusatzprozent",
+			"var":"0.0085",
+			"explain": "Wenn ein Prozentwert als Zusatzbeitrag gemeldet wurde, wird dieser verwendet 50% wegen anteiliger Beteiligung AN und AG. Sonst Durchschnittlihcer Zusatzbeitrag."
+		},
+		 {
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"62100",
+			"label": "sv_gkv_an_zusatz12",
+			"labelvar":"sv_gkv_an_zusatzprozent",
+			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
+		  },
+		  {
+			"type":"addition",
+			"base":"sv_gkv_an_base12",
+			"label":"sv_gkv_an12",
+			"labelvar":"sv_gkv_an_zusatz12",
+			"explain": "Add Baseamount and Zusatzbeitrag, 12 months basis."
+		 },
+		 {
+		  	"type": "multiply",
+		  	"base": "sv_gkv_an12",
+		  	"from":"0",
+		  	"to":"200000",
+		  	"label": "sv_gkv_an",
+		  	"labelvar": "timeshare",
+		   	"explain": "Runterrechnung auf Timeshare-Quote."
+		  }
+		],
 	"2023": [
 		{
 			"type": "divide",
@@ -208,6 +363,94 @@
 	  "Source": ".1"
   },
   "PV": {
+	"2024": [
+		{
+			"type": "divide",
+			"base": "bruttogehalt",
+			"label": "bruttogehalt12",
+			"labelvar": "timeshare",
+			"explain": "Hochrechnung auf 12 Monate."
+		},
+		{
+			"type": "addabsolute",
+			"base": "sv_pv_an_beitragsatz",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.017",
+			"explain": "Beitragssatz Basis AN mit Kindern (generell) (nicht Sachsen)."
+		},
+		{
+			"type": "addabsolute",
+			"base": "kinderunter25",
+			"from": "0",
+			"to": "0",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.006",
+			"explain": "Kinderlose zahlen 0,6% Zuschlag."
+		},
+		{
+			"type": "addabsolute",
+			"base": "kinderunter25",
+			"from": "1",
+			"to": "99",
+			"label": "kinderunter25",
+			"var": "-1",
+			"explain": "Erstes Kind bereits eingerechnet in Beitragssatz."
+		},
+		{
+			"type": "multiply",
+			"base": "kinderunter25",
+			"from":"1",
+			"to":"4",
+			"label": "sv_pv_abzugkinder",
+			"var": "-0.0025",
+			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
+		},
+		{
+			"type": "addabsolute",
+			"base": "kinderunter25",
+			"from":"5",
+			"to":"99",
+			"label": "sv_pv_abzugkinder",
+			"var": "-0.01",
+			"explain": "Von 2 bis 5 Kindern jeweils 0,25% Abschlag pro Kind."
+		},
+		{
+			"type": "addabsolute",
+			"base": "sv_pv_an_beitragsatz",
+			"from":"0",
+			"to":"1",
+			"label": "sv_pv_an_beitragsatz",
+			"labelvar": "sv_pv_abzugkinder",
+			"explain": "Ermittlung Beitragssatz"
+		},
+		{
+			"type": "addabsolute",
+			"base": "pv_sachsen",
+			"from":"1",
+			"to":"1",
+			"label": "sv_pv_an_beitragsatz",
+			"var": "0.005",
+			"explain": "In Sachsen tragen AN einen halben Prozentpunkt mehr."
+		},
+		 {
+			"type": "steppercent",
+			"base": "bruttogehalt12",
+			"from": "0",
+			"to":"62100",
+			"label": "sv_pv_an12",
+			"labelvar":"sv_pv_an_beitragsatz",
+			"explain": "GKV Arbeitnehmer Zusatzbeitrag."
+		  },
+		 {
+		  	"type": "multiply",
+		  	"base": "sv_pv_an12",
+		  	"from":"0",
+		  	"to":"200000",
+		  	"label": "sv_pv_an",
+		  	"labelvar": "timeshare",
+		   	"explain": "Runterrechnung auf Timeshare-Quote."
+		  }
+	],
 	"2023": [
 		{
 			"type": "divide",
@@ -225,9 +468,9 @@
 		},
 		{
 			"type": "addabsolute",
-			"base": "kinderlos",
-			"from": "1",
-			"to": "1",
+			"base": "kinderunter25",
+			"from": "0",
+			"to": "0",
 			"label": "sv_pv_an_beitragsatz",
 			"var": "0.006",
 			"explain": "Kinderlose zahlen 0,6% Zuschlag."

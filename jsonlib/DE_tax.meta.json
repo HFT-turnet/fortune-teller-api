@@ -4,6 +4,48 @@
   "comment1": "Only suited for simple tax cases. No guarantee for correctness. Use at your own risk.",
   "income":
   	{	
+		"2024": [
+			{
+				"scheme":"einkuenfte",
+				"type":"summeEinkuenfte",
+				"version":"2023"		
+			},
+			{
+				"scheme":"einkuenfte",
+				"type":"gesamtbetragEinkuenfte",
+				"version":"2023"		
+			},
+			{
+				"scheme":"sonderausgaben",
+				"type":"saVorsorgeaufwendungen",
+				"version":"2023"		
+			},
+			{
+				"scheme":"sonderausgaben",
+				"type":"saSonstige",
+				"version":"2023"	
+			},
+			{
+				"scheme":"zve",
+				"type":"einkommen",
+				"version":"2023"		
+			},
+			{
+				"scheme":"zve",
+				"type":"zve",
+				"version":"2023"		
+			},
+			{
+				"scheme":"tax",
+				"type":"estTarif",
+				"version":"2024"
+			},
+			{
+				"scheme":"tax",
+				"type":"festsetzung",
+				"version":"2024"
+			}
+		],
 		"2023": [
 					{
 						"scheme":"einkuenfte",
