@@ -34,6 +34,7 @@ class Simulation < ApplicationRecord
             return "Pension Points (Non-Currency)"
         end
     end
+    ### WHEN DO WE USE THIS?
     def self.valuetype_text(valuetype)
         case valuetype
         when 1
@@ -60,7 +61,7 @@ class Simulation < ApplicationRecord
     # Sourcetype
     # 0: Internal automatism
     # 1: Cvalue (a value in time with limits and characteristics)
-    # 2: Cslice (many individual timevalues that are to be treated in aggregation)
+    # 2: Cslice (many individual timevalues that are to be treated in aggregation) => a standard cslice does not have deviations beyond its assumptions.
     # 3: Cflow (a flow over a certain timeframe, i.e. debt, fund, other)
     # 4: CPensionflow (specific to pensions, similar to Cflow, but potentially non-currency)
     def sourcetype_text

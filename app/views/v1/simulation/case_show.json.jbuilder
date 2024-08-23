@@ -11,7 +11,7 @@ json.cvalues @case.cvalues.where(:cslice_id=>nil).each do |cv|
 	json.valuetype_text cv.cvaluetype_text
 	json.label cv.label
 	json.t cv.t
-	json.value cv.ev
+	json.value (cv.ev + cv.cto)
 	json.fromt cv.fromt
 	json.tot cv.tot
 	json.interest cv.interest

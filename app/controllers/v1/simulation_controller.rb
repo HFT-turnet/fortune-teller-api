@@ -44,6 +44,7 @@ class V1::SimulationController < ApplicationController
 
     def case_entries
         # Show all objects in the case
+        # Very general solution, case_show actually provides better information.
         render json: @case.as_json(include: [:cvalues, :cslices])
     end
 
@@ -110,13 +111,22 @@ class V1::SimulationController < ApplicationController
 
     # Remove entries
     def cvalue_destroy
-        # Only execute, if the entry is not part of something bigger.
+        # Only do a flat execute, if the entry is not part of something bigger.
         if @case.cvalues.find(params[:cvalue_id]).cslice_id.nil?
             @case.cvalues.find(params[:cvalue_id]).destroy
             @case.simulations.where(sourcetype: 1, sourceid: params[:cvalue_id]).destroy_all
             @case.simulate_cashbalance
+        else
+            cslice=@case.cvalues.find(params[:cvalue_id]).cslice
+            @case.cvalues.find(params[:cvalue_id]).destroy
+            cslice.simulate
+            @case.simulate_cashbalance
         end
         return "OK."
+    end
+
+    def cslice_show
+        @cslice=@case.cslices.find(params[:cslice_id])
     end
 
     def cslice_destroy
