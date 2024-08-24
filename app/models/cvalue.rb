@@ -10,35 +10,92 @@ class Cvalue < ApplicationRecord
         case self.cvaluetype
         when 1
             return "Income"
+            # This type is timemorphed if multi-year and against the base year. It would be repeated annualy when a time-span is chosen.
         when 2
             return "Expense"
+            # This type is timemorphed if multi-year and against the base year. It would be repeated annualy when a time-span is chosen.
         when 3
-            return "Cashbalance"
+            return "Cashbalance - " + self.cf_type_text
+            # This type represents savings / credit and a savings plan. It is not timemorphed, but simulated in cash.
+            # The ev is the end value in period fromt.
+            # The cto is the annual value cashflow.
+            # The interest is the interest rate per year, it is incurred on the prior year.
+            # The inflation can carry a value. This only makes sense in case of simulating a market value element, i.e. a fund of some kind. The amount is applied on the ev without cash impact until repayment.
+            # The cf_type is the cashflow type and determines which part of th Cvalue has an impact on the overall budget.
         end
     end
-
+    def cf_type_text
+        case self.cf_type
+        when 1
+            return "cto contains interest" # Typical for an annuity debt.
+        when 2
+            return "cto and interest lead to cash" # Typical for a debt balance.
+        when 3
+            return "cto is cash, interest is accumulated" # Typical for a savings account.
+        end
+    end
+    
     # Simulation depending on valuetype
-    def simulate_cashbalance
+    def simulate #type 3 only.
+        # This module was called "simulate_cashbalance" before.
+        # The purpose of this is to simulate the type3 values. All other values are either taken into the simulation via their overarching module.
+        # or are added with the "before_save" write_to_simulation. Function. 
+        # The type 3 is capable of simple investment flows (i.e. savings account, simple debt, a kind of financial asset).
+
         return unless self.cvaluetype==3
+
         # Clear existing simulation values
         self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
         # Create new simulation values
         (self.fromt..self.tot).each do |t|
-            # Write first year movement
+            # Write first year movement (Cash out / Cash in depending on type.)
             if t==self.fromt
                 # The Balance move is treated with inverse value to the balance: i.e. to have a cashbalance on something, it goes against the cashflow.
+                # It is generally assumed, that the cashflows producing the ev are aggregated towards the end of the year.
+                # The cto of the first year is contained in this value, it does not come extra. No interest is considered in the first year.
                 self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: -1*self.ev)
                 newvalue=self.ev
             else
-                # We need to consider the interest rate here
-                # Write interest as income and as a deltaposition in asset.
+                # For all other years, we need to consider the interest rate & CTO
                 interest=@priorvalue*self.interest
-                self.case.simulations.create(valuetype: 1, sourcetype: 1, sourceid: self.id, t: t, value: interest)
-                self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: -1*interest)
-                newvalue=@priorvalue+interest
+                newvalue=@priorvalue # This is the starting point before oprions are considered.
+                # Depending on the cashflow type, interest is accumulated, contained in cto or leads to cash.
+                # The movement cash is being generated here, the ev is updated at the bottom of the loop.
+                case self.cf_type
+                when 1
+                    # Interest is part of CTO and needs to be separated out.
+                    evmovement=self.cto-interest # example: -500 annuity, -100 interest, -400 remaining ev reduction.
+                    # Simulation movements: CTO, Interest.
+                    self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: evmovement) unless evmovement==0
+                    newvalue=newvalue-evmovement # The CTO effect on the ev is adverse. i.e. negative Cash to Owner decreases the debt balance.
+                    # Interest (valuetype depends on kind of interest):
+                    self.case.simulations.create(valuetype: 2, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest<0
+                    self.case.simulations.create(valuetype: 1, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest>0
+                when 2
+                    # CTO and interest are both separate cash movements.
+                    # CTO:
+                    self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: self.cto) unless self.cto==0
+                    newvalue=newvalue-self.cto # The CTO effect on the ev is adverse. i.e. Cash to Owner decreases the savings balance.
+                    # Interest (valuetype depends on kind of interest):
+                    self.case.simulations.create(valuetype: 2, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest<0
+                    self.case.simulations.create(valuetype: 1, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest>0
+                when 3
+                    # CTO generates additional movement:
+                    self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: self.cto) unless self.cto==0
+                    newvalue=newvalue-self.cto # The CTO effect on the ev is adverse. i.e. Cash to Owner decreases the savings balance.
+                    # Interest is accumulated in balance:
+                    newvalue=newvalue+interest # both correct for savings and debt.
+                end
+                # At this stage we have generate the every year's movements and determined a newvalue after cto and interest.
+            end
+            # Very special case, but technically possible: Inflation is set like a market development on a fund.
+            if self.inflation!=0 and not t==self.fromt
+                # The "inflation" / market movement is applied to the endvalue, but not to the movement cash.
+                newvalue=newvalue*(1+self.inflation)
             end
             
-            # Write last year movement or manage every other case
+            # Write last year movement or manage every other case to determine the core values.
+            # This would be the remaining balance with inverted value of the start of period.
             if t==self.tot
                 # The endvalue is transferred into movement cash.
                 self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: newvalue)
@@ -63,6 +120,16 @@ class Cvalue < ApplicationRecord
     # Write to simulation
     private
     def write_to_simulation
-        puts "I would simulate this value now."
+        puts "Simulating CValue: #{self.id}"
+        # This is only being executed for type 1 and 2 automatically. Type 3 is being executed in the simulate function.
+        # It is also limited to those entries, that are not embedded in something bigger like a Cslice.
+        # Clear existing simulation values
+        if self.cvaluetype!=3 and self.cslice_id.nil?
+            self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
+            # Create new simulation values
+            (self.fromt..self.tot).each do |t|
+                self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
+            end
+        end
     end
 end
