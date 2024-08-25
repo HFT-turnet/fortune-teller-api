@@ -48,44 +48,19 @@ class V1::SimulationController < ApplicationController
         render json: @case.as_json(include: [:cvalues, :cslices])
     end
 
-    # Create an entry in the case
+    # Create an entry (or multiple) in the case
     def entry_create
+        # This has been empowered to use params["cvalue"] and params["cslice"] for one entry and the plurals for multiple entries.
         case params[:type]
             when "Cvalue"
-                # Enter a value in a point in time = Cvalue
-                # i.e. receive an amount X in year Y
-                entry=Cvalue.create(
-                    case_id: @case.id,
-                    cvaluetype: params[:cvalue]["cvaluetype"],
-                    label: params[:cvalue]["label"],
-                    cto:  params[:cvalue]["cto"],
-                    ev:  params[:cvalue]["ev"],
-                    t:  params[:cvalue]["t"],
-                    fromt:  params[:cvalue]["fromt"],
-                    tot:  params[:cvalue]["tot"],
-                    interest:  params[:cvalue]["interest"]
-                )
-                # Check some logic on the new entry.
-                entry.ev=0 if entry.cvaluetype<3
-                entry.cto=0 if entry.cvaluetype>2
-                entry.save
-                entry.simulate_cashbalance
-            when "Cslice"
-                # Enter a recurring value = Cslice
-                # i.e. pay an amount X every year from year Y to year Z
-                cslice=Cslice.create(
-                    case_id: @case.id,
-                    cvaluetype: params[:cslice]["cvaluetype"],
-                    label: params[:cslice]["label"],
-                    t: params[:cslice]["t"],
-                    disclaimer: params[:cslice]["disclaimer"],
-                    source: params[:cslice]["source"],
-                    info: params[:cslice]["info"]
-                )
-                cslice.save
-                # Create all Cvalues in the slice:
-                params[:cslice]["cvalues"].each do |v|
-                    entry=cslice.cvalues.create(
+                if params[:cvalue]
+                    # initialize the array as if a multitude of entries had been submitted.
+                    params[:cvalues]=[]
+                    params[:cvalues] << params[:cvalue]
+                end
+                # Work with multitude of entries.
+                params[:cvalues].each do |v|
+                    entry=Cvalue.create(
                         case_id: @case.id,
                         cvaluetype: v["cvaluetype"],
                         label: v["label"],
@@ -94,15 +69,57 @@ class V1::SimulationController < ApplicationController
                         t:  v["t"],
                         fromt:  v["fromt"],
                         tot:  v["tot"],
+                        interest:  v["interest"],
                         inflation:  v["inflation"],
-                        interest:  v["interest"]
+                        cf_type:  v["cf_type"]
                     )
                     # Check some logic on the new entry.
-                    entry.inflation=0 if entry.inflation.nil?
+                    entry.ev=0 if entry.cvaluetype<3
                     entry.save
                 end
-                cslice.sync_cvalues
-                cslice.simulate
+
+            when "Cslice"
+                # Enter a recurring value = Cslice or multiple Cslices.
+                # i.e. pay an amount X every year from year Y to year Z
+                if params[:cslice]
+                    # initialize the array as if a multitude of entries had been submitted.
+                    params[:cslices]=[]
+                    params[:cslices] << params[:cslice]
+                end
+                # Work with multitude of entries.
+                params[:cslices].each do |v|
+                    cslice=Cslice.create(
+                        case_id: @case.id,
+                        cvaluetype: v["cvaluetype"],
+                        label: v["label"],
+                        t: v["t"],
+                        disclaimer: v["disclaimer"],
+                        source: v["source"],
+                        info: v["info"]
+                    )
+                    cslice.save
+                    # Create all Cvalues in the slice:
+                    v["cvalues"].each do |v|
+                        entry=cslice.cvalues.create(
+                            case_id: @case.id,
+                            cvaluetype: v["cvaluetype"],
+                            label: v["label"],
+                            cto:  v["cto"],
+                            ev:  v["ev"],
+                            t:  v["t"],
+                            fromt:  v["fromt"],
+                            tot:  v["tot"],
+                            inflation:  v["inflation"],
+                            interest:  v["interest"],
+                            cf_type:  v["cf_type"]
+                        )
+                        # Check some logic on the new entry.
+                        entry.inflation=0 if entry.inflation.nil?
+                        entry.save
+                    end
+                    cslice.sync_cvalues
+                    cslice.simulate
+                end
         end
         # Simulate the Cashbalance
         @case.simulate_cashbalance

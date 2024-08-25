@@ -1,4 +1,5 @@
 class Cvalue < ApplicationRecord
+    before_save :check_core_fields
     before_save :write_to_simulation
     belongs_to :case
     has_many :simulations
@@ -32,6 +33,8 @@ class Cvalue < ApplicationRecord
             return "cto and interest lead to cash" # Typical for a debt balance.
         when 3
             return "cto is cash, interest is accumulated" # Typical for a savings account.
+        else
+            return "Unknown" # This is OK to happen, if the cf_type is not needed.
         end
     end
     
@@ -48,6 +51,10 @@ class Cvalue < ApplicationRecord
         self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
         # Create new simulation values
         (self.fromt..self.tot).each do |t|
+            vt_interest=1 if self.ev>0
+            vt_interest=2 if self.ev<0
+            vt_balance=11 if self.ev>0
+            vt_balance=12 if self.ev<0
             # Write first year movement (Cash out / Cash in depending on type.)
             if t==self.fromt
                 # The Balance move is treated with inverse value to the balance: i.e. to have a cashbalance on something, it goes against the cashflow.
@@ -69,16 +76,14 @@ class Cvalue < ApplicationRecord
                     self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: evmovement) unless evmovement==0
                     newvalue=newvalue-evmovement # The CTO effect on the ev is adverse. i.e. negative Cash to Owner decreases the debt balance.
                     # Interest (valuetype depends on kind of interest):
-                    self.case.simulations.create(valuetype: 2, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest<0
-                    self.case.simulations.create(valuetype: 1, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest>0
+                    self.case.simulations.create(valuetype: vt_interest, sourcetype: 1, sourceid: self.id, t: t, value: interest)
                 when 2
                     # CTO and interest are both separate cash movements.
                     # CTO:
                     self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: self.cto) unless self.cto==0
                     newvalue=newvalue-self.cto # The CTO effect on the ev is adverse. i.e. Cash to Owner decreases the savings balance.
                     # Interest (valuetype depends on kind of interest):
-                    self.case.simulations.create(valuetype: 2, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest<0
-                    self.case.simulations.create(valuetype: 1, sourcetype: 1, sourceid: self.id, t: t, value: interest) if interest>0
+                    self.case.simulations.create(valuetype: vt_interest, sourcetype: 1, sourceid: self.id, t: t, value: interest)
                 when 3
                     # CTO generates additional movement:
                     self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: self.cto) unless self.cto==0
@@ -100,10 +105,10 @@ class Cvalue < ApplicationRecord
                 # The endvalue is transferred into movement cash.
                 self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: newvalue)
                 # Endvalue is zero
-                self.case.simulations.create(valuetype: 11, sourcetype: 1, sourceid: self.id, t: t, value: 0)
+                self.case.simulations.create(valuetype: vt_balance, sourcetype: 1, sourceid: self.id, t: t, value: 0)
             else
                 # Write balance
-                self.case.simulations.create(valuetype: 11, sourcetype: 1, sourceid: self.id, t: t, value: newvalue)
+                self.case.simulations.create(valuetype: vt_balance, sourcetype: 1, sourceid: self.id, t: t, value: newvalue)
                 # Store the value for the next iteration
                 @priorvalue=newvalue
             end
@@ -119,17 +124,36 @@ class Cvalue < ApplicationRecord
 
     # Write to simulation
     private
+    def check_core_fields
+        # Check that the fromt and tot are in the frame of the case.
+        self.fromt=self.case.byear if self.fromt<self.case.byear
+        self.tot=self.case.dyear if self.tot>self.case.dyear
+        # Check some core logic on the entry.
+        self.inflation=0 if self.inflation.nil?
+        self.interest=0 if self.interest.nil?
+        self.ev=0 if self.ev.nil?
+        self.cto=0 if self.cto.nil?
+    end
     def write_to_simulation
+        # Start the simulation
         puts "Simulating CValue: #{self.id}"
         # This is only being executed for type 1 and 2 automatically. Type 3 is being executed in the simulate function.
         # It is also limited to those entries, that are not embedded in something bigger like a Cslice.
         # Clear existing simulation values
-        if self.cvaluetype!=3 and self.cslice_id.nil?
+        if self.cvaluetype<3 and self.cslice_id.nil?
             self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
             # Create new simulation values
             (self.fromt..self.tot).each do |t|
                 self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
             end
+        end
+        if self.cvaluetype==3 and self.cslice_id.nil?
+            self.simulate
+        end
+        if self.cvaluetype==4
+            # This is a special case, where the value of the general cash-buffer is being set, rather than calculated.
+            self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
+            self.case.simulations.create(valuetype: 10, sourcetype: 1, sourceid: self.id, t: t, value: self.ev)
         end
     end
 end
