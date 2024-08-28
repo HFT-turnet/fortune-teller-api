@@ -176,6 +176,6 @@ class V1::SimulationController < ApplicationController
         render json: message unless @case
     end
     def case_permitted_params
-        params.permit(:byear, :dyear, :sex)
+        params.permit(:byear, :dyear, :sex, :nodelete)
     end
 end

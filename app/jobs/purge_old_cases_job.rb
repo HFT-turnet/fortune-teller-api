@@ -12,7 +12,7 @@ class PurgeOldCasesJob < ApplicationJob
     # The first check is in simulation data, because most client interactions should have led to simulations.
     # The second check is in case data, if a case does not have any simulations, it can also run out of validity.
 
-    validity=30.days.ago
+    validity=60.days.ago
     # Get the case IDs and most recent simulation date
     sql="
         SELECT case_id, updated_at FROM ( SELECT case_id, updated_at,
