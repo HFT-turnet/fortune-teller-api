@@ -12,12 +12,6 @@ Rails.application.routes.draw do
       match 'summary_report', via: :post
       match 'timeslice' , via: :post
       match 'lastingmoney', via: :get
-      #match 'timemorph' , via: :post
-      #match 'timeslice_sample2', via: :get
-      #match 'timeslice_get' , via: :post
-      #match 'timeslice_series' , via: :post
-      #match 'valueflow_complete', via: :post
-      #match 'summary_report', via: :post
     end
     
     # CalcSchemes
@@ -61,14 +55,15 @@ Rails.application.routes.draw do
     end
 
     # Manage APIKeys
+    # Currently there is no need to manage API-Keys, the function is deactivated.
     #post '/persist/api-keys', to: 'api_keys#create'
     #delete '/persist/api-keys', to: 'api_keys#destroy'
     #get '/persist/api-keys', to: 'api_keys#index'
-    resources :api_keys, path: '/persist/api-keys', only: %i[index create destroy]
-    namespace :beta, defaults: { format: :json }  do
+    
+    #resources :api_keys, path: '/persist/api-keys', only: %i[index create destroy]
+    
+    #namespace :beta, defaults: { format: :json }  do
       #match 'timeslice', to: 'public#get_timeslice', via: :get
-    end
-
+    #end
   end
-  
 end

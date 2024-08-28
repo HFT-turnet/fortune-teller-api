@@ -22,6 +22,7 @@ class V1::SimulationController < ApplicationController
 
     # Destroy a case
     def case_destroy
+        # There is a better version now with @case.delete_all
         # Destroy simulations
         @case.simulations.destroy_all
         # Destroy Cvalues, Cslices, Cflows, CPensionFlows

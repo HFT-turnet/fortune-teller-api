@@ -1,5 +1,6 @@
 class Case < ApplicationRecord
     before_save :generate_external_uuid
+    before_save :set_nodelete_default
     has_many :simulations
     has_many :cvalues
     has_many :cslices
@@ -141,8 +142,25 @@ class Case < ApplicationRecord
         end
     end
 
+    # Deletion of case and all data
+    def delete_all
+        # Destroy simulations
+        self.simulations.destroy_all
+        # Destroy Cvalues, Cslices, Cflows, CPensionFlows
+        self.cvalues.destroy_all
+        self.cslices.destroy_all
+        #@case.cflows.destroy_all
+        #@case.cpensionflows.destroy_all
+        # Destroy the case
+        self.destroy
+        puts "Deleted case with id #{self.external_id}."
+    end
+
     private
+    def set_nodelete_default
+        self.nodelete=false if self.nodelete.nil?
+    end
     def generate_external_uuid
-        self.external_id = SecureRandom.uuid
+        self.external_id = SecureRandom.uuid if self.external_id.nil?
     end
 end

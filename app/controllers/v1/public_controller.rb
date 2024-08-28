@@ -3,7 +3,6 @@ class V1::PublicController < ApplicationController
   #controller.test
   
   # Base math (Single Value functions)
-  # tbd
   
   # Transformations
     # Use Timevalue Models for transformations
@@ -17,7 +16,7 @@ class V1::PublicController < ApplicationController
       ts=Valueflow.new(json)
       ts.tvs=[]
       ts.tvs_attributes=json["tvs"]
-  # OPEN: include check whether the relevant fields are available
+    # OPEN: include check whether the relevant fields are available
       ts.twoperiodcomplete
       jsonout << ts.as_json
     end
@@ -81,7 +80,7 @@ class V1::PublicController < ApplicationController
     # Load named TVs into Timeslice
     expenses.tvs_attributes=envelope_expenses_tvs unless params[:public][:expenses].blank?
     incomes.tvs_attributes=envelope_incomes_tvs unless params[:public][:incomes].blank?    
-# Add an info box that allows to review API comments
+    # Add an info box that allows to review API comments
     # Backup (if needed: find a specific label in entries)
     #a=expenses.tvs.select {|tv| tv.label == e.label}
     
@@ -97,13 +96,13 @@ class V1::PublicController < ApplicationController
       @expenselist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>expenses_tf.tvs[i].cto})
     end
         
-  unless incomes.blank?
-  # Incomes Next (as above)
+   unless incomes.blank?
+     # Incomes Next (as above)
     incomes_t0=incomes.freeze
     incomes.move_to(@envelope["to"])
     incomes_tf=incomes.freeze 
 
-  # Prepare for Json_parse
+    # Prepare for Json_parse
     @incomelist=[]
     incomes_t0.tvs.each_with_index do |t,i|
       @incomelist.push({"label"=>t.label,"cto_now"=>t.cto,"cto_then"=>incomes_tf.tvs[i].cto}) 
@@ -232,21 +231,6 @@ class V1::PublicController < ApplicationController
     render json: ts
   end  
   
-  def draft
-    # TV Get only knows two periods in the model: 0 and 1, the number of periods to be discounted is in the header
-    # Set the Header and initiate
-    ts=Valueflow.new(valueflow_head_params)
-    # Set t=0 data
-    ts.tvs.first.update(valueflow_tvs_params[0])
-    # Create t=1 dataset
-    ts.getorcreate_tv_at_t(1)
-    ts.tvs.last.update(valueflow_tvs_params[1])
-    # Call TV calculation
-    ts.setTwoPeriodEv
-    # Play back the dataset
-    render json: ts.as_json
-  end
-  
   ## Work with Calculation Models
   # How long will money last?
   def lastingmoney
@@ -262,7 +246,6 @@ class V1::PublicController < ApplicationController
       render json: flow
     end
   end
-  
   
   # Params definition  
   def timeslice_head_params
