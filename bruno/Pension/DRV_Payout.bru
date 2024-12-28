@@ -1,0 +1,66 @@
+meta {
+  name: DRV_Payout
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{ftapi_server}}/v1/pension/drv/payout
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "requires": "All supply input data.",
+      "person": {
+          "birthyear": 1970
+      },
+      "pensionplan": {
+          "provider": "DRV-West",
+          "startsaving": 2000,
+          "endsaving": 2035,
+          "startpayout": 2035
+      },
+      "drv": {
+          "annahmen": {
+              "rentenanpassung": 0.01
+          },
+          "rentenpunkte": [
+              {
+                  "type": "status",
+                  "year": 2010,
+                  "value": 20
+              },
+              {
+                  "type": "status",
+                  "year": 2020,
+                  "value": 50
+              },
+              {
+                  "type": "contribution",
+                  "year": 2021,
+                  "value": 1.25
+              }
+          ],
+          "sv_gehalt": [
+              {
+                  "year": 2020,
+                  "value": 80000
+              },
+              {
+                  "year": 2021,
+                  "value": 85000
+              },
+              {
+                  "year": 2022,
+                  "value": 30000
+              },
+              {
+                  "year": 2023,
+                  "value": 90000
+              }
+          ]
+      }
+  }
+}

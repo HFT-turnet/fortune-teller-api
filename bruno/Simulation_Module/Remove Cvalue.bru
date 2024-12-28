@@ -1,0 +1,11 @@
+meta {
+  name: Remove Cvalue
+  type: http
+  seq: 13
+}
+
+delete {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/cvalue/81
+  body: none
+  auth: none
+}

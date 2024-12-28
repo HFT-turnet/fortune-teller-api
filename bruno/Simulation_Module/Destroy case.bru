@@ -1,0 +1,11 @@
+meta {
+  name: Destroy case
+  type: http
+  seq: 15
+}
+
+delete {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}
+  body: none
+  auth: none
+}

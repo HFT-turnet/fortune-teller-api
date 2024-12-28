@@ -1,0 +1,30 @@
+meta {
+  name: DRV berechnen
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/sv/DRV/2023
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+              "bruttogehalt": 100000.00,
+              "sv_ost": 0,
+              "sv_west": 1,
+              "timeshare": 0.5
+   }
+}
+
+docs {
+  The ALV calculation receives a _bruttogehalt_ and a _timeshare._ The timeshare provides a fraction of a year in decimal of 1 or below.
+  
+  Adding sv_ost = 1 or sv_west=1 will help the api to provide the correct regional calculation as output: _sv_alv / sv_alv12._ If it is not set, separate values for west and ost will be provided only (always onf 12 months basis).
+}

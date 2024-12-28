@@ -1,0 +1,40 @@
+meta {
+  name: ESt Metascheme
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/meta/tax/income/2023
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "bruttogehalt": "100000.00",
+      "sv_ost": "0.00",
+      "sv_west": "1.00",
+      "timeshare": "1.00",
+      "kinderlos": "1.00",
+      "bruttogehalt12": "100000.00",
+      "sv_alv_ost12": "1107.61",
+      "sv_alv_west12": "1138.81",
+      "sv_alv12": "1138.81",
+      "sv_alv": "1138.81",
+      "disclaimer": "PV Berechnung Arbeitnehmer. Developmentversion, nicht für produktiven Einsatz.",
+      "source": ".1",
+      "sv_drv_ost12": "7923.69",
+      "sv_drv_west12": "8146.89",
+      "sv_drv12": "8146.89",
+      "sv_drv": "8146.89",
+      "sv_gkv_an_base12": "4369.12",
+      "sv_gkv_an_zusatzprozent": "0.01",
+      "sv_gkv_an_zusatz12": "508.73",
+      "sv_gkv_an12": "4877.86",
+      "sv_gkv_an": "4877.86",
+      "sv_pv_an_beitragsatz": "0.02",
+      "sv_pv_an12": "1376.57",
+      "sv_pv_an": "1376.57"
+  }
+}

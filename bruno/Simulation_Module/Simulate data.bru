@@ -1,0 +1,11 @@
+meta {
+  name: Simulate data
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/simulate
+  body: none
+  auth: none
+}

@@ -1,0 +1,11 @@
+meta {
+  name: Show Case Entries
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/entries
+  body: none
+  auth: none
+}

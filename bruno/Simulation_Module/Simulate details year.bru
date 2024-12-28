@@ -1,0 +1,15 @@
+meta {
+  name: Simulate details year
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/simulate_detail?t=2042
+  body: none
+  auth: none
+}
+
+params:query {
+  t: 2042
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Run Metascheme
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/meta/tax/income/2023
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+  "bruttogehalt":"742229.10", 
+  "brutto":"742229.1", 
+  "wk_Arbeitsweg":"494.52", 
+  "wk_Kammerbeitraege":"666.0", 
+  "wk_Arbeitsmittel":"0.0", 
+  "wk_BerufAfA":"252.0", 
+  "werbungskosten":"1412.52", 
+  "sv_gkv_an":"4080.60", 
+  "sv_drv":"7867.80", 
+  "sv_rente_freiwillig":"9318.56",
+  "sa_spenden":"13618.62", 
+  "haushaltsnaheDL":"3094.25"
+  }
+}

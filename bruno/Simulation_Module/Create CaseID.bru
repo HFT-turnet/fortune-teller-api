@@ -1,0 +1,24 @@
+meta {
+  name: Create CaseID
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case
+  body: text
+  auth: none
+}
+
+body:text {
+  {
+      "byear": 1982,
+      "dyear": 2082,
+      "sex": 1
+  }
+}
+
+script:post-response {
+  const response = res.getBody();
+  bru.setEnvVar('sim_caseid', response.external_id);
+}

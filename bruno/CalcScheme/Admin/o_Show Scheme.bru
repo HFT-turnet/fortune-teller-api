@@ -1,0 +1,11 @@
+meta {
+  name: o_Show Scheme
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ftapi_server}}/v1/csadmin/DE/tax/income/2021
+  body: formUrlEncoded
+  auth: none
+}

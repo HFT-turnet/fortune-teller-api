@@ -1,0 +1,50 @@
+meta {
+  name: Create entry Cslice
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/entry?type=Cslice
+  body: json
+  auth: none
+}
+
+params:query {
+  type: Cslice
+}
+
+body:json {
+  {
+      "cslice": {
+          "cvaluetype": 1,
+          "label": "Arbeitseinkommen",
+          "t": 2024,
+          "disclaimer": "I am a Disclaimer",
+          "source": "I am a source",
+          "info": "I am an Info.",
+          "cvalues": [
+              {
+                  "cvaluetype": 1,
+                  "label": "Bruttoeinkommen",
+                  "cto": 40000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              },
+              {
+                  "cvaluetype": 2,
+                  "label": "Steuern",
+                  "cto": -11000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              }
+          ]
+      }
+  }
+}

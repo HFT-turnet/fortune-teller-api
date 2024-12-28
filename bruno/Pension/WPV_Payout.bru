@@ -1,0 +1,25 @@
+meta {
+  name: WPV_Payout
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{ftapi_server}}/v1/pension/wpv/payout
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "requires": "All supply input data.",
+      "person": {
+          "birthyear": 1960,
+          "deathyear": 2040
+      },
+      "pensionplan": {
+          "birthyear": 1960,
+          "deathyear": 2040
+      }
+  }
+}

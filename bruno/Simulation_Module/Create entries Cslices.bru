@@ -1,0 +1,82 @@
+meta {
+  name: Create entries Cslices
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/entry?type=Cslice
+  body: json
+  auth: none
+}
+
+params:query {
+  type: Cslice
+}
+
+body:json {
+  {
+      "cslices": [ 
+          {
+          "cvaluetype": 1,
+          "label": "ArbeitseinkommenA",
+          "t": 2024,
+          "disclaimer": "I am a Disclaimer",
+          "source": "I am a source",
+          "info": "I am an Info.",
+          "cvalues": [
+              {
+                  "cvaluetype": 1,
+                  "label": "Bruttoeinkommen",
+                  "cto": 40000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              },
+              {
+                  "cvaluetype": 2,
+                  "label": "Steuern",
+                  "cto": -11000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              }
+          ]
+      },
+      {
+          "cvaluetype": 1,
+          "label": "ArbeitseinkommenB",
+          "t": 2024,
+          "disclaimer": "I am a Disclaimer",
+          "source": "I am a source",
+          "info": "I am an Info.",
+          "cvalues": [
+              {
+                  "cvaluetype": 1,
+                  "label": "Bruttoeinkommen",
+                  "cto": 40000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              },
+              {
+                  "cvaluetype": 2,
+                  "label": "Steuern",
+                  "cto": -11000,
+                  "ev": 0,
+                  "t": 1990,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0
+              }
+          ]
+      }
+      ]
+  }
+}

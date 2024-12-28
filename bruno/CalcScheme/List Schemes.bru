@@ -1,0 +1,11 @@
+meta {
+  name: List Schemes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ftapi_server}}/v1/cs/DE/listschemes
+  body: formUrlEncoded
+  auth: none
+}

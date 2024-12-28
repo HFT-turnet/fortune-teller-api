@@ -1,0 +1,48 @@
+meta {
+  name: EStTarif
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/tax/estTarif/2024
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+              "zv_einkommen": {{cs_zve}}
+   }
+}
+
+script:pre-request {
+  //bru.setVar("year", 2023);
+}
+
+tests {
+  // Important: the CSV file must be really comma separated with decimals als "."
+  test("EST RESULT", function () {
+      // We accept a deviation of up to a EUR. Math.floor rounds down (that is why we do abs first)
+      var jsonData = res.getBody();
+      console.log(
+  //         "ESt: " + jsonData.tarifliche_est + " vs " + pm.iterationData.get("est")
+      )
+      expect(
+          Math.floor(
+  //             Math.abs(parseFloat(jsonData.tarifliche_est)-pm.iterationData.get("est"))
+                      )).to.eql(0);
+  });
+  test("SOLI RESULT", function () {
+      var jsonData = res.getBody();
+      // Soli might not be in answerset when 0
+      var responsesoli=jsonData.soli || 0
+      console.log(
+  //         "Soli: " + responsesoli + " vs " + pm.iterationData.get("soli")
+      )
+      expect(Math.floor(
+  //             Math.abs(parseFloat(responsesoli)-pm.iterationData.get("soli"))
+                      )).to.eql(0);
+  });
+  
+}

@@ -1,0 +1,17 @@
+meta {
+  name: ESt_Soli
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/tax/estTarif/2024
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "zv_einkommen": "100000.00"
+  }
+}

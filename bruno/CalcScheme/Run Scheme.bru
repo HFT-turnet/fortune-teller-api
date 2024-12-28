@@ -1,0 +1,23 @@
+meta {
+  name: Run Scheme
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{ftapi_server}}/v1/cs/DE/einkuenfte/summeEinkuenfte/2023
+  body: json
+  auth: none
+}
+
+body:json {
+          {
+              "bruttogehalt": 1000000.00,
+              "einnahme":122345,
+              "werbungskosten": 5000,
+              "einkuenft": 2000,
+              "sonderausgaben": 100,
+              "vorsorgeaufwendungen": 200,
+              "zv_einkommen": 50000
+          }
+}

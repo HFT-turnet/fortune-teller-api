@@ -1,0 +1,50 @@
+meta {
+  name: Create entry Cslice Aufwand
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/entry?type=Cslice
+  body: json
+  auth: none
+}
+
+params:query {
+  type: Cslice
+}
+
+body:json {
+  {
+      "cslice": {
+          "cvaluetype": 2,
+          "label": "Lebenskosten",
+          "t": 2024,
+          "disclaimer": "I am a Disclaimer",
+          "source": "I am a source",
+          "info": "I am an Info.",
+          "cvalues": [
+              {
+                  "cvaluetype": 2,
+                  "label": "Miete",
+                  "cto": -24000,
+                  "ev": 0,
+                  "t": 2024,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0.01
+              },
+              {
+                  "cvaluetype": 2,
+                  "label": "Essen",
+                  "cto": -26000,
+                  "ev": 0,
+                  "t": 2024,
+                  "fromt": 1990,
+                  "tot": 2090,
+                  "inflation": 0.02
+              }
+          ]
+      }
+  }
+}

@@ -1,0 +1,42 @@
+meta {
+  name: Create entries Cvalues
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/entry?type=Cvalue
+  body: json
+  auth: none
+}
+
+params:query {
+  type: Cvalue
+}
+
+body:json {
+  {
+      "cvalues": [
+              {
+                  "cvaluetype": 3,
+                  "label": "Spardose1",
+                  "cto": 0,
+                  "ev": 10000,
+                  "t": 2020,
+                  "fromt": 2020,
+                  "tot": 2024,
+                  "interest": 0.02
+              },
+              {
+                  "cvaluetype": 3,
+                  "label": "Spardose2",
+                  "cto": 0,
+                  "ev": 1000,
+                  "t": 2024,
+                  "fromt": 2024,
+                  "tot": 2090,
+                  "interest": 0.02
+              }
+              ]
+  }
+}
