@@ -23,6 +23,19 @@ development:
   variables:
      sql_mode: TRADITIONAL
 
+test:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: <%= Rails.application.credentials[:db_test_database] %>
+  pool: 5
+  username: <%= Rails.application.credentials[:db_test_login] %>
+  password: <%= Rails.application.credentials[:db_test_password] %>
+ # host: localhost
+  socket: /tmp/mysql.sock
+  variables:
+     sql_mode: TRADITIONAL
+
 production:
   adapter: mysql2
   encoding: utf8
