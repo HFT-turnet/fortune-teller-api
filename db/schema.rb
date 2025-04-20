@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_25_213509) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_20_154846) do
   create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -89,5 +89,4 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_25_213509) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
 end
