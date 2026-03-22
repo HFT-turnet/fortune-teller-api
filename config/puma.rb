@@ -24,11 +24,21 @@
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
-threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
+threads_count = ENV.fetch("RAILS_MAX_THREADS", 3).to_i
+workers_count  = ENV.fetch("WEB_CONCURRENCY", 1).to_i
+
 threads threads_count, threads_count
 
+# Define details for workers.
+workers workers_count if workers_count.to_i > 1
+preload_app! if workers_count.to_i > 1
+on_worker_boot do
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+end
+worker_timeout 60
+
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-port ENV.fetch("PORT", 3000)
+port ENV.fetch("PORT", 3010)
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
@@ -39,3 +49,6 @@ plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+
+#Ermöglicht Neustarts und Status-Abfragen per pumactl ohne PIDFILE:
+state_path "#{__dir__}/../tmp/pids/puma.state"
