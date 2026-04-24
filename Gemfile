@@ -57,5 +57,8 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+# CSV not part of standard ruby anymore
+gem 'csv'
+
 # Rswag UI only for display of swagger files 
 # gem 'rswag-ui'

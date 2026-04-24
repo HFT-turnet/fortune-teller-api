@@ -47,6 +47,8 @@ Rails.application.routes.draw do
         #match 'case/(:id)', to: :case_update, via: :post
         #match 'case/(:id)', to: :case_destroy, via: :delete
         # Assumptions (CValues, CSlices, CFlows, CPensionFlows)
+        # Templates
+        get 'case/(:case_id)/expense_template', action: "expense_template"
         # Simulation Results and details
         get 'case/(:case_id)/simulate', action: "simulate"
         get 'case/(:case_id)/simulate_detail', action: "simulate_detail"

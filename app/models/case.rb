@@ -24,6 +24,8 @@ class Case < ApplicationRecord
         simulationdata=self.simulations if valuetype.nil?
         simulationdata=self.simulations.where(:valuetype => valuetype) unless valuetype.nil?
         data=simulationdata.order(:t).group(:t, :valuetype).sum(:value)
+        # No point in continuing if there is no data.
+        return if data.empty?
         # Output to be limited to the frequency
         refrange=[]
         (data.first[0][0]..data.keys.last[0]).step(frequency.to_i) do |selectyears|

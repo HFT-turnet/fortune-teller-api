@@ -167,6 +167,20 @@ class V1::SimulationController < ApplicationController
         render json: @case.details(params[:t].to_i)
     end
 
+    # Expense template
+    def expense_template
+        countrycode="DE"
+        language="de"
+        filepath="jsonlib/" + countrycode + "_" + language + "_expensesample.json"
+        if File.exist?(filepath) then
+          file = File.read(filepath)
+          scheme=JSON.parse(file)
+          sample=Timeslice.new(scheme)
+          sample.i=0
+          sample.t=Time.current.year
+        end   
+        render json: sample.as_json(except: [:id, :created_at, :updated_at])
+    end
 
     private
     def findcase
