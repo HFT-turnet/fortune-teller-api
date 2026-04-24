@@ -2,24 +2,24 @@
 
 one:
   case_id: 1
-  t: 1
+  t: 2025
   cvaluetype: 1
-  label: MyString
-  cto: 9.99
-  ev: 9.99
-  fromt: 1
-  tot: 1
-  interest: 9.99
-  inflation: 9.99
+  label: Salary
+  cto: 3000.00
+  ev: 0.00
+  fromt: 2020
+  tot: 2040
+  interest: 0.0
+  inflation: 0.02
 
 two:
   case_id: 1
-  t: 1
-  cvaluetype: 1
-  label: MyString
-  cto: 9.99
-  ev: 9.99
-  fromt: 1
-  tot: 1
-  interest: 9.99
-  inflation: 9.99
+  t: 2025
+  cvaluetype: 2
+  label: Rent
+  cto: 1500.00
+  ev: 0.00
+  fromt: 2020
+  tot: 2040
+  interest: 0.0
+  inflation: 0.018
