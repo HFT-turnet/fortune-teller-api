@@ -1,15 +1,19 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  t: 1
-  i: 9.99
-  disclaimer: MyString
-  source: MyString
-  info: MyString
+  case_id: 1
+  cvaluetype: 2
+  label: Housing
+  t: 2025
+  disclaimer: Test disclaimer
+  source: Test source
+  info: Test info
 
 two:
-  t: 1
-  i: 9.99
-  disclaimer: MyString
-  source: MyString
-  info: MyString
+  case_id: 1
+  cvaluetype: 1
+  label: Salary
+  t: 2025
+  disclaimer: Test disclaimer
+  source: Test source
+  info: Test info

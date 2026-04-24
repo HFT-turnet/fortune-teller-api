@@ -2,12 +2,16 @@
 
 one:
   id: 1
-  byear: 1
-  dyear: 1
+  external_id: "aaaaaaaa-0001-0001-0001-aaaaaaaaaaaa"
+  byear: 1970
+  dyear: 2040
   sex: 1
+  nodelete: false
 
 two:
-  id: 1
-  byear: 1
-  dyear: 1
-  sex: 1
+  id: 2
+  external_id: "bbbbbbbb-0002-0002-0002-bbbbbbbbbbbb"
+  byear: 1980
+  dyear: 2050
+  sex: 2
+  nodelete: false
