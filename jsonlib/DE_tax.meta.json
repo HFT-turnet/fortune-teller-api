@@ -46,6 +46,48 @@
 				"version":"2026"
 			}
 		],
+		"2025": [
+			{
+				"scheme":"einkuenfte",
+				"type":"summeEinkuenfte",
+				"version":"2023"
+			},
+			{
+				"scheme":"einkuenfte",
+				"type":"gesamtbetragEinkuenfte",
+				"version":"2023"
+			},
+			{
+				"scheme":"sonderausgaben",
+				"type":"saVorsorgeaufwendungen",
+				"version":"2023"
+			},
+			{
+				"scheme":"sonderausgaben",
+				"type":"saSonstige",
+				"version":"2023"
+			},
+			{
+				"scheme":"zve",
+				"type":"einkommen",
+				"version":"2023"
+			},
+			{
+				"scheme":"zve",
+				"type":"zve",
+				"version":"2023"
+			},
+			{
+				"scheme":"tax",
+				"type":"estTarif",
+				"version":"2025"
+			},
+			{
+				"scheme":"tax",
+				"type":"festsetzung",
+				"version":"2025"
+			}
+		],
 		"2024": [
 			{
 				"scheme":"einkuenfte",
