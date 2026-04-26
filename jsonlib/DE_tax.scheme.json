@@ -110,7 +110,7 @@
 						"from":"69879",
 						"to":"277825",
 						"label":"tarifliche_est",
-						"var":"-11135,63"
+						"var":"-11135.63"
 					},
 					{
 						"type":"percent",
@@ -126,7 +126,7 @@
 						"from":"277826",
 						"to":"999999999",
 						"label":"tarifliche_est",
-						"var":"-19470,38"
+						"var":"-19470.38"
 					},
 					{
 						"type":"addabsolute",
