@@ -59,3 +59,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Rswag UI only for display of swagger files 
 # gem 'rswag-ui'
+
+# Image Variants
+gem "image_processing", "~> 1.2"

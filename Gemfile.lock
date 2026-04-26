@@ -82,8 +82,13 @@ GEM
       uri (>= 0.13.1)
     base64 (0.3.0)
     bcrypt (3.1.22)
+<<<<<<< Updated upstream
     bigdecimal (4.0.1)
     bootsnap (1.23.0)
+=======
+    bigdecimal (4.1.2)
+    bootsnap (1.24.0)
+>>>>>>> Stashed changes
       msgpack (~> 1.2)
     builder (3.3.0)
     byebug (13.0.0)
@@ -109,6 +114,9 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
+    image_processing (1.14.0)
+      mini_magick (>= 4.9.5, < 6)
+      ruby-vips (>= 2.0.17, < 3)
     io-console (0.8.2)
     irb (1.17.0)
       pp (>= 0.6.0)
@@ -135,6 +143,8 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
+    mini_magick (5.3.1)
+      logger
     mini_mime (1.1.5)
     minitest (6.0.2)
       drb (~> 2.0)
@@ -232,6 +242,9 @@ GEM
       tsort
     reline (0.6.3)
       io-console (~> 0.5)
+    ruby-vips (2.3.0)
+      ffi (~> 1.12)
+      logger
     securerandom (0.4.1)
     spring (4.4.2)
     stringio (3.2.0)
@@ -263,6 +276,11 @@ DEPENDENCIES
   bcrypt
   bootsnap
   byebug
+<<<<<<< Updated upstream
+=======
+  csv
+  image_processing (~> 1.2)
+>>>>>>> Stashed changes
   jbuilder
   listen
   minitest-spec-rails
