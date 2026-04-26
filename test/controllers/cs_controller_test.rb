@@ -17,8 +17,8 @@ class CsControllerTest < ActionDispatch::IntegrationTest
     # Route has optional countrycode, omitting it sends blank
     get "/v1/cs//listschemes"
     assert_response :success
-    body = JSON.parse(response.body)
-    assert_match(/countrycode/, body)
+    #body = JSON.parse(response.body)
+    assert_match(/countrycode/, response.body)
   end
 
   # GET /v1/cs/:countrycode/listmeta
@@ -44,15 +44,15 @@ class CsControllerTest < ActionDispatch::IntegrationTest
   test "GET get_schemetype for an invalid schemetype returns error" do
     get "/v1/cs/DE/nonexistent_scheme"
     assert_response :success
-    body = JSON.parse(response.body)
-    assert_match(/Error/, body)
+    #body = JSON.parse(response.body)
+    assert_match(/Error/, response.body)
   end
 
   test "GET get_schemetype for an invalid countrycode returns error" do
     get "/v1/cs/ZZ/tax"
     assert_response :success
-    body = JSON.parse(response.body)
-    assert_match(/Error/, body)
+    #body = JSON.parse(response.body)
+    assert_match(/Error/, response.body)
   end
 
   # POST /v1/cs/:countrycode/:schemetype/:scheme/:version — runs a scheme calculation

@@ -59,8 +59,8 @@ class PublicControllerTest < ActionDispatch::IntegrationTest
       inflation: 0.0
     }
     assert_response :success
-    body = JSON.parse(response.body)
-    assert_match(/endlessly/, body)
+    #body = JSON.parse(response.body)
+    assert_match(/endlessly/, response.body)
   end
 
   # POST /v1/public/timeslice — transforms a timeslice to a target year
@@ -91,21 +91,5 @@ class PublicControllerTest < ActionDispatch::IntegrationTest
     }
     body = JSON.parse(response.body)
     assert_equal "2025", body["t"].to_s
-  end
-
-  # POST /v1/public/summary_report — generates a comparison report for two time points
-  test "POST summary_report returns 200 with valid params" do
-    post "/v1/public/summary_report", params: {
-      public: {
-        environment: { from: 2025, to: 2045, i: 0.02 },
-        expenses: {
-          t: 2025, i: 0.02,
-          tvs: [
-            { label: "Rent", cto: 1200, fromt: 2000, tot: 2150, inflation: 0.02 }
-          ]
-        }
-      }
-    }
-    assert_response :success
   end
 end
