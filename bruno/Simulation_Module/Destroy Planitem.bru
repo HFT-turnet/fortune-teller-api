@@ -1,0 +1,11 @@
+meta {
+  name: Destroy Planitem
+  type: http
+  seq: 22
+}
+
+delete {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}
+  body: none
+  auth: none
+}

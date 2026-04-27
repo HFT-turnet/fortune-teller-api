@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  case_id: 1
+  title: "Work Phase"
+  category: 1
+  fromt: "2024-01-01"
+  tot: "2067-01-01"
+  leadt: "2022-01-01"
+  trailt: "2070-01-01"
+
+two:
+  id: 2
+  case_id: 1
+  title: "Retirement"
+  category: 3
+  fromt: "2067-01-01"
+  tot: "2082-01-01"
+  leadt: "2065-01-01"
+  trailt: "2085-01-01"

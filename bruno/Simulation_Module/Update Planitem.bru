@@ -1,0 +1,22 @@
+meta {
+  name: Update Planitem
+  type: http
+  seq: 19
+}
+
+patch {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "title": "Work Phase (updated)",
+      "category": "life_phase",
+      "fromt": "1982-01-01",
+      "tot": "2067-06-01",
+      "leadt": "1980-01-01",
+      "trailt": "2072-01-01"
+  }
+}

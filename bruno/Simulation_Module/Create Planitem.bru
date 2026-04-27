@@ -1,0 +1,27 @@
+meta {
+  name: Create Planitem
+  type: http
+  seq: 17
+}
+
+post {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "title": "Work Phase",
+      "category": "life_phase",
+      "fromt": "1982-01-01",
+      "tot": "2067-01-01",
+      "leadt": "1980-01-01",
+      "trailt": "2070-01-01"
+  }
+}
+
+script:post-response {
+  const response = res.getBody();
+  bru.setEnvVar('sim_planitem_id', response.planitem_id);
+}

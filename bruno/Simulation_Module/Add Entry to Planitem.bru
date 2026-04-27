@@ -1,0 +1,37 @@
+meta {
+  name: Add Entry to Planitem
+  type: http
+  seq: 21
+}
+
+put {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}/entries?type=Cslice
+  body: json
+  auth: none
+}
+
+params:query {
+  type: Cslice
+}
+
+body:json {
+  {
+      "cslice": {
+          "cvaluetype": 1,
+          "label": "Arbeitseinkommen",
+          "t": 2024
+      },
+      "cvalues": [
+          {
+              "cvaluetype": 1,
+              "label": "Bruttoeinkommen",
+              "cto": 40000,
+              "ev": 0,
+              "t": 1990,
+              "fromt": 1990,
+              "tot": 2067,
+              "inflation": 0
+          }
+      ]
+  }
+}
