@@ -21,6 +21,148 @@
 	}
   ],
   "estTarif": {
+	"2025": [
+				{
+					"type":"steppercent",
+                    "base":"zv_einkommen",
+					"from":"12096",
+					"to":"17443",
+					"label":"y",
+					"var":"0.0001"
+				},
+				{
+					"type":"multiply",
+                    "base":"y",
+					"from":"0",
+					"to":"99999",
+					"label":"y1",
+					"var":"932.30"
+				},
+				{
+					"type":"addabsolute",
+                    "base":"y1",
+					"from":"0",
+					"to":"99999",
+					"label":"y1",
+					"var":"1400"
+				},
+				{
+					"type":"multiply",
+                    "base":"y1",
+					"from":"0",
+					"to":"99999",
+					"label":"tarifliche_est",
+					"labelvar":"y"
+				},
+				{
+					"type":"steppercent",
+                    "base":"zv_einkommen",
+					"from":"17444",
+					"to":"68430",
+					"label":"z",
+					"var":"0.0001"
+				},
+				{
+					"type":"multiply",
+                    "base":"z",
+					"from":"0",
+					"to":"99999",
+					"label":"z1",
+					"var":"176.81"
+				},
+				{
+					"type":"addabsolute",
+                    "base":"z1",
+					"from":"1",
+					"to":"99999",
+					"label":"z1",
+					"var":"2397"
+				},
+				{
+					"type":"multiply",
+                    "base":"z1",
+					"from":"0",
+					"to":"99999",
+					"label":"tarifliche_est",
+					"labelvar":"z",
+					"explain":"The y calculation already provided the amount of 1015.13, so it does not need to be added again."
+				},
+				{
+					"type":"addabsolute",
+                    "base":"zv_einkommen",
+					"from":"68431",
+					"to":"999999999",
+					"label":"tarifliche_est",
+					"var":"-17833.4358813158979",
+					"explain":"in this range, the y and z calculation are irrelevant and need to be deducted."
+				},
+				{
+					"type":"percent",
+                    "base":"zv_einkommen",
+					"from":"68431",
+					"to":"277825",
+					"label":"tarifliche_est",
+					"var":"0.42"
+				},
+				{
+					"type":"addabsolute",
+                    "base":"zv_einkommen",
+					"from":"68431",
+					"to":"277825",
+					"label":"tarifliche_est",
+					"var":"-10907.16"
+				},
+				{
+					"type":"percent",
+                    "base":"zv_einkommen",
+					"from":"277825",
+					"to":"999999999",
+					"label":"tarifliche_est",
+					"var":"0.45"
+				},
+				{
+					"type":"addabsolute",
+                    "base":"zv_einkommen",
+					"from":"277826",
+					"to":"999999999",
+					"label":"tarifliche_est",
+					"var":"-19241.91"
+				},
+				{
+					"type":"addabsolute",
+                    "base":"zv_einkommen",
+					"from":"12096",
+					"to":"999999999",
+					"label":"tarifliche_est",
+					"var":"-0.48"
+				},
+				{
+					"type":"percent",
+					"base":"tarifliche_est",
+					"from":"36138",
+					"to":"999999999",
+					"label":"soli",
+					"var":"0.055",
+					"explain":"Soli is calculated above 19334 ESt. But there is a transition zone: if 11,9% on the difference between est and the free area is less.",
+					"explain2":"This break-even is at x EUR upwards: 5,5%*ESt = 11,9%*(ESt-19334): ESt = 19334/(1-0,055/0,119) = 19334/0,535 = 36138,32"
+				},
+				{
+					"type":"addition",
+					"base":"tarifliche_est",
+					"label":"soli_transition",
+					"var":"-19334"
+				},
+				{
+					"type":"percent",
+					"base":"soli_transition",
+					"from":"1",
+					"to":"16804",
+					"label":"soli",
+					"var":"0.119",
+					"explain":"36138 - 19334 = 16804."
+				}
+
+	],
 	"2026": [
 					{
 						"type":"steppercent",
@@ -452,6 +594,70 @@
   },
   "festsetzung":
 	{
+	  "2025": [
+			  {
+				  "type":"minof",
+				  "base":"haushaltsnaheDL",
+				  "label":"haushaltsnaheDL_limit",
+				  "var":"20000"
+			  },
+			  {
+				"type":"minof",
+				"base":"handwerkerDL",
+				"label":"handwerkerDL_limit",
+				"var":"6000"
+			  },
+			  {
+				"type":"addition",
+				"base":"handwerkerDL_limit",
+				"label":"DLausgaben",
+				"labelvar":"haushaltsnaheDL_limit"
+			},
+			{
+				"type":"divide",
+				"base":"DLausgaben",
+				"label":"est_zumabzug",
+				"var":"5"
+			},
+			{
+				"type":"minof",
+				"base":"est_zumabzug",
+				"label":"est_abzuege",
+				"labelvar":"tarifliche_est"
+			},
+			{
+				"type":"addition",
+				"base":"est_abzuege",
+				"part":"-1",
+				"label":"est",
+				"labelvar":"tarifliche_est"
+			},
+			{
+				"type":"percent",
+				"base":"est",
+				"from":"36138",
+				"to":"999999999",
+				"label":"soli",
+				"var":"0.055",
+				"explain":"Soli is calculated above 19334 ESt. But there is a transition zone: if 11,9% on the difference between est and the free area is less.",
+				"explain2":"This break-even is at x EUR upwards: 5,5%*ESt = 11,9%*(ESt-19334): ESt = 19334/(1-0,055/0,119) = 19334/0,535 = 36138,32"
+			},
+			{
+				"type":"addition",
+				"base":"est",
+				"label":"soli_transition",
+				"var":"-19334"
+			},
+			{
+				"type":"percent",
+				"base":"soli_transition",
+				"from":"1",
+				"to":"16804",
+				"label":"soli",
+				"var":"0.119",
+				"explain":"36138 - 19334 = 16804."
+			}
+	  ],
 	  "2026": [
 			  {
 				  "type":"minof",
