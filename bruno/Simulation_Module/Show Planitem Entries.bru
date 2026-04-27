@@ -1,0 +1,11 @@
+meta {
+  name: Show Planitem Entries
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}/entries
+  body: none
+  auth: none
+}

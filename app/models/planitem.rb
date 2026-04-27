@@ -3,17 +3,15 @@ class Planitem < ApplicationRecord
     has_many :cslices, dependent: :nullify
     has_many :cvalues, dependent: :nullify
 
-    # Category: 1 - life phase, 2 - change in life, 3 - investment
+    enum :category, { life_phase: 1, change_in_life: 2, investment: 3 }
+
+    CATEGORY_LABELS = {
+        "life_phase"     => "Life Phase",
+        "change_in_life" => "Change in Life",
+        "investment"     => "Investment"
+    }.freeze
+
     def category_text
-        case self.category
-        when 1
-            return "Life Phase"
-        when 2
-            return "Change in Life"
-        when 3
-            return "Investment"
-        else
-            return "Unknown"
-        end
+        CATEGORY_LABELS[self.category]
     end
 end
