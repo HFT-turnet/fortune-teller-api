@@ -1,5 +1,6 @@
 class V1::SimulationController < ApplicationController
     before_action :findcase, except: [:case_create]
+    before_action :findplanitem, only: [:planitem_show, :planitem_update, :planitem_destroy, :planitem_entries_show, :planitem_entries_create]
     # Grundsätzlicher Flow:
     # Open Case
     # Adjust Case assumptions
@@ -30,6 +31,8 @@ class V1::SimulationController < ApplicationController
         @case.cslices.destroy_all
         #@case.cflows.destroy_all
         #@case.cpensionflows.destroy_all
+        # Destroy Planitems
+        @case.planitems.destroy_all
         # Destroy the case
         @case.destroy
         message={}
@@ -167,6 +170,84 @@ class V1::SimulationController < ApplicationController
         render json: @case.details(params[:t].to_i)
     end
 
+    # Planitem actions
+
+    def planitem_index
+        render json: @case.planitems.map { |pi| planitem_json(pi) }
+    end
+
+    def planitem_create
+        @planitem=@case.planitems.create(planitem_permitted_params)
+        render json: planitem_json(@planitem)
+    end
+
+    def planitem_show
+        # Renders via jbuilder view
+    end
+
+    def planitem_update
+        @planitem.update(planitem_permitted_params)
+        render json: planitem_json(@planitem)
+    end
+
+    def planitem_destroy
+        @planitem.destroy
+        message={}
+        message["message"]="Planitem #{@planitem.id} destroyed."
+        render json: message
+    end
+
+    def planitem_entries_show
+        cslices=@planitem.cslices
+        # Only cvalues directly linked to the planitem (not via cslice)
+        cvalues=@planitem.cvalues.where(cslice_id: nil)
+        render json: {
+            planitem_id: @planitem.id,
+            cslices: cslices.map { |csl| { cslice_id: csl.id, label: csl.label, cvaluetype: csl.cvaluetype } },
+            cvalues: cvalues.map { |cv| { cvalue_id: cv.id, label: cv.label, cvaluetype: cv.cvaluetype } }
+        }
+    end
+
+    def planitem_entries_create
+        case params[:type]
+        when "Cvalue"
+            cv_params=params.require(:cvalue).permit(:cvaluetype, :label, :cto, :ev, :t, :fromt, :tot, :interest, :inflation, :cf_type)
+            entry=@case.cvalues.create(cv_params.merge(planitem_id: @planitem.id))
+            entry.ev=0 if entry.cvaluetype < 3
+            entry.save
+            @case.simulate_cashbalance
+            render json: { cvalue_id: entry.id, label: entry.label }
+        when "Cslice"
+            csl_params=params.require(:cslice).permit(:cvaluetype, :label, :t, :disclaimer, :source, :info)
+            cslice=@case.cslices.create(csl_params.merge(planitem_id: @planitem.id))
+            if params[:cvalues]
+                params[:cvalues].each do |v|
+                    entry=cslice.cvalues.create(
+                        case_id: @case.id,
+                        cvaluetype: v["cvaluetype"],
+                        label: v["label"],
+                        cto: v["cto"],
+                        ev: v["ev"],
+                        t: v["t"],
+                        fromt: v["fromt"],
+                        tot: v["tot"],
+                        inflation: v["inflation"],
+                        interest: v["interest"],
+                        cf_type: v["cf_type"]
+                    )
+                    entry.inflation=0 if entry.inflation.nil?
+                    entry.save
+                end
+                cslice.sync_cvalues
+                cslice.simulate
+            end
+            @case.simulate_cashbalance
+            render json: { cslice_id: cslice.id, label: cslice.label }
+        else
+            render json: { error: "Unknown type. Use Cvalue or Cslice." }, status: :unprocessable_entity
+        end
+    end
+
 
     private
     def findcase
@@ -175,7 +256,28 @@ class V1::SimulationController < ApplicationController
         message["error"]="Case not found." unless @case
         render json: message unless @case
     end
+    def findplanitem
+        @planitem=@case.planitems.find_by_id(params[:planitem_id])
+        unless @planitem
+            render json: { error: "Planitem not found." }, status: :not_found
+        end
+    end
     def case_permitted_params
         params.permit(:byear, :dyear, :sex, :nodelete)
+    end
+    def planitem_permitted_params
+        params.permit(:title, :category, :fromt, :tot, :leadt, :trailt)
+    end
+    def planitem_json(pi)
+        {
+            planitem_id: pi.id,
+            title: pi.title,
+            category: pi.category,
+            category_text: pi.category_text,
+            fromt: pi.fromt,
+            tot: pi.tot,
+            leadt: pi.leadt,
+            trailt: pi.trailt
+        }
     end
 end

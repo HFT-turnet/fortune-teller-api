@@ -4,6 +4,7 @@ class Case < ApplicationRecord
     has_many :simulations
     has_many :cvalues
     has_many :cslices
+    has_many :planitems
 
     # Definitions
     def sex_text
@@ -151,6 +152,8 @@ class Case < ApplicationRecord
         self.cslices.destroy_all
         #@case.cflows.destroy_all
         #@case.cpensionflows.destroy_all
+        # Destroy Planitems
+        self.planitems.destroy_all
         # Destroy the case
         self.destroy
         puts "Deleted case with id #{self.external_id}."

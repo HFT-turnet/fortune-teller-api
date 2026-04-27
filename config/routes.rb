@@ -52,6 +52,14 @@ Rails.application.routes.draw do
         get 'case/(:case_id)/simulate_detail', action: "simulate_detail"
         #match 'case/(:id)/simulate', to: :simulate, via: :get
         #match 'case/(:id)/simulate_cashbalance', to: :simulate_cashbalance, via: :get
+        # Planitems
+        get 'case/(:case_id)/planitems', action: "planitem_index"
+        post 'case/(:case_id)/planitem', action: "planitem_create"
+        get 'case/(:case_id)/planitem/(:planitem_id)', action: "planitem_show"
+        patch 'case/(:case_id)/planitem/(:planitem_id)', action: "planitem_update"
+        delete 'case/(:case_id)/planitem/(:planitem_id)', action: "planitem_destroy"
+        get 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_show"
+        put 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_create"
     end
 
     # Manage APIKeys
