@@ -3,7 +3,51 @@
   "title":"Berechnung alle SVen",
   "comment1": "No guarantee for correctness. Use at your own risk.",
   "allsv":
-  	{	
+  	{
+		"2026": [
+					{
+						"scheme":"sv",
+						"type":"ALV",
+						"version":"2026"		
+					},
+					{
+						"scheme":"sv",
+						"type":"DRV",
+						"version":"2026"
+					},
+					{
+						"scheme":"sv",
+						"type":"GKV",
+						"version":"2026"
+					},
+					{
+						"scheme":"sv",
+						"type":"PV",
+						"version":"2026"
+					}
+				],
+		"2025": [
+					{
+						"scheme":"sv",
+						"type":"ALV",
+						"version":"2025"		
+					},
+					{
+						"scheme":"sv",
+						"type":"DRV",
+						"version":"2025"
+					},
+					{
+						"scheme":"sv",
+						"type":"GKV",
+						"version":"2025"
+					},
+					{
+						"scheme":"sv",
+						"type":"PV",
+						"version":"2025"
+					}
+				],	
 		"2024": [
 					{
 						"scheme":"sv",
