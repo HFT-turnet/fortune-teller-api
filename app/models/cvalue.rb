@@ -4,6 +4,7 @@ class Cvalue < ApplicationRecord
     belongs_to :case
     has_many :simulations
     belongs_to :cslice, optional: true
+    belongs_to :planitem, optional: true
 
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance

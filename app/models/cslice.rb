@@ -2,6 +2,7 @@ class Cslice < ApplicationRecord
     # While a cslice might contain type 1 or 2 cvalues. It carries an own valuetype which is used in simulation.
     # The integer - type map is the same as in Cvalue.
     belongs_to :case
+    belongs_to :planitem, optional: true
     has_many :cvalues
     has_many :simulations
 
