@@ -62,6 +62,12 @@ Rails.application.routes.draw do
         put 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_create"
     end
 
+    # Agent Driver
+    namespace :agentdriver do
+        match '/', action: 'drive', via: [:get, :post]
+        get ':case_id', action: 'case_status'
+    end
+
     # Manage APIKeys
     # Currently there is no need to manage API-Keys, the function is deactivated.
     #post '/persist/api-keys', to: 'api_keys#create'
