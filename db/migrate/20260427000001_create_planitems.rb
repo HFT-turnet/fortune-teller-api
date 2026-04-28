@@ -4,10 +4,10 @@ class CreatePlanitems < ActiveRecord::Migration[8.0]
       t.integer :case_id, null: false
       t.string :title
       t.integer :category
-      t.date :fromt
-      t.date :tot
-      t.date :leadt
-      t.date :trailt
+      t.integer :fromt
+      t.integer :tot
+      t.integer :leadt
+      t.integer :trailt
 
       t.timestamps
     end
