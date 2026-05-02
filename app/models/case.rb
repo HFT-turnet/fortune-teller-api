@@ -5,6 +5,7 @@ class Case < ApplicationRecord
     has_many :cvalues
     has_many :cslices
     has_many :planitems
+    has_many :checklists
 
     # Definitions
     def sex_text
