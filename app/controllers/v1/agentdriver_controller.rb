@@ -102,6 +102,6 @@ class V1::AgentdriverController < ApplicationController
     end
 
     def case_permitted_params
-        params.permit(:byear, :dyear, :sex, :nodelete)
+        params.permit(:byear, :dyear, :sex, :nodelete, :chat_active)
     end
 end

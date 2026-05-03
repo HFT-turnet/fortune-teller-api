@@ -263,7 +263,7 @@ class V1::SimulationController < ApplicationController
         end
     end
     def case_permitted_params
-        params.permit(:byear, :dyear, :sex, :nodelete)
+        params.permit(:byear, :dyear, :sex, :nodelete, :chat_active)
     end
     def planitem_permitted_params
         params.permit(:title, :category, :fromt, :tot, :leadt, :trailt)
