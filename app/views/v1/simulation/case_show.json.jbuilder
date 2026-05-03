@@ -3,6 +3,7 @@ json.case do
 	json.byear @case.byear
 	json.dyear @case.dyear
 	json.sex @case.sex
+	json.chat_active @case.chat_active
 end
 
 json.cvalues @case.cvalues.where(:cslice_id=>nil).each do |cv|
