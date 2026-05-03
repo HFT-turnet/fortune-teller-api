@@ -1,7 +1,7 @@
 class CreatePlanitems < ActiveRecord::Migration[8.0]
   def change
     create_table :planitems do |t|
-      t.integer :case_id, null: false
+      t.bigint :case_id, null: false
       t.string :title
       t.integer :category
       t.integer :fromt
