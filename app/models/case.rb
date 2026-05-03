@@ -1,6 +1,7 @@
 class Case < ApplicationRecord
     before_save :generate_external_uuid
     before_save :set_nodelete_default
+    before_create :set_country_default
     has_many :simulations
     has_many :cvalues
     has_many :cslices
@@ -163,6 +164,9 @@ class Case < ApplicationRecord
     private
     def set_nodelete_default
         self.nodelete=false if self.nodelete.nil?
+    end
+    def set_country_default
+        self.country="DE" if self.country.nil?
     end
     def generate_external_uuid
         self.external_id = SecureRandom.uuid if self.external_id.nil?

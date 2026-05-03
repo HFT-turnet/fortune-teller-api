@@ -1,0 +1,126 @@
+{
+  "flow": {
+    "id": "DE_1_ausbildung",
+    "version": "1.0",
+    "description": "Flow-Definition für den Planitem-Typ 'Ausbildung'.",
+    "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 1,
+    "icon": "fas fa-graduation-cap",
+
+    "items": {
+      "bezeichnung": {
+        "$ref": "DE_gen.flow.json#/flow/items/bezeichnung",
+        "description": "Name der Ausbildung (z. B. 'Studium BWL')."
+      },
+
+      "beginn": {
+        "name": "beginn",
+        "label": "Beginn",
+        "type": "date",
+        "required": true,
+        "format": "YYYY-MM-DD",
+        "description": "Startdatum der Ausbildung.",
+        "icon": "fas fa-calendar-check",
+        "api": {
+          "field": "beginn",
+          "type": "date"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": "format(YYYY-MM-DD) && <= today",
+              "message": "Startdatum muss im Format YYYY-MM-DD vorliegen und in der Vergangenheit liegen."
+            }
+          ]
+        },
+        "checklist_entry": "Startdatum der Ausbildung angeben"
+      },
+
+      "ende": {
+        "name": "ende",
+        "label": "Ende",
+        "type": "date",
+        "required": false,
+        "format": "YYYY-MM-DD",
+        "description": "Enddatum der Ausbildung (optional, falls noch laufend).",
+        "icon": "fas fa-calendar-times",
+        "api": {
+          "field": "ende",
+          "type": "date"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": "format(YYYY-MM-DD) && >= items.beginn",
+              "message": "Enddatum muss im Format YYYY-MM-DD vorliegen und nach dem Startdatum liegen."
+            }
+          ]
+        },
+        "checklist_entry": "Enddatum der Ausbildung angeben (optional)"
+      },
+
+      "kosten_pro_jahr": {
+        "name": "kosten_pro_jahr",
+        "label": "Kosten pro Jahr",
+        "type": "number",
+        "required": false,
+        "min": 0,
+        "description": "Jährliche Kosten der Ausbildung in Euro.",
+        "icon": "fas fa-money-bill-wave",
+        "api": {
+          "field": "kosten_pro_jahr",
+          "type": "number"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": ">= 0",
+              "message": "Kosten müssen größer oder gleich 0 sein."
+            }
+          ]
+        },
+        "checklist_entry": "Jährliche Kosten angeben (optional)"
+      },
+
+      "foerderungen": {
+        "name": "foerderungen",
+        "label": "Förderungen",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "string",
+          "enum": ["BAföG", "Stipendium", "Elternunterstützung", "sonstiges"]
+        },
+        "description": "Liste der Förderungen für die Ausbildung.",
+        "icon": "fas fa-hand-holding-heart",
+        "api": {
+          "field": "foerderungen",
+          "type": "array"
+        },
+        "checklist_entry": "Förderungen auswählen (optional)"
+      },
+
+      "case_id": {
+        "$ref": "DE_gen.flow.json#/flow/items/case_id"
+      }
+    },
+
+    "api": {
+      "endpoint": "/api/v1/planitems/ausbildung",
+      "method": "POST",
+      "payload": {
+        "content_type": "application/json",
+        "structure": {
+          "planitem_type": 1,
+          "bezeichnung": "{items.bezeichnung.api.field}",
+          "beginn": "{items.beginn.api.field}",
+          "ende": "{items.ende.api.field}",
+          "kosten_pro_jahr": "{items.kosten_pro_jahr.api.field}",
+          "foerderungen": "{items.foerderungen.api.field}",
+          "case_id": "{items.case_id.api.field}"
+        }
+      }
+    }
+  }
+}

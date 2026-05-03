@@ -9,6 +9,8 @@ class V1::SimulationController < ApplicationController
     # Adjust assumptions
     # Delete Case and all related data
 
+    include V1::TemplateHandler
+
     # Create a new case
     def case_create
         @case=Case.create(case_permitted_params)
@@ -263,10 +265,10 @@ class V1::SimulationController < ApplicationController
         end
     end
     def case_permitted_params
-        params.permit(:byear, :dyear, :sex, :nodelete, :chat_active)
+        params.permit(:byear, :country, :dyear, :sex, :nodelete, :chat_active)
     end
     def planitem_permitted_params
-        params.permit(:title, :category, :fromt, :tot, :leadt, :trailt)
+        params.permit(:title, :category, :plan_type, :fromt, :tot, :leadt, :trailt)
     end
     def planitem_json(pi)
         {
@@ -274,6 +276,9 @@ class V1::SimulationController < ApplicationController
             title: pi.title,
             category: pi.category,
             category_text: pi.category_text,
+            plan_type: pi.plan_type,
+            plan_type_text: pi.plan_type_text,
+            plan_type_icon: pi.plan_type_icon,
             fromt: pi.fromt,
             tot: pi.tot,
             leadt: pi.leadt,

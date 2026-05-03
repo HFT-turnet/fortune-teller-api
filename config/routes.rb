@@ -60,6 +60,10 @@ Rails.application.routes.draw do
         delete 'case/(:case_id)/planitem/(:planitem_id)', action: "planitem_destroy"
         get 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_show"
         put 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_create"
+        # Templates
+        get 'case/(:case_id)/templates', action: "template_index"
+        get 'case/(:case_id)/templates/planitems', action: "template_planitems"
+        get 'case/(:case_id)/templates/(:plan_type)', action: "template_show"
     end
 
     # Agent Driver

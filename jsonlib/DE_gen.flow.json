@@ -1,0 +1,101 @@
+{
+  "flow": {
+    "id": "DE_gen",
+    "version": "1.0",
+    "description": "Generische Items für alle Planitem-Typen in Deutschland.",
+    "scope": "DE",
+    "type": "base",
+
+    "items": {
+      "case_id": {
+        "name": "case_id",
+        "label": "Case-ID",
+        "type": "string",
+        "required": false,
+        "description": "Optional: Verknüpfung mit einer Case-ID für Simulationen.",
+        "icon": "fas fa-link",
+        "api": {
+          "field": "case_id",
+          "type": "string"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": "string",
+              "message": "Case-ID muss ein String sein."
+            }
+          ]
+        },
+        "checklist_entry": "Case-ID verknüpfen (optional)"
+      },
+
+      "bezeichnung": {
+        "name": "bezeichnung",
+        "label": "Bezeichnung",
+        "type": "string",
+        "required": true,
+        "description": "Name oder Beschreibung des Planitems.",
+        "icon": "fas fa-tag",
+        "api": {
+          "field": "bezeichnung",
+          "type": "string"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": "required && min_length(1)",
+              "message": "Bezeichnung ist Pflicht und muss mindestens 1 Zeichen lang sein."
+            }
+          ]
+        },
+        "checklist_entry": "Bezeichnung angeben"
+      },
+
+      "datum": {
+        "name": "datum",
+        "label": "Datum",
+        "type": "date",
+        "required": true,
+        "format": "YYYY-MM-DD",
+        "description": "Datum des Planitems (z. B. Beginn, Kaufdatum).",
+        "icon": "fas fa-calendar-alt",
+        "api": {
+          "field": "datum",
+          "type": "date"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": "format(YYYY-MM-DD)",
+              "message": "Datum muss im Format YYYY-MM-DD vorliegen."
+            }
+          ]
+        },
+        "checklist_entry": "Datum angeben"
+      },
+
+      "betrag": {
+        "name": "betrag",
+        "label": "Betrag",
+        "type": "number",
+        "required": true,
+        "min": 0,
+        "description": "Betrag in Euro.",
+        "icon": "fas fa-euro-sign",
+        "api": {
+          "field": "betrag",
+          "type": "number"
+        },
+        "validation": {
+          "rules": [
+            {
+              "condition": ">= 0",
+              "message": "Betrag muss größer oder gleich 0 sein."
+            }
+          ]
+        },
+        "checklist_entry": "Betrag in Euro angeben"
+      }
+    }
+  }
+}

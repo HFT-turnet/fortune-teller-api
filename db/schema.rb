@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_02_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_02_210317) do
   create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_000002) do
   create_table "cases", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "byear"
     t.boolean "chat_active"
+    t.string "country"
     t.datetime "created_at", null: false
     t.integer "dyear"
     t.string "external_id"
@@ -102,6 +103,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_000002) do
     t.datetime "created_at", null: false
     t.integer "fromt"
     t.integer "leadt"
+    t.integer "months"
+    t.integer "plan_type"
     t.string "title"
     t.integer "tot"
     t.integer "trailt"
