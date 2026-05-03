@@ -6,6 +6,7 @@ class Planitem < ApplicationRecord
     enum :category, { phase: 1, pit: 3 }
     enum :plan_type, { ausbildung: 1, erwerbstaetigkeit: 2, arbeitslos: 3, elternzeit: 4, pflegezeit: 5, auszeit: 6, ruhestand: 7, immobilie: 10, verkauf_immobilie: 11, investment: 12, erbe: 15, versorgungszahlungen: 16 }
 
+    before_create :derive_category
     after_create :generate_checklist
 
     CATEGORY_LABELS = {
@@ -55,6 +56,12 @@ class Planitem < ApplicationRecord
     end
 
     private
+
+    def derive_category
+        return if category.present?
+        return unless plan_type.present?
+        self.category = Planitem.plan_types[plan_type] < 10 ? :phase : :pit
+    end
 
     def generate_checklist
         return unless plan_type.present?
