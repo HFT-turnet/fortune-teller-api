@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_20_154846) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_02_000002) do
   create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -27,8 +27,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_154846) do
     t.integer "dyear"
     t.integer "sex"
     t.boolean "nodelete"
+    t.boolean "chat_active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "checklists", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "case_id", null: false
+    t.integer "planitem_id"
+    t.text "text"
+    t.string "flow_ref"
+    t.integer "status", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_checklists_on_case_id"
+    t.index ["planitem_id"], name: "index_checklists_on_planitem_id"
   end
 
   create_table "cslices", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -89,4 +102,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_154846) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "checklists", "cases"
+  add_foreign_key "checklists", "planitems"
+  add_foreign_key "planitems", "cases"
 end
