@@ -7,6 +7,9 @@
     "type": "planitem",
     "planitem_type": 1,
     "icon": "fas fa-graduation-cap",
+    "referenced_items": [
+      "cash_start"
+    ],
 
     "items": {
       "bezeichnung": {

@@ -61,9 +61,9 @@ Rails.application.routes.draw do
         get 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_show"
         put 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_create"
         # Templates
-        get 'case/(:case_id)/templates', action: "template_index"
-        get 'case/(:case_id)/templates/planitems', action: "template_planitems"
-        get 'case/(:case_id)/templates/(:plan_type)', action: "template_show"
+        get 'templates/planitems', action: "template_planitems"
+        get 'templates/(:country)', action: "template_index"
+        get 'templates/(:country)/(:plan_type)', action: "template_show"
     end
 
     # Agent Driver

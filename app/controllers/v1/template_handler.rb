@@ -5,7 +5,7 @@ module V1::TemplateHandler
   TEMPLATE_DIR = Rails.root.join("jsonlib")
   TEMPLATE_SUFFIX = ".flow.json"
 
-  # Response to GET /v1/simulation/case/:case_id/templates/planitems
+  # Response to GET /v1/simulation/templates/planitems
   def template_planitems
     all_plan_types = Planitem.plan_types.map do |key, value|
       {
@@ -28,40 +28,29 @@ module V1::TemplateHandler
     render json: result
   end
 
-  # GET /v1/simulation/case/:case_id/templates
+  # GET /v1/simulation/templates/(:country)
   # Optional param: plan_type – filters results to a specific plan type
   def template_index
-    country = @case.country || "OL"
+    country = sanitize_template_key(params[:country]) || "DE"
     plan_type_filter = sanitize_template_key(params[:plan_type])
 
-    files = Dir[TEMPLATE_DIR.join("#{country}_*#{TEMPLATE_SUFFIX}")].sort
-    files = files.select { |f| File.basename(f).start_with?("#{country}_#{plan_type_filter}") } if plan_type_filter.present?
-
-    templates = files.map do |file|
-      plan_type_key = File.basename(file, TEMPLATE_SUFFIX).delete_prefix("#{country}_")
-      {
-        name: File.basename(file, TEMPLATE_SUFFIX),
-        plan_type: plan_type_key,
-        country: country
-      }
-    end
-
-    render json: { case_id: params[:case_id], country: country, templates: templates }
+    templates = SimTemplate.new.list_templates(country, plan_type_filter)
+    render json: { country: country, templates: templates }
   end
 
-  # GET /v1/simulation/case/:case_id/templates/:plan_type
+  # GET /v1/simulation/templates/(:country)/(:plan_type)
+  # :plan_type is the numeric enum value (e.g. 1 for ausbildung)
   def template_show
-    country = @case.country || "OL"
-    plan_type = sanitize_template_key(params[:plan_type])
+    country = sanitize_template_key(params[:country]) || "DE"
+    plan_type_value = params[:plan_type].to_i
 
-    if plan_type.blank?
-      render json: { error: "Invalid plan_type." }, status: :bad_request and return
+    if Planitem.plan_types.key(plan_type_value).blank?
+      render json: { error: "Unknown plan_type." }, status: :bad_request and return
     end
 
-    file_path = TEMPLATE_DIR.join("#{country}_#{plan_type}#{TEMPLATE_SUFFIX}")
-
-    if File.exist?(file_path)
-      render json: JSON.parse(File.read(file_path))
+    template = SimTemplate.new.get_template(country, plan_type_value)
+    if template
+      render json: template
     else
       render json: { error: "Template not found." }, status: :not_found
     end

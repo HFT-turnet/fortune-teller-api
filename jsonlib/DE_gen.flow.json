@@ -7,26 +7,41 @@
     "type": "base",
 
     "items": {
-      "case_id": {
-        "name": "case_id",
-        "label": "Case-ID",
-        "type": "string",
+      "cash_start": {
+        "name": "cash_start",
+        "label": "Bargeld zu Beginn",
         "required": false,
-        "description": "Optional: Verknüpfung mit einer Case-ID für Simulationen.",
-        "icon": "fas fa-link",
-        "api": {
-          "field": "case_id",
-          "type": "string"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": "string",
-              "message": "Case-ID muss ein String sein."
+        "description": "Optional: Wenn positive Bargeld-, Konto- oder Depotbestände bestehen.",
+        "icon": "fas fa-piggy-bank",
+        "checklist_entry": "Bargeld zu Beginn angeben (optional)",
+        "actions": {
+          "cslice_cash": {
+            "api": {
+              "version": "v1",
+              "path": "/simulation/cslice"
+              },
+            "fields": {
+              "cash_start": {
+                "type": "decimal",
+                "label": "Kontostand",
+                "help": "Bargeldbestand eingeben bitte."
+              }
             }
-          ]
-        },
-        "checklist_entry": "Case-ID verknüpfen (optional)"
+          },
+          "cslice_depot": {
+            "api": {
+              "version": "v1",
+              "path": "/simulation/cslice"
+              },
+            "fields": {
+              "depot_start": {
+                "type": "decimal",
+                "label": "Depotwert",
+                "help": "Depotwert eingeben bitte."
+              }
+            }
+        }
+        }
       },
 
       "bezeichnung": {

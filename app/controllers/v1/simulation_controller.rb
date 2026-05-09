@@ -1,5 +1,5 @@
 class V1::SimulationController < ApplicationController
-    before_action :findcase, except: [:case_create]
+    before_action :findcase, except: [:case_create, :template_index, :template_planitems, :template_show]
     before_action :findplanitem, only: [:planitem_show, :planitem_update, :planitem_destroy, :planitem_entries_show, :planitem_entries_create]
     # Grundsätzlicher Flow:
     # Open Case
