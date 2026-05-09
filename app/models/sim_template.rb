@@ -27,11 +27,40 @@ class SimTemplate
     return nil if plan_type_key.blank?
 
     file_path = TEMPLATE_DIR.join("#{country}_#{plan_type_value}_#{plan_type_key}#{TEMPLATE_SUFFIX}")
-    if File.exist?(file_path)
-      JSON.parse(File.read(file_path))
-    else
-      nil
+    return nil unless File.exist?(file_path)
+
+    template = JSON.parse(File.read(file_path))
+    merge_referenced_items(template)
+    template
+  end
+
+  private
+
+  def merge_referenced_items(template)
+    flow = template["flow"]
+    return unless flow
+
+    referenced = flow["referenced_items"].presence
+    return unless referenced
+
+    country = flow["scope"].presence
+    return unless country
+
+    generic = load_generic(country)
+    return unless generic
+
+    generic_items = generic.dig("flow", "items") || {}
+    flow["items"] ||= {}
+
+    referenced.each do |key|
+      flow["items"][key] = generic_items[key] if generic_items.key?(key)
     end
+  end
+
+  def load_generic(country)
+    file_path = TEMPLATE_DIR.join("#{country}_gen#{TEMPLATE_SUFFIX}")
+    return nil unless File.exist?(file_path)
+    JSON.parse(File.read(file_path))
   end
 
   def create_checklist(country, plan_type_value, case_id, planitem_id)

@@ -2,114 +2,96 @@
   "flow": {
     "id": "DE_gen",
     "version": "1.0",
-    "description": "Generische Items für alle Planitem-Typen in Deutschland.",
+    "description": "Generische Items für mehrere Planitem-Typen in Deutschland.",
     "scope": "DE",
-    "type": "base",
-
     "items": {
       "cash_start": {
         "name": "cash_start",
-        "label": "Bargeld zu Beginn",
+        "label": "Vermögen zu Beginn",
         "required": false,
         "description": "Optional: Wenn positive Bargeld-, Konto- oder Depotbestände bestehen.",
         "icon": "fas fa-piggy-bank",
-        "checklist_entry": "Bargeld zu Beginn angeben (optional)",
+        "checklist_entry": "Vermögen zu Beginn angeben (optional)",
         "actions": {
-          "cslice_cash": {
+          "cvalue_cash": {
             "api": {
               "version": "v1",
-              "path": "/simulation/cslice"
+              "path": "/entry?type=Cvalue",
+              "method": "POST",
+              "payload": {
+                  "cvalue": {
+                              "cvaluetype": 3,
+                              "label": "Bargeld / Giro",
+                              "cto": 0,
+                              "t": "var_planitem_fromt",
+                              "fromt": "var_planitem_fromt",
+                              "tot": "var_planitem_tot",
+                              "interest": 0
+                          }
+                }
               },
             "fields": {
-              "cash_start": {
+              "ev": {
                 "type": "decimal",
                 "label": "Kontostand",
                 "help": "Bargeldbestand eingeben bitte."
               }
-            }
+            },
+            "include_fields_in_payload_within": "cvalue"
           },
-          "cslice_depot": {
+          "cvalue_tagesgeld": {
             "api": {
               "version": "v1",
-              "path": "/simulation/cslice"
+              "path": "/entry?type=Cvalue",
+              "method": "POST",
+              "payload": {
+                  "cvalue": {
+                              "cvaluetype": 3,
+                              "label": "Bargeld / Giro",
+                              "cto": 0,
+                              "t": "var_planitem_fromt",
+                              "fromt": "var_planitem_fromt",
+                              "tot": "var_planitem_tot",
+                              "interest": 0
+                          }
+                }
               },
             "fields": {
-              "depot_start": {
+              "ev": {
                 "type": "decimal",
-                "label": "Depotwert",
-                "help": "Depotwert eingeben bitte."
+                "label": "Kontostand Tagesgeld",
+                "help": "Bargeldbestand eingeben bitte."
               }
-            }
+            },
+            "include_fields_in_payload_within": "cvalue"
+          },
+          "cvalue_depot": {
+            "api": {
+              "version": "v1",
+              "path": "/entry?type=Cvalue",
+              "method": "POST",
+              "payload": {
+                  "cvalue": {
+                              "cvaluetype": 3,
+                              "label": "Bargeld / Giro",
+                              "cto": 0,
+                              "t": "var_fromt",
+                              "fromt": "var_planitem_fromt",
+                              "tot": "var_planitem_tot",
+                              "interest": 0
+                          }
+                }
+              },
+            "fields": {
+              "ev": {
+                "type": "decimal",
+                "label": "Depotbestand",
+                "help": "Bargeldbestand eingeben bitte."
+              }
+            },
+            "include_fields_in_payload_within": "cvalue"
+          }
         }
-        }
-      },
-
-      "bezeichnung": {
-        "name": "bezeichnung",
-        "label": "Bezeichnung",
-        "type": "string",
-        "required": true,
-        "description": "Name oder Beschreibung des Planitems.",
-        "icon": "fas fa-tag",
-        "api": {
-          "field": "bezeichnung",
-          "type": "string"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": "required && min_length(1)",
-              "message": "Bezeichnung ist Pflicht und muss mindestens 1 Zeichen lang sein."
-            }
-          ]
-        },
-        "checklist_entry": "Bezeichnung angeben"
-      },
-
-      "datum": {
-        "name": "datum",
-        "label": "Datum",
-        "type": "date",
-        "required": true,
-        "format": "YYYY-MM-DD",
-        "description": "Datum des Planitems (z. B. Beginn, Kaufdatum).",
-        "icon": "fas fa-calendar-alt",
-        "api": {
-          "field": "datum",
-          "type": "date"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": "format(YYYY-MM-DD)",
-              "message": "Datum muss im Format YYYY-MM-DD vorliegen."
-            }
-          ]
-        },
-        "checklist_entry": "Datum angeben"
-      },
-
-      "betrag": {
-        "name": "betrag",
-        "label": "Betrag",
-        "type": "number",
-        "required": true,
-        "min": 0,
-        "description": "Betrag in Euro.",
-        "icon": "fas fa-euro-sign",
-        "api": {
-          "field": "betrag",
-          "type": "number"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": ">= 0",
-              "message": "Betrag muss größer oder gleich 0 sein."
-            }
-          ]
-        },
-        "checklist_entry": "Betrag in Euro angeben"
       }
     }
   }

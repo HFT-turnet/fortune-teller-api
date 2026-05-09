@@ -57,6 +57,8 @@ class Cvalue < ApplicationRecord
             vt_balance=11 if self.ev>0
             vt_balance=12 if self.ev<0
             # Write first year movement (Cash out / Cash in depending on type.)
+            #byebug
+            puts t
             if t==self.fromt
                 # The Balance move is treated with inverse value to the balance: i.e. to have a cashbalance on something, it goes against the cashflow.
                 # It is generally assumed, that the cashflows producing the ev are aggregated towards the end of the year.
@@ -94,6 +96,7 @@ class Cvalue < ApplicationRecord
                 end
                 # At this stage we have generate the every year's movements and determined a newvalue after cto and interest.
             end
+            puts newvalue
             # Very special case, but technically possible: Inflation is set like a market development on a fund.
             if self.inflation!=0 and not t==self.fromt
                 # The "inflation" / market movement is applied to the endvalue, but not to the movement cash.
