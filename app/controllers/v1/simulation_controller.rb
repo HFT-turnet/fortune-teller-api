@@ -1,5 +1,5 @@
 class V1::SimulationController < ApplicationController
-    before_action :findcase, except: [:case_create, :template_index, :template_planitems, :template_show]
+    before_action :findcase, except: [:case_create, :template_index, :template_planitems, :template_show, :template_flows]
     before_action :findplanitem, only: [:planitem_show, :planitem_update, :planitem_destroy, :planitem_entries_show, :planitem_entries_create]
     # Grundsätzlicher Flow:
     # Open Case
@@ -68,6 +68,7 @@ class V1::SimulationController < ApplicationController
                 params[:cvalues].each do |v|
                     entry=Cvalue.create(
                         case_id: @case.id,
+                        planitem_id: v["planitem_id"],
                         cvaluetype: v["cvaluetype"],
                         label: v["label"],
                         cto:  v["cto"],
@@ -96,6 +97,7 @@ class V1::SimulationController < ApplicationController
                 params[:cslices].each do |v|
                     cslice=Cslice.create(
                         case_id: @case.id,
+                        planitem_id: v["planitem_id"],
                         cvaluetype: v["cvaluetype"],
                         label: v["label"],
                         t: v["t"],
@@ -108,6 +110,7 @@ class V1::SimulationController < ApplicationController
                     v["cvalues"].each do |v|
                         entry=cslice.cvalues.create(
                             case_id: @case.id,
+                            planitem_id: v["planitem_id"],
                             cvaluetype: v["cvaluetype"],
                             label: v["label"],
                             cto:  v["cto"],
@@ -175,12 +178,12 @@ class V1::SimulationController < ApplicationController
     # Planitem actions
 
     def planitem_index
-        render json: @case.planitems.map { |pi| planitem_json(pi) }
+        render json: @case.planitems.map { |pi| planitem_json(pi) }.to_json
     end
 
     def planitem_create
         @planitem=@case.planitems.create(planitem_permitted_params)
-        render json: planitem_json(@planitem)
+        render json: planitem_json(@planitem).to_json
     end
 
     def planitem_show
@@ -189,7 +192,7 @@ class V1::SimulationController < ApplicationController
 
     def planitem_update
         @planitem.update(planitem_permitted_params)
-        render json: planitem_json(@planitem)
+        render json: planitem_json(@planitem).to_json
     end
 
     def planitem_destroy

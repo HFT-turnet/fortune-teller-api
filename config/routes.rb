@@ -63,6 +63,7 @@ Rails.application.routes.draw do
         # Templates
         get 'templates/planitems', action: "template_planitems"
         get 'templates/(:country)', action: "template_index"
+        get 'templates/(:country)/(:plan_type)/flows', action: "template_flows"
         get 'templates/(:country)/(:plan_type)', action: "template_show"
     end
 

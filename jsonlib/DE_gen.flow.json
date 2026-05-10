@@ -23,9 +23,10 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Giro",
                               "cto": 0,
-                              "t": "var_planitem_fromt",
-                              "fromt": "var_planitem_fromt",
-                              "tot": "var_planitem_tot",
+                              "planitem_id": "9",
+                              "t": "1990",
+                              "fromt": "1990",
+                              "tot": "2100",
                               "interest": 0
                           }
                 }
@@ -49,10 +50,10 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Giro",
                               "cto": 0,
-                              "t": "var_planitem_fromt",
-                              "fromt": "var_planitem_fromt",
-                              "tot": "var_planitem_tot",
-                              "interest": 0
+                              "planitem_id": "9",
+                              "t": 1990,
+                              "fromt": 2025,
+                              "tot": 2090
                           }
                 }
               },
@@ -61,6 +62,11 @@
                 "type": "decimal",
                 "label": "Kontostand Tagesgeld",
                 "help": "Bargeldbestand eingeben bitte."
+              },             
+              "interest": {
+                "type": "decimal",
+                "label": "Zinssatz Tagesgeld",
+                "help": "Zinssatz für Tagesgeld eingeben bitte."
               }
             },
             "include_fields_in_payload_within": "cvalue"
@@ -75,6 +81,7 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Giro",
                               "cto": 0,
+                              "planitem_id": "9",
                               "t": "var_fromt",
                               "fromt": "var_planitem_fromt",
                               "tot": "var_planitem_tot",
