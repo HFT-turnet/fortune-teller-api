@@ -7,7 +7,7 @@ module V1::TemplateHandler
 
   # Response to GET /v1/simulation/templates/planitems
   def template_planitems
-    all_plan_types = Planitem.plan_types.map do |key, value|
+    all_plan_types = Planitem::PLAN_TYPES.map do |key, value|
       {
         key: key,
         value: value,
@@ -38,13 +38,31 @@ module V1::TemplateHandler
     render json: { country: country, templates: templates }
   end
 
+  # GET /v1/simulation/templates/(:country)/(:plan_type)/flows
+  # Returns only the flow items (key, label, icon, description) for a given template.
+  def template_flows
+    country = sanitize_template_key(params[:country]) || "DE"
+    plan_type_value = params[:plan_type].to_i
+
+    if Planitem::PLAN_TYPES.key(plan_type_value).blank?
+      render json: { error: "Unknown plan_type." }, status: :bad_request and return
+    end
+
+    flows = SimTemplate.new.list_flows(country, plan_type_value)
+    if flows
+      render json: { country: country, plan_type: plan_type_value, flows: flows }
+    else
+      render json: { error: "Template not found." }, status: :not_found
+    end
+  end
+
   # GET /v1/simulation/templates/(:country)/(:plan_type)
   # :plan_type is the numeric enum value (e.g. 1 for ausbildung)
   def template_show
     country = sanitize_template_key(params[:country]) || "DE"
     plan_type_value = params[:plan_type].to_i
 
-    if Planitem.plan_types.key(plan_type_value).blank?
+    if Planitem::PLAN_TYPES.key(plan_type_value).blank?
       render json: { error: "Unknown plan_type." }, status: :bad_request and return
     end
 

@@ -22,8 +22,23 @@ class SimTemplate
 
   # plan_type_value: integer enum value (e.g. 1)
   # Resolves the key from Planitem enum and builds the correct filename: {country}_{value}_{key}.flow.json
+  def list_flows(country, plan_type_value)
+    template = get_template(country, plan_type_value)
+    return nil unless template
+
+    items = template.dig("flow", "items") || {}
+    items.map do |key, item|
+      {
+        key: key,
+        label: item["label"],
+        icon: item["icon"],
+        description: item["description"]
+      }
+    end
+  end
+
   def get_template(country, plan_type_value)
-    plan_type_key = Planitem.plan_types.key(plan_type_value.to_i)
+    plan_type_key = Planitem::PLAN_TYPES.key(plan_type_value.to_i)
     return nil if plan_type_key.blank?
 
     file_path = TEMPLATE_DIR.join("#{country}_#{plan_type_value}_#{plan_type_key}#{TEMPLATE_SUFFIX}")

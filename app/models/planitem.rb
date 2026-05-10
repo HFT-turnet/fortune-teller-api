@@ -4,7 +4,21 @@ class Planitem < ApplicationRecord
     has_many :cvalues, dependent: :nullify
 
     enum :category, { phase: 1, pit: 3 }
-    enum :plan_type, { ausbildung: 1, erwerbstaetigkeit: 2, arbeitslos: 3, elternzeit: 4, pflegezeit: 5, auszeit: 6, ruhestand: 7, immobilie: 10, verkauf_immobilie: 11, investment: 12, erbe: 15, versorgungszahlungen: 16 }
+
+    PLAN_TYPES = {
+        "ausbildung"          => 1,
+        "erwerbstaetigkeit"   => 2,
+        "arbeitslos"          => 3,
+        "elternzeit"          => 4,
+        "pflegezeit"          => 5,
+        "auszeit"             => 6,
+        "ruhestand"           => 7,
+        "immobilie"           => 10,
+        "verkauf_immobilie"   => 11,
+        "investment"          => 12,
+        "erbe"                => 15,
+        "versorgungszahlungen" => 16
+    }.freeze
 
     before_create :derive_category
     after_create :generate_checklist
@@ -34,7 +48,7 @@ class Planitem < ApplicationRecord
     }.freeze
 
     def plan_type_text
-        PLANTYPE_LABELS[self.plan_type]
+        PLANTYPE_LABELS[PLAN_TYPES.key(self.plan_type)]
     end
     PLANTYPE_ICONS = {
         "ausbildung"     => "fas fa-graduation-cap",
@@ -52,7 +66,7 @@ class Planitem < ApplicationRecord
     }.freeze
 
     def plan_type_icon
-        PLANTYPE_ICONS[self.plan_type]
+        PLANTYPE_ICONS[PLAN_TYPES.key(self.plan_type)]
     end
 
     private
@@ -60,13 +74,14 @@ class Planitem < ApplicationRecord
     def derive_category
         return if category.present?
         return unless plan_type.present?
-        self.category = Planitem.plan_types[plan_type] < 10 ? :phase : :pit
+        self.category = self.plan_type < 10 ? :phase : :pit
     end
 
     def generate_checklist
         return unless plan_type.present?
-        template_key = "#{Planitem.plan_types[plan_type]}_#{plan_type}"
-        SimTemplate.new.create_checklist(self.case.country, template_key, case_id, id)
+        plan_type_key = PLAN_TYPES.key(self.plan_type)
+        return unless plan_type_key
+        SimTemplate.new.create_checklist(self.case.country, "#{self.plan_type}_#{plan_type_key}", case_id, id)
     end
 
 end
