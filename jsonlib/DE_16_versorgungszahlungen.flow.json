@@ -1,0 +1,21 @@
+{
+  "flow": {
+    "id": "DE_16_versorgungszahlungen",
+    "version": "1.0",
+    "description": "Flow-Definition für den Planitem-Typ 'Versorgungszahlungen'.",
+    "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 16,
+    "icon": "fas fa-money-bill-wave",
+    "items": {
+      "standard": {
+        "name": "standard",
+        "label": "Standard",
+        "required": false,
+        "description": "Standard-Eintrag für den Planitem-Typ 'Versorgungszahlungen'.",
+        "icon": "fas fa-money-bill-wave",
+        "checklist_entry": "Standard-Angaben für Versorgungszahlungen angeben"
+      }
+    }
+  }
+}

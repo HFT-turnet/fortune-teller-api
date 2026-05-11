@@ -1,0 +1,21 @@
+{
+  "flow": {
+    "id": "DE_12_investment",
+    "version": "1.0",
+    "description": "Flow-Definition für den Planitem-Typ 'Investment'.",
+    "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 12,
+    "icon": "fas fa-chart-line",
+    "items": {
+      "standard": {
+        "name": "standard",
+        "label": "Standard",
+        "required": false,
+        "description": "Standard-Eintrag für den Planitem-Typ 'Investment'.",
+        "icon": "fas fa-chart-line",
+        "checklist_entry": "Standard-Angaben für Investment angeben"
+      }
+    }
+  }
+}

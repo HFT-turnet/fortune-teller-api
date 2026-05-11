@@ -1,0 +1,21 @@
+{
+  "flow": {
+    "id": "DE_15_erbe",
+    "version": "1.0",
+    "description": "Flow-Definition für den Planitem-Typ 'Erbe'.",
+    "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 15,
+    "icon": "fas fa-file-contract",
+    "items": {
+      "standard": {
+        "name": "standard",
+        "label": "Standard",
+        "required": false,
+        "description": "Standard-Eintrag für den Planitem-Typ 'Erbe'.",
+        "icon": "fas fa-file-contract",
+        "checklist_entry": "Standard-Angaben für Erbe angeben"
+      }
+    }
+  }
+}

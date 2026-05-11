@@ -1,0 +1,21 @@
+{
+  "flow": {
+    "id": "DE_11_verkauf_immobilie",
+    "version": "1.0",
+    "description": "Flow-Definition für den Planitem-Typ 'Verkauf Immobilie'.",
+    "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 11,
+    "icon": "fas fa-house-flag",
+    "items": {
+      "standard": {
+        "name": "standard",
+        "label": "Standard",
+        "required": false,
+        "description": "Standard-Eintrag für den Planitem-Typ 'Verkauf Immobilie'.",
+        "icon": "fas fa-house-flag",
+        "checklist_entry": "Standard-Angaben für Verkauf Immobilie angeben"
+      }
+    }
+  }
+}
