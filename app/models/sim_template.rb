@@ -49,6 +49,27 @@ class SimTemplate
     template
   end
 
+  def create_checklist(country, plan_type_value, case_id, planitem_id)
+    template = get_template(country, plan_type_value)
+    return nil unless template
+
+    flow      = template["flow"]
+    flow_ref  = flow["id"]
+    items     = flow["items"] || {}
+
+    items.each_value do |item|
+      next unless item.is_a?(Hash) && item["checklist_entry"].present?
+
+      Checklist.create!(
+        case_id:     case_id,
+        planitem_id: planitem_id,
+        text:        item["checklist_entry"],
+        flow_ref:    flow_ref,
+        status:      1
+      )
+    end
+  end
+
   private
 
   def merge_referenced_items(template)
@@ -78,24 +99,4 @@ class SimTemplate
     JSON.parse(File.read(file_path))
   end
 
-  def create_checklist(country, plan_type_value, case_id, planitem_id)
-    template = get_template(country, plan_type_value)
-    return nil unless template
-
-    flow      = template["flow"]
-    flow_ref  = flow["id"]
-    items     = flow["items"] || {}
-
-    items.each_value do |item|
-      next unless item.is_a?(Hash) && item["checklist_entry"].present?
-
-      Checklist.create!(
-        case_id:     case_id,
-        planitem_id: planitem_id,
-        text:        item["checklist_entry"],
-        flow_ref:    flow_ref,
-        status:      1
-      )
-    end
-  end
 end

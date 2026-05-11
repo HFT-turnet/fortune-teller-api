@@ -81,7 +81,7 @@ class Planitem < ApplicationRecord
         return unless plan_type.present?
         plan_type_key = PLAN_TYPES.key(self.plan_type)
         return unless plan_type_key
-        SimTemplate.new.create_checklist(self.case.country, "#{self.plan_type}_#{plan_type_key}", case_id, id)
+        SimTemplate.new.create_checklist(self.case.country, self.plan_type, case_id, id)
     end
 
 end
