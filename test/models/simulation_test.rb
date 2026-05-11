@@ -32,6 +32,16 @@ class SimulationTest < ActiveSupport::TestCase
     assert_equal "Debt Balance (Cash)", sim.valuetype_text
   end
 
+  test "valuetype_text returns Pension Points (Non-Currency) for valuetype 15" do
+    sim = Simulation.new(valuetype: 15)
+    assert_equal "Pension Points (Non-Currency)", sim.valuetype_text
+  end
+
+  test "valuetype_text returns Pension Points Balance (Non-Currency) for valuetype 16" do
+    sim = Simulation.new(valuetype: 16)
+    assert_equal "Pension Points Balance (Non-Currency)", sim.valuetype_text
+  end
+
   # valuetype_text (class method): same mapping via the class-level method
   test "Simulation.valuetype_text returns Income for 1" do
     assert_equal "Income", Simulation.valuetype_text(1)
@@ -39,6 +49,10 @@ class SimulationTest < ActiveSupport::TestCase
 
   test "Simulation.valuetype_text returns Expense for 2" do
     assert_equal "Expense", Simulation.valuetype_text(2)
+  end
+
+  test "Simulation.valuetype_text returns Pension Points for 15" do
+    assert_equal "Pension Points (Non-Currency)", Simulation.valuetype_text(15)
   end
 
   test "Simulation.valuetype_text returns nil for unknown valuetype" do

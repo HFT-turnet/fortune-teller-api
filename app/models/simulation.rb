@@ -11,7 +11,8 @@ class Simulation < ApplicationRecord
     # 12: Debt Balance (Cash)
     # 13: Assets Balance (Monetary)
     # 14: Assets Balance (Non-Monetary)
-    # 15: Pension Points (Non-Currency)
+    # 15: Pension Points (Non-Currency, annual movement)
+    # 16: Pension Points Balance (Non-Currency, cumulative)
     def valuetype_text
         case self.valuetype
         when 1
@@ -32,6 +33,8 @@ class Simulation < ApplicationRecord
             return "Assets Balance (Non-Monetary)"
         when 15
             return "Pension Points (Non-Currency)"
+        when 16
+            return "Pension Points Balance (Non-Currency)"
         end
     end
     ### WHEN DO WE USE THIS?
@@ -55,6 +58,8 @@ class Simulation < ApplicationRecord
             return "Assets Balance (Non-Monetary)"
         when 15
             return "Pension Points (Non-Currency)"
+        when 16
+            return "Pension Points Balance (Non-Currency)"
         end
     end
 

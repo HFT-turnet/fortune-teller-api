@@ -17,6 +17,11 @@ class CvalueTest < ActiveSupport::TestCase
     assert_match /Cashbalance/, cv.cvaluetype_text
   end
 
+  test "cvaluetype_text returns Pension Points for type 15" do
+    cv = Cvalue.new(cvaluetype: 15)
+    assert_equal "Pension Points", cv.cvaluetype_text
+  end
+
   # cf_type_text: returns label for the cashflow type
   test "cf_type_text returns interest description for cf_type 1" do
     cv = Cvalue.new(cf_type: 1)

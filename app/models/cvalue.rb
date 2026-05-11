@@ -7,7 +7,7 @@ class Cvalue < ApplicationRecord
     belongs_to :planitem, optional: true
 
     ## DEFINITIONS
-    # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
+    # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance, 15: Pension Points
     def cvaluetype_text
         case self.cvaluetype
         when 1
@@ -24,6 +24,8 @@ class Cvalue < ApplicationRecord
             # The interest is the interest rate per year, it is incurred on the prior year.
             # The inflation can carry a value. This only makes sense in case of simulating a market value element, i.e. a fund of some kind. The amount is applied on the ev without cash impact until repayment.
             # The cf_type is the cashflow type and determines which part of th Cvalue has an impact on the overall budget.
+        when 15
+            return "Pension Points"
         end
     end
     def cf_type_text
@@ -158,6 +160,12 @@ class Cvalue < ApplicationRecord
             # This is a special case, where the value of the general cash-buffer is being set, rather than calculated.
             self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
             self.case.simulations.create(valuetype: 10, sourcetype: 1, sourceid: self.id, t: t, value: self.ev)
+        end
+        if self.cvaluetype==15 and self.cslice_id.nil?
+            self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
+            (self.fromt..self.tot).each do |t|
+                self.case.simulations.create(valuetype: 15, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
+            end
         end
     end
 end

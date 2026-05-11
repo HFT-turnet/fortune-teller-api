@@ -145,6 +145,17 @@ class Case < ApplicationRecord
         end
     end
 
+    def simulate_pensionpoints
+        # Reset existing automatically derived pension points balance.
+        self.simulations.where(:sourcetype => 0).where(:valuetype => 16).destroy_all
+        # Create annual cumulative pension point balances from all annual point postings.
+        points_balance=0.to_d
+        self.simulations.where(:valuetype => 15).group(:t).sum(:value).sort.each do |key, value|
+            points_balance=points_balance+value.to_d
+            self.simulations.create(valuetype: 16, sourcetype: 0, t: key, value: points_balance)
+        end
+    end
+
     # Deletion of case and all data
     def delete_all
         # Destroy simulations

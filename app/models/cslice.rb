@@ -7,7 +7,7 @@ class Cslice < ApplicationRecord
     has_many :simulations
 
     ## DEFINITIONS
-    # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
+    # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance, 15: Pension Points
     def cvaluetype_text
         case self.cvaluetype
         when 1
@@ -16,6 +16,8 @@ class Cslice < ApplicationRecord
             return "Expense"
         when 3
             return "Cashbalance"
+        when 15
+            return "Pension Points"
         end
     end
 

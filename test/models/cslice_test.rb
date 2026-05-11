@@ -17,6 +17,11 @@ class CsliceTest < ActiveSupport::TestCase
     assert_equal "Cashbalance", csl.cvaluetype_text
   end
 
+  test "cvaluetype_text returns Pension Points for type 15" do
+    csl = Cslice.new(cvaluetype: 15)
+    assert_equal "Pension Points", csl.cvaluetype_text
+  end
+
   test "cvaluetype_text returns nil for an unknown type" do
     csl = Cslice.new(cvaluetype: 99)
     assert_nil csl.cvaluetype_text

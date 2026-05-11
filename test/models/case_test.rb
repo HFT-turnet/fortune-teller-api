@@ -59,6 +59,21 @@ class CaseTest < ActiveSupport::TestCase
     assert result.is_a?(Hash)
   end
 
+  test "simulate_pensionpoints creates cumulative point balances" do
+    c = Case.create!(byear: 2020, dyear: 2030, sex: 1)
+    c.simulations.create!(valuetype: 15, sourcetype: 1, sourceid: 1, t: 2025, value: 1.2)
+    c.simulations.create!(valuetype: 15, sourcetype: 2, sourceid: 1, t: 2025, value: 0.8)
+    c.simulations.create!(valuetype: 15, sourcetype: 1, sourceid: 2, t: 2026, value: 1.0)
+
+    c.simulate_pensionpoints
+
+    y2025 = c.simulations.find_by(valuetype: 16, sourcetype: 0, t: 2025)
+    y2026 = c.simulations.find_by(valuetype: 16, sourcetype: 0, t: 2026)
+    assert_equal 2.0.to_d, y2025.value.to_d
+    assert_equal 3.0.to_d, y2026.value.to_d
+    c.delete_all
+  end
+
   # delete_all: destroys case and associated records
   test "delete_all destroys the case" do
     c = Case.create!(byear: 1980, dyear: 2050, sex: 1)

@@ -132,6 +132,7 @@ class V1::SimulationController < ApplicationController
         end
         # Simulate the Cashbalance
         @case.simulate_cashbalance
+        @case.simulate_pensionpoints
         return "OK."
     end
 
@@ -142,11 +143,13 @@ class V1::SimulationController < ApplicationController
             @case.cvalues.find(params[:cvalue_id]).destroy
             @case.simulations.where(sourcetype: 1, sourceid: params[:cvalue_id]).destroy_all
             @case.simulate_cashbalance
+            @case.simulate_pensionpoints
         else
             cslice=@case.cvalues.find(params[:cvalue_id]).cslice
             @case.cvalues.find(params[:cvalue_id]).destroy
             cslice.simulate
             @case.simulate_cashbalance
+            @case.simulate_pensionpoints
         end
         return "OK."
     end
@@ -160,6 +163,7 @@ class V1::SimulationController < ApplicationController
         @case.cvalues.where(cslice_id: params[:cslice_id]).destroy_all
         @case.simulations.where(sourcetype: 2, sourceid: params[:cslice_id]).destroy_all
         @case.simulate_cashbalance
+        @case.simulate_pensionpoints
     end
 
     # Simulate the case
@@ -221,6 +225,7 @@ class V1::SimulationController < ApplicationController
             entry.ev=0 if entry.cvaluetype < 3
             entry.save
             @case.simulate_cashbalance
+            @case.simulate_pensionpoints
             render json: { cvalue_id: entry.id, label: entry.label }
         when "Cslice"
             csl_params=params.require(:cslice).permit(:cvaluetype, :label, :t, :disclaimer, :source, :info)
@@ -247,6 +252,7 @@ class V1::SimulationController < ApplicationController
                 cslice.simulate
             end
             @case.simulate_cashbalance
+            @case.simulate_pensionpoints
             render json: { cslice_id: cslice.id, label: cslice.label }
         else
             render json: { error: "Unknown type. Use Cvalue or Cslice." }, status: :unprocessable_entity
