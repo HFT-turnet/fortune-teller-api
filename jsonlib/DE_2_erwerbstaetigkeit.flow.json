@@ -8,7 +8,8 @@
     "planitem_type": 2,
     "icon": "fas fa-briefcase",
     "referenced_items": [
-      "cash_start"
+      "cash_start",
+      "salary_sequence"
       ],
     "items": {
 

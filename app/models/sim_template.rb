@@ -28,11 +28,19 @@ class SimTemplate
 
     items = template.dig("flow", "items") || {}
     items.map do |key, item|
+      actions = item["actions"] || {}
+      # Find first action (lowest order, or first without order)
+      first_action = actions.min_by { |_,a| a["order"].to_i }
+      next_action_key = first_action&.first
+      first_action_config = first_action&.last || {}
+      
       {
         key: key,
         label: item["label"],
         icon: item["icon"],
-        description: item["description"]
+        description: item["description"],
+        first_action: next_action_key,
+        has_sequence: first_action_config["next_action"].present?
       }
     end
   end
@@ -60,13 +68,13 @@ class SimTemplate
     items.each_value do |item|
       next unless item.is_a?(Hash) && item["checklist_entry"].present?
 
-      Checklist.create!(
-        case_id:     case_id,
-        planitem_id: planitem_id,
-        text:        item["checklist_entry"],
-        flow_ref:    flow_ref,
-        status:      1
-      )
+      Checklist.create! do |c|
+        c.case_id = case_id
+        c.planitem_id = planitem_id
+        c.text = item["checklist_entry"]
+        c.flow_ref = flow_ref
+        c.status = 1
+      end
     end
   end
 

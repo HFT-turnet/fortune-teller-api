@@ -4,6 +4,9 @@
     "version": "1.0",
     "description": "Generische Items für mehrere Planitem-Typen in Deutschland.",
     "scope": "DE",
+    "type": "planitem",
+    "planitem_type": 99,
+    "icon": "fas fa-cogs",
     "items": {
       "cash_start": {
         "name": "cash_start",
@@ -97,6 +100,118 @@
               }
             },
             "include_fields_in_payload_within": "cvalue"
+          }
+        }
+      },
+      "salary_sequence": {
+        "name": "salary_sequence",
+        "label": "Gehalt berechnen & speichern",
+        "description": "Zuerst Bruttogehalt eingeben, dann Ergebnisse speichern",
+        "icon": "fas fa-coins",
+        "checklist_entry": "Gehalt berechnen und einplanen",
+        "actions": {
+          "a_grossnet": {
+            "order": 1,
+            "label": "Schritt 1: Bruttogehalt berechnen",
+            "description": "Berechnet Netto aus Brutto (SV + Steuern)",
+            "api": {
+              "version": "v1",
+              "path": "/public/grossnet",
+              "method": "POST",
+              "payload": { "gross_salary": "var_gross_salary", "sv-westost": "sv-west" }
+            },
+            "fields": {
+              "gross_salary": {
+                "type": "decimal",
+                "label": "Bruttogehalt (Jährlich)",
+                "help": "Geben Sie Ihr jährliches Bruttogehalt ein",
+                "required": true
+              }
+            },
+            "result_mapping": {
+              "gross": "bruttogehalt",
+              "alv": "sv_alv12",
+              "gkv": "sv_gkv_an12",
+              "pv": "sv_pv_an12",
+              "drv": "sv_drv12",
+              "est": "est",
+              "soli": "soli"
+            },
+            "next_action": "b_save",
+            "show_results": true,
+            "result_partial": "core/grossnet"
+          },
+          "b_save": {
+            "order": 2,
+            "label": "Schritt 2: Einkommen einplanen",
+            "description": "Speichern Sie die berechneten Werte mit Zeitraum und Inflation",
+            "api": {
+              "version": "v1",
+              "path": "/entry",
+              "method": "POST",
+              "payload": {
+                "cslice": {
+                  "cvaluetype": 1,
+                  "label": "Arbeitseinkommen",
+                  "planitem_id": "1",
+                  "t": "var_current_year",
+                  "source": "Flow: Salary",
+                  "info": "Created by flow sequence",
+                  "cvalues": [
+                    {
+                      "planitem_id": "1",
+                      "cvaluetype": 1,
+                      "label": "Bruttoeinkommen",
+                      "cto": "var_gross",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_fromt",
+                      "tot": "var_tot",
+                      "inflation": "var_inflation"
+                    },
+                    {
+                      "planitem_id": "1",
+                      "cvaluetype": 2,
+                      "label": "Sozialversicherung",
+                      "cto": "var_sum_sv",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_fromt",
+                      "tot": "var_tot",
+                      "inflation": "var_inflation"
+                    },
+                    {
+                      "planitem_id": "1",
+                      "cvaluetype": 2,
+                      "label": "Steuern",
+                      "cto": "var_sum_tax",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_fromt",
+                      "tot": "var_tot",
+                      "inflation": "var_inflation"
+                    }
+                  ]
+                }
+              }
+            },
+            "fields": {
+              "fromt": {
+                "type": "integer",
+                "label": "Berufsbeginn (Jahr)",
+                "default": 2025
+              },
+              "tot": {
+                "type": "integer",
+                "label": "Berufsende (Jahr)",
+                "default": 2060
+              },
+              "inflation": {
+                "type": "decimal",
+                "label": "Gehaltserhöhung (%)",
+                "default": 2.0
+              }
+            }
           }
         }
       }

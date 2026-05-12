@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       match 'summary_report', via: :post
       match 'timeslice' , via: :post
       match 'lastingmoney', via: :get
+      match 'grossnet', via: :post
     end
     
     # CalcSchemes

@@ -209,6 +209,58 @@ class V1::PublicController < ApplicationController
     render json: jsonout
   end
   
+  # Gross to Net Calculator
+  def grossnet
+    # Parameters are sent as JSON body, so they're in params directly
+    gross_salary = params.dig(:gross_salary).to_d
+    sv_region = params.dig(:sv_westost) || "sv-west"
+
+    # Set SV region flags
+    sv_west = sv_region == "sv-west" ? 1 : 0
+    sv_ost = sv_region == "sv-ost" ? 1 : 0
+
+    # 1. Calculate social insurance (SV) using Calcscheme directly
+    sv_calc = Calcscheme.new
+    sv_calc.meta_load("DE", "sv")
+    sv_calc.set("allsv", "2024")
+    
+    sv_inputs = {
+      "bruttogehalt" => gross_salary,
+      "sv_west" => sv_west,
+      "sv_ost" => sv_ost
+    }
+    sv_check = sv_calc.meta_run(sv_inputs)
+    
+    unless sv_check == "OK"
+      render json: { error: "SV calculation failed: #{sv_check}" }, status: :bad_request
+      return
+    end
+
+    # 2. Calculate taxes using Calcscheme directly
+    tax_calc = Calcscheme.new
+    tax_calc.meta_load("DE", "tax")
+    tax_calc.set("income", "2024")
+    
+    # Prepare tax inputs with SV results
+    tax_inputs = sv_calc.result.merge(
+      "sv_gkv_an" => sv_calc.result.dig("sv_gkv_an12"),
+      "sv_pv_an" => sv_calc.result.dig("sv_pv_an12"),
+      "sv_drv" => sv_calc.result.dig("sv_drv12")
+    )
+    
+    tax_check = tax_calc.meta_run(tax_inputs)
+    
+    unless tax_check == "OK"
+      render json: { error: "Tax calculation failed: #{tax_check}" }, status: :bad_request
+      return
+    end
+
+    # Combine results
+    result = sv_calc.result.merge(tax_calc.result)
+
+    render json: result
+  end
+
   # Work with VALUEFLOWS (as in valueflows model). Includes Financial Assets and Debt Outlook
     # Valueflows are driven by contracts, the financial market or do not change
   
