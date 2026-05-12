@@ -6,122 +6,15 @@
     "scope": "DE",
     "type": "planitem",
     "planitem_type": 10,
-    "icon": "fas fa-home",
-    "referenced_items": [
-      "cash_start"
-      ],
+    "icon": "fas fa-house-flag",
     "items": {
-      "bezeichnung": {
-        "$ref": "DE_gen.flow.json#/flow/items/bezeichnung",
-        "description": "Name der Immobilie (z. B. 'Eigentumswohnung Berlin')."
-      },
-
-      "beginn": {
-        "name": "beginn",
-        "label": "Beginn",
-        "type": "date",
-        "required": true,
-        "format": "YYYY-MM-DD",
-        "description": "Startdatum des Immobilienerwerbs.",
-        "icon": "fas fa-calendar-check",
-        "api": {
-          "field": "beginn",
-          "type": "date"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": "format(YYYY-MM-DD) && <= today",
-              "message": "Startdatum muss im Format YYYY-MM-DD vorliegen und in der Vergangenheit liegen."
-            }
-          ]
-        },
-        "checklist_entry": "Startdatum des Immobilienerwerbs angeben"
-      },
-
-      "ende": {
-        "name": "ende",
-        "label": "Ende",
-        "type": "date",
+      "standard": {
+        "name": "standard",
+        "label": "Standard",
         "required": false,
-        "format": "YYYY-MM-DD",
-        "description": "Enddatum des Immobilienerwerbs (optional).",
-        "icon": "fas fa-calendar-times",
-        "api": {
-          "field": "ende",
-          "type": "date"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": "format(YYYY-MM-DD) && >= items.beginn",
-              "message": "Enddatum muss im Format YYYY-MM-DD vorliegen und nach dem Startdatum liegen."
-            }
-          ]
-        },
-        "checklist_entry": "Enddatum angeben (optional)"
-      },
-
-      "kosten_pro_jahr": {
-        "name": "kosten_pro_jahr",
-        "label": "Kosten pro Jahr",
-        "type": "number",
-        "required": false,
-        "min": 0,
-        "description": "Jährliche Kosten der Immobilie in Euro.",
-        "icon": "fas fa-money-bill-wave",
-        "api": {
-          "field": "kosten_pro_jahr",
-          "type": "number"
-        },
-        "validation": {
-          "rules": [
-            {
-              "condition": ">= 0",
-              "message": "Kosten müssen größer oder gleich 0 sein."
-            }
-          ]
-        },
-        "checklist_entry": "Jährliche Kosten angeben (optional)"
-      },
-
-      "foerderungen": {
-        "name": "foerderungen",
-        "label": "Förderungen",
-        "type": "array",
-        "required": false,
-        "items": {
-          "type": "string",
-          "enum": ["BAföG", "Stipendium", "Elternunterstützung", "sonstiges"]
-        },
-        "description": "Liste der Förderungen für die Immobilie.",
-        "icon": "fas fa-hand-holding-heart",
-        "api": {
-          "field": "foerderungen",
-          "type": "array"
-        },
-        "checklist_entry": "Förderungen auswählen (optional)"
-      },
-
-      "case_id": {
-        "$ref": "DE_gen.flow.json#/flow/items/case_id"
-      }
-    },
-
-    "api": {
-      "endpoint": "/api/v1/planitems/immobilie",
-      "method": "POST",
-      "payload": {
-        "content_type": "application/json",
-        "structure": {
-          "planitem_type": 10,
-          "bezeichnung": "{items.bezeichnung.api.field}",
-          "beginn": "{items.beginn.api.field}",
-          "ende": "{items.ende.api.field}",
-          "kosten_pro_jahr": "{items.kosten_pro_jahr.api.field}",
-          "foerderungen": "{items.foerderungen.api.field}",
-          "case_id": "{items.case_id.api.field}"
-        }
+        "description": "Standard-Eintrag für den Planitem-Typ 'Immobilie'.",
+        "icon": "fas fa-house-flag",
+        "checklist_entry": "Standard-Angaben für Immobilie angeben"
       }
     }
   }
