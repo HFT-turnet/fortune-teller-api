@@ -1,0 +1,19 @@
+meta {
+  name: Grossnet
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{ftapi_server}}/v1/public/grossnet
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "gross_salary": 60000,
+    "sv_westost": "sv-west",
+    "year":2026
+  }
+}

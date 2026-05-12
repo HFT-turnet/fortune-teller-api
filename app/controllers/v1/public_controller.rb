@@ -214,6 +214,12 @@ class V1::PublicController < ApplicationController
     # Parameters are sent as JSON body, so they're in params directly
     gross_salary = params.dig(:gross_salary).to_d
     sv_region = params.dig(:sv_westost) || "sv-west"
+    year = params.dig(:year)&.to_s || Time.current.year.to_s
+
+    if year.blank?
+      render json: { error: "year is required" }, status: :bad_request
+      return
+    end
 
     # Set SV region flags
     sv_west = sv_region == "sv-west" ? 1 : 0
@@ -222,7 +228,7 @@ class V1::PublicController < ApplicationController
     # 1. Calculate social insurance (SV) using Calcscheme directly
     sv_calc = Calcscheme.new
     sv_calc.meta_load("DE", "sv")
-    sv_calc.set("allsv", "2024")
+    sv_calc.set("allsv", year)
     
     sv_inputs = {
       "bruttogehalt" => gross_salary,
@@ -239,7 +245,7 @@ class V1::PublicController < ApplicationController
     # 2. Calculate taxes using Calcscheme directly
     tax_calc = Calcscheme.new
     tax_calc.meta_load("DE", "tax")
-    tax_calc.set("income", "2024")
+    tax_calc.set("income", year)
     
     # Prepare tax inputs with SV results
     tax_inputs = sv_calc.result.merge(
