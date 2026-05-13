@@ -15,6 +15,11 @@
         "description": "Optional: Wenn positive Bargeld-, Konto- oder Depotbestände bestehen.",
         "icon": "fas fa-piggy-bank",
         "checklist_entry": "Vermögen zu Beginn angeben (optional)",
+        "variables": {
+          "var_fromt": 1990,
+          "var_planitem_fromt": 1990,
+          "var_planitem_tot": 2100
+        },
         "actions": {
           "cvalue_cash": {
             "api": {
@@ -128,19 +133,18 @@
                 "required": true
               }
             },
-            "result_mapping": {
-              "gross": "bruttogehalt",
-              "alv": "sv_alv12",
-              "gkv": "sv_gkv_an12",
-              "pv": "sv_pv_an12",
-              "drv": "sv_drv12",
-              "est": "est",
-              "soli": "soli"
+            "result_presentation": {
+              "bruttogehalt": "Bruttogehalt",
+              "sv_alv12": "Arbeitslosenversicherung",
+              "sv_gkv_an12": "Gesetzliche Krankenversicherung",
+              "sv_pv_an12": "Pflegeversicherung",
+              "sv_drv12": "Rentenversicherung",
+              "est": "Einkommensteuer",
+              "soli": "Solidaritätszuschlag"
             },
-            "next_action": "b_save",
             "show_results": true,
-            "result_partial": "core/grossnet"
-          },
+            "next_action": "b_save"
+            },
           "b_save": {
             "order": 2,
             "label": "Schritt 2: Einkommen einplanen",
