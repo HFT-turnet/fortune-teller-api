@@ -305,6 +305,7 @@ class V1::PublicController < ApplicationController
     end
   end
   
+  private
   # Params definition  
   def timeslice_head_params
     #params.require(:tvs).permit!

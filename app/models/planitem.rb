@@ -69,6 +69,11 @@ class Planitem < ApplicationRecord
         PLANTYPE_ICONS[PLAN_TYPES.key(self.plan_type)]
     end
 
+    def self.plan_types_for_category(cat_key)
+        is_phase = cat_key.to_s == "phase"
+        PLAN_TYPES.select { |_key, value| is_phase ? value < 10 : value >= 10 }
+    end
+
     private
 
     def derive_category

@@ -1,9 +1,11 @@
 module V1::TemplateHandler
   # This is for simulations to manage the flow and provision of templates, that are stored in jsonlib.
   # Basically, there is a template for each planitem and a generic one. All is country based.
+  # The concurrent model is SimTemplate, which has the logic to read the templates and create checklists based on them.
 
-  TEMPLATE_DIR = Rails.root.join("jsonlib")
-  TEMPLATE_SUFFIX = ".flow.json"
+  def self.included(base)
+    base.before_action :set_template_params, only: [:template_flows, :template_show]
+  end
 
   # Response to GET /v1/simulation/templates/planitems
   def template_planitems
@@ -17,11 +19,12 @@ module V1::TemplateHandler
     end
 
     result = Planitem.categories.map do |cat_key, cat_value|
+      category_plan_types = Planitem.plan_types_for_category(cat_key)
       {
         key: cat_key,
         value: cat_value,
         label: Planitem::CATEGORY_LABELS[cat_key],
-        plan_types: all_plan_types.select { |pt| cat_value == 1 ? pt[:value] <= 9 : pt[:value] > 9 }
+        plan_types: all_plan_types.select { |pt| category_plan_types.value?(pt[:value]) }
       }
     end
 
@@ -41,16 +44,9 @@ module V1::TemplateHandler
   # GET /v1/simulation/templates/(:country)/(:plan_type)/flows
   # Returns only the flow items (key, label, icon, description) for a given template.
   def template_flows
-    country = sanitize_template_key(params[:country]) || "DE"
-    plan_type_value = params[:plan_type].to_i
-
-    if Planitem::PLAN_TYPES.key(plan_type_value).blank?
-      render json: { error: "Unknown plan_type." }, status: :bad_request and return
-    end
-
-    flows = SimTemplate.new.list_flows(country, plan_type_value)
+    flows = SimTemplate.new.list_flows(@country, @plan_type_value)
     if flows
-      render json: { country: country, plan_type: plan_type_value, flows: flows }
+      render json: { country: @country, plan_type: @plan_type_value, flows: flows }
     else
       render json: { error: "Template not found." }, status: :not_found
     end
@@ -59,14 +55,7 @@ module V1::TemplateHandler
   # GET /v1/simulation/templates/(:country)/(:plan_type)
   # :plan_type is the numeric enum value (e.g. 1 for ausbildung)
   def template_show
-    country = sanitize_template_key(params[:country]) || "DE"
-    plan_type_value = params[:plan_type].to_i
-
-    if Planitem::PLAN_TYPES.key(plan_type_value).blank?
-      render json: { error: "Unknown plan_type." }, status: :bad_request and return
-    end
-
-    template = SimTemplate.new.get_template(country, plan_type_value)
+    template = SimTemplate.new.get_template(@country, @plan_type_value)
     if template
       render json: template
     else
@@ -75,6 +64,14 @@ module V1::TemplateHandler
   end
 
   private
+
+  def set_template_params
+    @country = sanitize_template_key(params[:country]) || "DE"
+    @plan_type_value = params[:plan_type].to_i
+    if Planitem::PLAN_TYPES.key(@plan_type_value).blank?
+      render json: { error: "Unknown plan_type." }, status: :bad_request
+    end
+  end
 
   # Only allow alphanumeric characters and underscores to prevent path traversal.
   def sanitize_template_key(value)
