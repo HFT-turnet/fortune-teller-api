@@ -1,6 +1,12 @@
 class Simulation < ApplicationRecord
     belongs_to :case
 
+    # General purpose and principles:
+    # The simulation table is intended to allow for querie for any point in time to receive the then-valid amounts. This can be done via the "case.details(t)" function.
+    # To avoid crowding, Cslices are there to provide an aggregator to a number of CValues.
+    # CValues make up the amounts as per their characteristic.
+    # In order to always have a balance, there is the valuetype 10. This is the "automatic savings balance" that is generated as the balancing item for the cash balance. It is generated in the simulate_cashbalance module and should be used in the output to always have a balance.
+
     ## DEFINITIONS
     # Valuetype
     # 1: Income
@@ -62,7 +68,7 @@ class Simulation < ApplicationRecord
     # 0: Internal automatism
     # 1: Cvalue (a value in time with limits and characteristics)
     # 2: Cslice (many individual timevalues that are to be treated in aggregation) => a standard cslice does not have deviations beyond its assumptions.
-    # 3: Cflow (a flow over a certain timeframe, i.e. debt, fund, other)
+    # 3: not implemented - Cflow (a flow over a certain timeframe, i.e. debt, fund, other)
     # 4: CPensionflow (specific to pensions, similar to Cflow, but potentially non-currency)
     def sourcetype_text
         case self.sourcetype

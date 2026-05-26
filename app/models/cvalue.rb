@@ -1,10 +1,24 @@
 class Cvalue < ApplicationRecord
-    before_save :check_core_fields
-    before_save :write_to_simulation
+    # Relations
     belongs_to :case
     has_many :simulations
     belongs_to :cslice, optional: true
     belongs_to :planitem, optional: true
+
+    # Data integrity
+    before_save :fix_core_fields
+    validate :check_core_fields
+    validate :check_cslice_consistency
+    validate :check_planitem_consistency
+
+    # Simulation integration
+    # Only done for stand-alone CValues.
+    before_save :write_to_simulation
+
+    # Quick-Checks
+    def independent?
+        self.cslice_id.nil? && self.planitem_id.nil?
+    end
 
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
@@ -24,6 +38,8 @@ class Cvalue < ApplicationRecord
             # The interest is the interest rate per year, it is incurred on the prior year.
             # The inflation can carry a value. This only makes sense in case of simulating a market value element, i.e. a fund of some kind. The amount is applied on the ev without cash impact until repayment.
             # The cf_type is the cashflow type and determines which part of th Cvalue has an impact on the overall budget.
+        when 4
+            return "Cash balance adjustment."
         end
     end
     def cf_type_text
@@ -128,7 +144,7 @@ class Cvalue < ApplicationRecord
 
     # Write to simulation
     private
-    def check_core_fields
+    def fix_core_fields
         # Check that the fromt and tot are in the frame of the case.
         self.fromt=self.case.byear if self.fromt<self.case.byear
         self.tot=self.case.dyear if self.tot>self.case.dyear
@@ -138,20 +154,34 @@ class Cvalue < ApplicationRecord
         self.ev=0 if self.ev.nil?
         self.cto=0 if self.cto.nil?
     end
+    def check_core_fields
+        if self.cvaluetype.nil? || ![1,2,3,4].include?(self.cvaluetype)
+            errors.add(:cvaluetype, "Unvalid cvaluetype '#{self.cvaluetype}'. Only 1 (Income), 2 (Expense), 3 (Cashbalance) and 4 (Cash balance adjustment) are allowed.")
+        end
+    end
+    def check_cslice_consistency
+        return if self.cslice_id.nil?
+        1==1
+    end
+    def check_planitem_consistency
+        return if self.planitem_id.nil?
+        1==1
+    end
     def write_to_simulation
         # Start the simulation
         puts "Simulating CValue: #{self.id}"
         # This is only being executed for type 1 and 2 automatically. Type 3 is being executed in the simulate function.
-        # It is also limited to those entries, that are not embedded in something bigger like a Cslice.
+        # It is also limited to those entries, that are not embedded in something bigger like a Cslice or a Planitem.
         # Clear existing simulation values
-        if self.cvaluetype<3 and self.cslice_id.nil?
+        if self.cvaluetype<3 and self.cslice_id.nil? and self.planitem_id.nil?
             self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
             # Create new simulation values
             (self.fromt..self.tot).each do |t|
                 self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
             end
         end
-        if self.cvaluetype==3 and self.cslice_id.nil?
+        if self.cvaluetype==3 and self.cslice_id.nil? and self.planitem_id.nil?
+            # This is for cash_balance amounts only.
             self.simulate
         end
         if self.cvaluetype==4

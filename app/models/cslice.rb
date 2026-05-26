@@ -6,6 +6,9 @@ class Cslice < ApplicationRecord
     has_many :cvalues
     has_many :simulations
 
+    validates :label, presence: true
+    validates :cvaluetype, presence: true
+
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance
     def cvaluetype_text

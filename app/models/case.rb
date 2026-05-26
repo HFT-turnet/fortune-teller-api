@@ -123,24 +123,33 @@ class Case < ApplicationRecord
         # These values have sourcetype 1, cvaluetype 4 and are simulated as type 10.
         known_values=self.simulations.where(:sourcetype => 1).where(:valuetype => 10)
         known_values_years=known_values.pluck(:t)
-        # Create the annual automatic cashbalances
-        @balancevalue=0
+
+        # Re-Create the annual automatic cashbalances (type 3)
+        #@balancevalue=0
+        auto_cashbalance_years=[]
         self.simulations.where(:valuetype => [1,2,3]).group(:t).sum(:value).each do |key, value|
             self.simulations.create(valuetype: 3, sourcetype: 0, t: key, value: -1 * value) unless value==0
-            @balancevalue=@balancevalue+value
+            auto_cashbalance_years << key unless value==0
+            #@balancevalue=@balancevalue+value
             # Do we have a known value for this year?
-            @balancevalue=known_values.where(:t => key).first.value if key.in?(known_values_years)
+            #@balancevalue=known_values.where(:t => key).first.value if key.in?(known_values_years)
             # Only write a fresh value if it is not known by explicit statement.
-            self.simulations.create(valuetype: 10, sourcetype: 0, t: key, value: @balancevalue) unless key.in?(known_values_years)
+            #self.simulations.create(valuetype: 10, sourcetype: 0, t: key, value: @balancevalue) unless key.in?(known_values_years)
         end
-        # Make sure that any remaining balance is continued until simulation end.
-        cashbalance_years=self.simulations.where(:valuetype => 10).pluck(:t)
-        self.byear..self.dyear do t
-            unless t.in?(cashbalance_years)
-                # Let us see whether we have a balance value to fill a gap.
-                if (t-1).in?(cashbalance_years)
-                    self.simulations.create(valuetype: 10, sourcetype: 0, t: t, value: self.simulations.where(:valuetype => 10, :t => t-1).first.value)
+        # Walk through years and recalculate (unless there is an overwrite.).
+        #auto_cashbalance_years=self.simulations.where(:valuetype =>3).pluck(:t)
+        auto_cash_balance=0
+        (self.byear..self.dyear).each do |t|
+            if t.in?(known_values_years)
+                # We have a known value for this year. This is already included as a type10, so we just need to reset the cumulation.
+                auto_cash_balance=self.simulations.where(:valuetype => 10).where(:t => t).first.value
+            else
+                # We do not have a replacement-balance for this year.
+                # If this year is in the auto_cashbalance_years, we need to take the move into account.
+                if t.in?(auto_cashbalance_years)
+                    auto_cash_balance=auto_cash_balance-self.simulations.where(:sourcetype => 0).where(:valuetype => 3).where(:t => t).first.value 
                 end
+                self.simulations.create(valuetype: 10, sourcetype: 0, t: t, value: auto_cash_balance)
             end
         end
     end
