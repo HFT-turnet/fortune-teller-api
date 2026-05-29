@@ -1,6 +1,12 @@
 class Pensionfactor < ApplicationRecord
-  
+  ### DRV Data ###
+  # We store: 
+  #   regularstart start year of payout, based on age.
+  #   rentenwert, the point value for a given year.
+  #   bbmg, the ceiling of contribution and reference calc.
+  #   av_gehalt, the average salary for a given year.
   def self.drv_rentenwert(year, provider, annahme_rentenanpassung)
+    
     # Future values need to be guessed / assumed.
     entry=Pensionfactor.where("year = ? AND provider = ? AND factor='rentenwert'", year, provider).first
     unless entry.nil?

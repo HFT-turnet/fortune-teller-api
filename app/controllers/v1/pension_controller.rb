@@ -107,11 +107,12 @@ class V1::PensionController < ApplicationController
         # Prepare reply
         @assumptions=[]
         @assumptions << "Limitierung: Diese Simulation ist im frühen Entwicklungsstadium!"
-                
+        @assumptions << "Es wird auf Jahre gerundet, individuelle Werte können um bis zu ein Jahr abweichen."
+
         # Regelalter ermitteln (nur Jahre, die Übergangszeiten sind stehen in der DB.)
         regularstart=Pensionfactor.where(ptype: "drv", provider: provider, factor: "regularstart", year: params[:person][:birthyear]).first
         if regularstart.nil?
-            regularstart=params[:person][:birthyear].to_i+67
+            regularstart=params[:person][:birthyear].to_i + 67
         else
             regularstart=regularstart.value
         end
@@ -122,6 +123,8 @@ class V1::PensionController < ApplicationController
             @assumptions << "Es gab keine Information zu Rentenpunkten oder sv_gehalt, daher wird ein Verdienst auf Durchschnitt ab 25 angenommen."
             @assumptions << "Annahmenbedingte Entgeltpunkte: " + entgeltpunkte.to_s
         end
+        # Variable for byear
+        @byear=params[:person][:birthyear]
         # Obtain all available input and check necessary action.
         # übermittelte Rentenpunkte als Hash
         rentenpunkte=params.dig('drv','rentenpunkte')
@@ -211,6 +214,8 @@ class V1::PensionController < ApplicationController
             payout["startyear"]=year
             payout["monthly"] = (rentenwert * zugangsfaktor[key] * entgeltpunkte).round(2)
             payout["annually"] = (payout["monthly"]*12).round(2)
+            payout["values_as_per"]=2025
+            payout["values_inflated_with"]=annahme_rentenanpassung
             @variants[year] = payout
         end
         # Queried payout is a selection of the above, therefore it needs to be in the list of keys.

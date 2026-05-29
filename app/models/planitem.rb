@@ -74,6 +74,12 @@ class Planitem < ApplicationRecord
         PLAN_TYPES.select { |_key, value| is_phase ? value < 10 : value >= 10 }
     end
 
+    ## Functions
+    def simulate
+        # We need to check on which level the linked entries are being simulated.
+      
+    end
+
     private
 
     def derive_category
