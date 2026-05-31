@@ -136,6 +136,21 @@ class V1::SimulationController < ApplicationController
     end
 
     # Remove entries
+    def cvalue_update
+        cvalue=@case.cvalues.find(params[:cvalue_id])
+        if cvalue.update(cvalue_permitted_params)
+            if cvalue.cslice_id.nil?
+                @case.simulate_cashbalance
+            else
+                cvalue.cslice.simulate
+                @case.simulate_cashbalance
+            end
+            render json: cvalue
+        else
+            render json: { errors: cvalue.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     def cvalue_destroy
         # Only do a flat execute, if the entry is not part of something bigger.
         if @case.cvalues.find(params[:cvalue_id]).cslice_id.nil?
@@ -153,6 +168,50 @@ class V1::SimulationController < ApplicationController
 
     def cslice_show
         @cslice=@case.cslices.find(params[:cslice_id])
+    end
+
+    def cvalue_show
+        cvalue=@case.cvalues.find(params[:cvalue_id])
+        render json: cvalue
+    end
+
+    def cslice_update
+        @cslice=@case.cslices.find(params[:cslice_id])
+        cslice_attributes=cslice_permitted_params.to_h
+
+        if @cslice.update(cslice_attributes)
+            if params[:cvalues]
+                errors=[]
+                params[:cvalues].each do |v|
+                    cvalue_id=v["cvalue_id"] || v[:cvalue_id] || v["id"] || v[:id]
+                    cvalue_attributes=cvalue_from_cslice_params(v)
+
+                    if cvalue_id.present?
+                        cvalue=@cslice.cvalues.find_by(id: cvalue_id)
+                        unless cvalue
+                            errors << "Cvalue #{cvalue_id} not found in this cslice."
+                            next
+                        end
+                        errors.concat(cvalue.errors.full_messages) unless cvalue.update(cvalue_attributes)
+                    else
+                        entry=@cslice.cvalues.create(cvalue_attributes.merge(case_id: @case.id))
+                        errors.concat(entry.errors.full_messages) unless entry.persisted?
+                    end
+                end
+
+                if errors.any?
+                    render json: { errors: errors.uniq }, status: :unprocessable_entity
+                    return
+                end
+            end
+
+            @cslice.sync_cvalues
+            @cslice.simulate
+            @case.simulate_cashbalance
+            render :cslice_show
+        else
+            render json: { errors: @cslice.errors.full_messages }, status: :unprocessable_entity
+        end
     end
 
     def cslice_destroy
@@ -176,7 +235,6 @@ class V1::SimulationController < ApplicationController
     end
 
     # Planitem actions
-
     def planitem_index
         render json: @case.planitems.map { |pi| planitem_json(pi) }.to_json
     end
@@ -272,6 +330,16 @@ class V1::SimulationController < ApplicationController
     end
     def planitem_permitted_params
         params.permit(:title, :category, :plan_type, :fromt, :tot, :leadt, :trailt)
+    end
+    def cvalue_permitted_params
+        params.permit(:planitem_id, :cvaluetype, :label, :cto, :ev, :t, :fromt, :tot, :interest, :inflation, :cf_type)
+    end
+    def cslice_permitted_params
+        params.permit(:planitem_id, :cvaluetype, :label, :t, :disclaimer, :source, :info)
+    end
+    def cvalue_from_cslice_params(raw)
+        raw=ActionController::Parameters.new(raw) unless raw.respond_to?(:permit)
+        raw.permit(:planitem_id, :cvaluetype, :label, :cto, :ev, :t, :fromt, :tot, :interest, :inflation, :cf_type).to_h
     end
     def planitem_json(pi)
         {

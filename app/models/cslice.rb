@@ -7,7 +7,10 @@ class Cslice < ApplicationRecord
     has_many :simulations
 
     validates :label, presence: true
-    validates :cvaluetype, presence: true
+    validates :cvaluetype,
+        presence: true,
+        numericality: { only_integer: true },
+        inclusion: { in: [1, 2, 3, 4], message: "must be an integer between 1 and 4" }
 
     ## DEFINITIONS
     # Cvaluetype: 1: Income, 2: Expense, 3: Cashbalance

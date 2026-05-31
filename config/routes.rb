@@ -42,7 +42,10 @@ Rails.application.routes.draw do
         delete 'case/(:case_id)', action: "case_destroy"
         get 'case/(:case_id)/entries', action: "case_entries"
         post 'case/(:case_id)/entry', action: "entry_create"
+        get 'case/(:case_id)/cvalue/(:cvalue_id)', action: "cvalue_show"
         get 'case/(:case_id)/cslice/(:cslice_id)', action: "cslice_show"
+        patch 'case/(:case_id)/cvalue/(:cvalue_id)', action: "cvalue_update"
+        patch 'case/(:case_id)/cslice/(:cslice_id)', action: "cslice_update"
         delete 'case/(:case_id)/cvalue/(:cvalue_id)', action: "cvalue_destroy"
         delete 'case/(:case_id)/cslice/(:cslice_id)', action: "cslice_destroy"
         #match 'case/(:id)', to: :case_update, via: :post
