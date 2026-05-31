@@ -1,0 +1,29 @@
+meta {
+  name: Update Cvalue
+  type: http
+  seq: 13
+}
+
+patch {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/cvalue/86
+  body: json
+  auth: none
+}
+
+body:json {
+      {
+        "case_id": 20,
+        "planitem_id": null,
+        "cslice_id": 33,
+        "t": 2026,
+        "cvaluetype": 1,
+        "label": "Bruttoeinkomme",
+        "cto": "120000.0",
+        "ev": "0.0",
+        "fromt": 2026,
+        "tot": 2050,
+        "interest": "0.0",
+        "inflation": "0.01",
+        "cf_type": null
+      }
+}

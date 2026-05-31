@@ -1,0 +1,58 @@
+meta {
+  name: Update Cslice
+  type: http
+  seq: 15
+}
+
+patch {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/cslice/33
+  body: json
+  auth: none
+}
+
+body:json {
+    {
+      "cvaluetype": 1,
+      "planitem_id": 19,
+      "label": "Arbeitseinkommen",
+      "t": 2026,
+      "cvalues": [
+        {
+          "cvalue_id": 86,
+          "cvaluetype": 2,
+          "label": "Bruttoeinkommen",
+          "t": 2026,
+          "cto": "120001.0",
+          "ev": "0.0",
+          "fromt": 2026,
+          "tot": 2050,
+          "interest": "0.0",
+          "inflation": "0.01"
+        },
+        {
+          "cvalue_id": 87,
+          "cvaluetype": 2,
+          "label": "Sozialversicherungen",
+          "t": 2026,
+          "cto": "-16093.25",
+          "ev": "0.0",
+          "fromt": 2026,
+          "tot": 2050,
+          "interest": "0.0",
+          "inflation": "0.01"
+        },
+        {
+          "cvalue_id": 88,
+          "cvaluetype": 1,
+          "label": "Steuern",
+          "t": 2026,
+          "cto": "-34631.84",
+          "ev": "0.0",
+          "fromt": 2026,
+          "tot": 2050,
+          "interest": "0.0",
+          "inflation": "0.01"
+        }
+      ]
+    }
+}

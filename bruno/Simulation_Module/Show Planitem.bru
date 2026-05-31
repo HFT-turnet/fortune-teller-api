@@ -1,11 +1,15 @@
 meta {
   name: Show Planitem
   type: http
-  seq: 18
+  seq: 21
 }
 
 get {
   url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}
   body: none
   auth: none
+}
+
+vars:pre-request {
+  sim_planitem_id: 19
 }
