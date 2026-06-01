@@ -32,7 +32,7 @@ threads threads_count, threads_count
 # Define details for workers.
 workers workers_count if workers_count.to_i > 1
 preload_app! if workers_count.to_i > 1
-on_worker_boot do
+before_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 end
 worker_timeout 60
