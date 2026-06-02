@@ -195,4 +195,49 @@ class SimulationControllerTest < ActionDispatch::IntegrationTest
     assert_match(/No year/, response.body)
     case_obj.delete_all
   end
+
+  # POST .../planitem/:planitem_id/run_autopension
+  test "POST run_autopension on a non-ruhestand planitem returns unprocessable_entity" do
+    case_obj = Case.create!(byear: 1970, dyear: 2040, sex: 1)
+    planitem = case_obj.planitems.create!(title: "Work", plan_type: Planitem::PLAN_TYPES["erwerbstaetigkeit"], fromt: 2000, tot: 2037)
+    post "/v1/simulation/case/#{case_obj.external_id}/planitem/#{planitem.id}/run_autopension"
+    assert_response :unprocessable_entity
+    body = JSON.parse(response.body)
+    assert body.key?("error")
+    case_obj.delete_all
+  end
+
+  test "POST run_autopension with fromt too early returns unprocessable_entity" do
+    # byear 1970 → regularstart 2037, earliest 2033; fromt 2030 is too early
+    case_obj = Case.create!(byear: 1970, dyear: 2050, sex: 1)
+    planitem = case_obj.planitems.create!(title: "Retirement", plan_type: Planitem::PLAN_TYPES["ruhestand"], fromt: 2030, tot: 2050)
+    post "/v1/simulation/case/#{case_obj.external_id}/planitem/#{planitem.id}/run_autopension"
+    assert_response :unprocessable_entity
+    body = JSON.parse(response.body)
+    assert body.key?("error")
+    case_obj.delete_all
+  end
+
+  test "POST run_autopension with valid fromt creates a cslice and cvalue" do
+    case_obj = Case.create!(byear: 1970, dyear: 2050, sex: 1)
+    planitem = case_obj.planitems.create!(title: "Retirement", plan_type: Planitem::PLAN_TYPES["ruhestand"], fromt: 2037, tot: 2050)
+    assert_difference(["Cslice.count", "Cvalue.count"], 1) do
+      post "/v1/simulation/case/#{case_obj.external_id}/planitem/#{planitem.id}/run_autopension"
+    end
+    assert_response :success
+    case_obj.delete_all
+  end
+
+  test "POST run_autopension response contains expected keys" do
+    case_obj = Case.create!(byear: 1970, dyear: 2050, sex: 1)
+    planitem = case_obj.planitems.create!(title: "Retirement", plan_type: Planitem::PLAN_TYPES["ruhestand"], fromt: 2037, tot: 2050)
+    post "/v1/simulation/case/#{case_obj.external_id}/planitem/#{planitem.id}/run_autopension"
+    body = JSON.parse(response.body)
+    assert body.key?("cslice_id")
+    assert body.key?("monthly")
+    assert body.key?("annually")
+    assert body.key?("rentenpunkte")
+    assert_equal 40, body["rentenpunkte"]
+    case_obj.delete_all
+  end
 end

@@ -64,6 +64,7 @@ Rails.application.routes.draw do
         delete 'case/(:case_id)/planitem/(:planitem_id)', action: "planitem_destroy"
         get 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_show"
         put 'case/(:case_id)/planitem/(:planitem_id)/entries', action: "planitem_entries_create"
+        post 'case/(:case_id)/planitem/(:planitem_id)/run_autopension', action: "run_autopension"
         # Templates
         get 'templates/planitems', action: "template_planitems"
         get 'templates/(:country)', action: "template_index"

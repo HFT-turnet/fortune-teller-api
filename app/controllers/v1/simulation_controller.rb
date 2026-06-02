@@ -1,6 +1,6 @@
 class V1::SimulationController < ApplicationController
     before_action :findcase, except: [:case_create, :template_index, :template_planitems, :template_show, :template_flows]
-    before_action :findplanitem, only: [:planitem_show, :planitem_update, :planitem_destroy, :planitem_entries_show, :planitem_entries_create]
+    before_action :findplanitem, only: [:planitem_show, :planitem_update, :planitem_destroy, :planitem_entries_show, :planitem_entries_create, :run_autopension]
     # Grundsätzlicher Flow:
     # Open Case
     # Adjust Case assumptions
@@ -309,6 +309,59 @@ class V1::SimulationController < ApplicationController
         else
             render json: { error: "Unknown type. Use Cvalue or Cslice." }, status: :unprocessable_entity
         end
+    end
+
+
+    def run_autopension
+        unless @planitem.plan_type == Planitem::PLAN_TYPES["ruhestand"]
+            render json: { error: "run_autopension is only valid for planitem type 'ruhestand'." }, status: :unprocessable_entity
+            return
+        end
+
+        result = V1::PensionController.calculate_drv(
+            birthyear: @case.byear,
+            startpayout: @planitem.fromt
+        )
+
+        if result[:error]
+            render json: { error: result[:error] }, status: :unprocessable_entity
+            return
+        end
+
+        cslice = @case.cslices.create!(
+            planitem_id: @planitem.id,
+            cvaluetype: 1,
+            label: "Gesetzliche Rente (DRV)",
+            t: result[:queried_year],
+            source: "autopension",
+            info: "#{result[:rentenpunkte]} Entgeltpunkte, Rentenbeginn #{result[:queried_year]}"
+        )
+
+        cslice.cvalues.create!(
+            case_id: @case.id,
+            cvaluetype: 1,
+            label: "Jährliche Rente (DRV)",
+            cto: result[:annually],
+            ev: 0,
+            t: result[:queried_year],
+            fromt: result[:queried_year],
+            tot: @case.dyear,
+            inflation: 0,
+            interest: 0
+        )
+
+        cslice.sync_cvalues
+        cslice.simulate
+        @case.simulate_cashbalance
+
+        render json: {
+            message: "Autopension created.",
+            cslice_id: cslice.id,
+            queried_year: result[:queried_year],
+            monthly: result[:monthly],
+            annually: result[:annually],
+            rentenpunkte: result[:rentenpunkte]
+        }
     end
 
 

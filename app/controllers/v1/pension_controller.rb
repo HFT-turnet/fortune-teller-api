@@ -237,6 +237,56 @@ class V1::PensionController < ApplicationController
         render 'wpv_pension_payout' if iserror.blank?
     end
 
+    # Class-level helper used by other controllers (e.g. run_autopension) to compute
+    # a DRV pension payout without going through an HTTP round-trip.
+    # Returns either { error: "…" } or a result hash with :monthly, :annually, etc.
+    def self.calculate_drv(birthyear:, startpayout:, rentenpunkte: 40, provider: "drv-west", rentenanpassung: 0)
+        birthyear = birthyear.to_i
+        startpayout = startpayout.to_i
+
+        # Determine regular retirement age
+        regularstart_record = Pensionfactor.where(ptype: "drv", provider: provider, factor: "regularstart", year: birthyear).first
+        regularstart = regularstart_record ? regularstart_record.value.to_i : birthyear + 67
+
+        # Zugangsfaktoren (same as drv_pension_payout)
+        zugangsfaktor = {
+            -4 => 0.856,
+            -3 => 0.892,
+            -2 => 0.928,
+            -1 => 0.964,
+             0 => 1.0,
+             1 => 1.060,
+             2 => 1.120,
+             3 => 1.180,
+             4 => 1.240,
+             5 => 1.3
+        }
+
+        earliest_start = regularstart + zugangsfaktor.keys.min  # regularstart - 4
+        latest_start   = regularstart + zugangsfaktor.keys.max  # regularstart + 5
+
+        if startpayout < earliest_start
+            return { error: "Pension start #{startpayout} is too early. Earliest possible start is #{earliest_start}." }
+        end
+
+        queried_year = [startpayout, latest_start].min
+        offset = queried_year - regularstart
+        factor = zugangsfaktor[offset] || 1.0
+
+        rentenwert = Pensionfactor.drv_rentenwert(regularstart, provider, rentenanpassung)
+        monthly    = (rentenwert * factor * rentenpunkte).round(2)
+        annually   = (monthly * 12).round(2)
+
+        {
+            regularstart: regularstart,
+            queried_year: queried_year,
+            monthly: monthly,
+            annually: annually,
+            rentenpunkte: rentenpunkte,
+            rentenwert: rentenwert.round(4)
+        }
+    end
+
   private
     
     def check_params(person, pensionplan)
