@@ -22,6 +22,7 @@ class Planitem < ApplicationRecord
 
     before_create :derive_category
     after_create :generate_checklist
+    after_update :adjust_related_on_time_change
 
     CATEGORY_LABELS = {
         "phase"     => "Lebensphase",
@@ -81,6 +82,42 @@ class Planitem < ApplicationRecord
     end
 
     private
+
+    def adjust_related_on_time_change
+        return unless saved_change_to_fromt? || saved_change_to_tot?
+
+        new_fromt = self.fromt
+        new_tot = self.tot
+
+        # Adjust cvalues directly linked to this planitem (not via a cslice) and re-simulate them.
+        self.cvalues.where(cslice_id: nil).each do |cvalue|
+            set_cvalue_times(cvalue, new_fromt, new_tot)
+            cvalue.save
+            cvalue.simulate
+        end
+
+        # Adjust cslice-linked cvalues, then re-simulate each cslice.
+        self.cslices.each do |cslice|
+            cslice.cvalues.each do |cvalue|
+                set_cvalue_times(cvalue, new_fromt, new_tot)
+                cvalue.save
+            end
+            cslice.simulate
+        end
+
+        # Re-run the case-level cash balance simulation.
+        self.case.simulate_cashbalance
+    end
+
+    def set_cvalue_times(cvalue, new_fromt, new_tot)
+        if cvalue.fromt == cvalue.tot
+            cvalue.fromt = new_fromt
+            cvalue.tot = new_fromt
+        else
+            cvalue.fromt = new_fromt
+            cvalue.tot = new_tot
+        end
+    end
 
     def derive_category
         return if category.present?
