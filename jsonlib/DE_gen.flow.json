@@ -30,6 +30,7 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Giro",
                               "cto": 0,
+                              "ev": "field_cash_ev",
                               "planitem_id": "var_planitem_id",
                               "t": "var_planitem_fromt",
                               "fromt": "var_planitem_fromt",
@@ -39,13 +40,12 @@
                 }
               },
             "fields": {
-              "ev": {
+              "cash_ev": {
                 "type": "decimal",
                 "label": "Kontostand",
                 "help": "Bargeldbestand eingeben bitte."
               }
-            },
-            "include_fields_in_payload_within": "cvalue"
+            }
           },
           "cvalue_tagesgeld": {
             "api": {
@@ -57,26 +57,28 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Tagesgeld",
                               "cto": 0,
+                              "ev": "field_cashtg_ev",
                               "planitem_id":"var_planitem_id",
                               "t": "var_planitem_fromt",
                               "fromt": "var_planitem_fromt",
-                              "tot": "var_planitem_fromt"
+                              "tot": "var_planitem_fromt",
+                              "interest": "field_cashtg_interest"
                           }
                 }
               },
             "fields": {
-              "ev": {
+              "cashtg_ev": {
                 "type": "decimal",
                 "label": "Kontostand Tagesgeld",
                 "help": "Bargeldbestand eingeben bitte."
               },             
-              "interest": {
+              "cashtg_interest": {
                 "type": "decimal",
                 "label": "Zinssatz Tagesgeld",
-                "help": "Zinssatz für Tagesgeld eingeben bitte."
+                "help": "Zinssatz für Tagesgeld eingeben bitte.",
+                "secondary_field": true
               }
-            },
-            "include_fields_in_payload_within": "cvalue"
+            }
           },
           "cvalue_depot": {
             "api": {
@@ -88,27 +90,28 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Depot",
                               "cto": 0,
+                              "ev": "field_depot_ev",
                               "planitem_id": "var_planitem_id",
                               "t": "var_planitem_fromt",
                               "fromt": "var_planitem_fromt",
                               "tot": "var_planitem_fromt",
-                              "interest": 0
+                              "interest": "field_depot_interest"
                           }
                 }
               },
             "fields": {
-              "ev": {
+              "depot_ev": {
                 "type": "decimal",
                 "label": "Depotbestand",
                 "help": "Bargeldbestand eingeben bitte."
               },             
-              "interest": {
+              "depot_interest": {
                 "type": "decimal",
                 "label": "Rendite Depot (netto)",
-                "help": "Rendite für Depot eingeben bitte."
+                "help": "Rendite für Depot eingeben bitte.",
+                "secondary_field": true
               }
-            },
-            "include_fields_in_payload_within": "cvalue"
+            }
           }
         }
       },
@@ -120,6 +123,7 @@
         "icon": "fas fa-receipt",
         "checklist_entry": "Laufende Ausgaben erfassen (optional)",
         "variables": [
+          "var_current_year",
           "var_planitem_id",
           "var_planitem_fromt",
           "var_planitem_tot"
@@ -135,39 +139,72 @@
                   "cvaluetype": 2,
                   "label": "Lebenshaltungskosten",
                   "planitem_id": "var_planitem_id",
-                  "t": "var_planitem_fromt",
+                  "t": "var_current_year",
                   "source": "Flow: expenses",
                   "info": "Created by generic expenses flow",
                   "cvalues": [
                     {
                       "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
-                      "label": "Miete und Nebenkosten",
-                      "cto": "field_housing_cto",
+                      "label": "Nahrungsmittel, Getränke und Tabakwaren",
+                      "cto": "field_food_tobacco_cto",
                       "ev": 0,
-                      "t": "var_planitem_fromt",
+                      "t": "var_current_year",
                       "fromt": "var_planitem_fromt",
                       "tot": "var_planitem_tot",
-                      "inflation": "field_housing_inflation"
+                      "inflation": "field_food_tobacco_inflation"
                     },
                     {
                       "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
-                      "label": "Verpflegung",
-                      "cto": "field_food_cto",
+                      "label": "Bekleidung und Schuhe",
+                      "cto": "field_clothing_cto",
                       "ev": 0,
-                      "t": "var_planitem_fromt",
+                      "t": "var_current_year",
                       "fromt": "var_planitem_fromt",
                       "tot": "var_planitem_tot",
-                      "inflation": "field_food_inflation"
+                      "inflation": "field_clothing_inflation"
                     },
                     {
                       "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
-                      "label": "Transport",
+                      "label": "Wohnung, Wasser, Strom, Gas und andere Brennstoffe",
+                      "cto": "field_housing_energy_cto",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_housing_energy_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Einrichtungsgegenstände (Möbel), Hausrat, Instandhaltung",
+                      "cto": "field_home_goods_cto",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_home_goods_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Gesundheit",
+                      "cto": "field_health_cto",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_health_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Verkehr",
                       "cto": "field_transport_cto",
                       "ev": 0,
-                      "t": "var_planitem_fromt",
+                      "t": "var_current_year",
                       "fromt": "var_planitem_fromt",
                       "tot": "var_planitem_tot",
                       "inflation": "field_transport_inflation"
@@ -175,87 +212,163 @@
                     {
                       "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
-                      "label": "Kommunikation",
-                      "cto": "field_communication_cto",
+                      "label": "Information und Kommunikation",
+                      "cto": "field_information_communication_cto",
                       "ev": 0,
-                      "t": "var_planitem_fromt",
+                      "t": "var_current_year",
                       "fromt": "var_planitem_fromt",
                       "tot": "var_planitem_tot",
-                      "inflation": "field_communication_inflation"
+                      "inflation": "field_information_communication_inflation"
                     },
                     {
                       "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
-                      "label": "Versicherungen",
-                      "cto": "field_insurance_cto",
+                      "label": "Freizeit, Sport und Kultur",
+                      "cto": "field_leisure_culture_cto",
                       "ev": 0,
-                      "t": "var_planitem_fromt",
+                      "t": "var_current_year",
                       "fromt": "var_planitem_fromt",
                       "tot": "var_planitem_tot",
-                      "inflation": "field_insurance_inflation"
+                      "inflation": "field_leisure_culture_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Gastronomie- und Beherbergungsdienstleistungen",
+                      "cto": "field_hospitality_cto",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_hospitality_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Bildung, Versicherungen und sonstige Waren und DL",
+                      "cto": "field_education_insurance_other_cto",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_education_insurance_other_inflation"
                     }
                   ]
                 }
               }
             },
             "fields": {
-              "housing_cto": {
+              "food_tobacco_cto": {
                 "type": "decimal",
-                "label": "Miete und Nebenkosten (jährlich)",
-                "default": 0
+                "label": "Nahrungsmittel, Getränke und Tabakwaren (jährlich)",
+                "default": 3048
               },
-              "housing_inflation": {
+              "food_tobacco_inflation": {
                 "type": "decimal",
-                "label": "Inflation Miete und Nebenkosten",
-                "default": 0.018,
+                "label": "Inflation Nahrungsmittel, Getränke und Tabakwaren",
+                "default": 0.026,
                 "secondary_field": true
               },
-              "food_cto": {
+              "clothing_cto": {
                 "type": "decimal",
-                "label": "Verpflegung (jährlich)",
-                "default": 0
+                "label": "Bekleidung und Schuhe (jährlich)",
+                "default": 720
               },
-              "food_inflation": {
+              "clothing_inflation": {
                 "type": "decimal",
-                "label": "Inflation Verpflegung",
-                "default": 0.015,
+                "label": "Inflation Bekleidung und Schuhe",
+                "default": 0.008,
+                "secondary_field": true
+              },
+              "housing_energy_cto": {
+                "type": "decimal",
+                "label": "Wohnung, Wasser, Strom, Gas und andere Brennstoffe (jährlich)",
+                "default": 9804
+              },
+              "housing_energy_inflation": {
+                "type": "decimal",
+                "label": "Inflation Wohnung, Wasser, Strom, Gas und andere Brennstoffe",
+                "default": 0.014,
+                "secondary_field": true
+              },
+              "home_goods_cto": {
+                "type": "decimal",
+                "label": "Einrichtungsgegenstände (Möbel), Hausrat, Instandhaltung (jährlich)",
+                "default": 924
+              },
+              "home_goods_inflation": {
+                "type": "decimal",
+                "label": "Inflation Einrichtungsgegenstände (Möbel), Hausrat, Instandhaltung",
+                "default": 0,
+                "secondary_field": true
+              },
+              "health_cto": {
+                "type": "decimal",
+                "label": "Gesundheit (jährlich)",
+                "default": 732
+              },
+              "health_inflation": {
+                "type": "decimal",
+                "label": "Inflation Gesundheit",
+                "default": 0.028,
                 "secondary_field": true
               },
               "transport_cto": {
                 "type": "decimal",
-                "label": "Transport (jährlich)",
-                "default": 0
+                "label": "Verkehr (jährlich)",
+                "default": 2340
               },
               "transport_inflation": {
                 "type": "decimal",
-                "label": "Inflation Transport",
-                "default": 0.02,
+                "label": "Inflation Verkehr",
+                "default": 0.018,
                 "secondary_field": true
               },
-              "communication_cto": {
+              "information_communication_cto": {
                 "type": "decimal",
-                "label": "Kommunikation (jährlich)",
-                "default": 0
+                "label": "Information und Kommunikation (jährlich)",
+                "default": 1296
               },
-              "communication_inflation": {
+              "information_communication_inflation": {
                 "type": "decimal",
-                "label": "Inflation Kommunikation",
+                "label": "Inflation Information und Kommunikation",
                 "default": -0.007,
                 "secondary_field": true
               },
-              "insurance_cto": {
+              "leisure_culture_cto": {
                 "type": "decimal",
-                "label": "Versicherungen (jährlich)",
-                "default": 0
+                "label": "Freizeit, Sport und Kultur (jährlich)",
+                "default": 1788
               },
-              "insurance_inflation": {
+              "leisure_culture_inflation": {
                 "type": "decimal",
-                "label": "Inflation Versicherungen",
-                "default": 0,
+                "label": "Inflation Freizeit, Sport und Kultur",
+                "default": 0.013,
+                "secondary_field": true
+              },
+              "hospitality_cto": {
+                "type": "decimal",
+                "label": "Gastronomie- und Beherbergungsdienstleistungen (jährlich)",
+                "default": 1356
+              },
+              "hospitality_inflation": {
+                "type": "decimal",
+                "label": "Inflation Gastronomie- und Beherbergungsdienstleistungen",
+                "default": 0.038,
+                "secondary_field": true
+              },
+              "education_insurance_other_cto": {
+                "type": "decimal",
+                "label": "Bildung, Versicherungen und sonstige Waren und DL (jährlich)",
+                "default": 996
+              },
+              "education_insurance_other_inflation": {
+                "type": "decimal",
+                "label": "Inflation Bildung, Versicherungen und sonstige Waren und DL",
+                "default": 0.05,
                 "secondary_field": true
               }
-            },
-            "include_fields_in_payload_within": "fields_var"
+            }
           }
         }
       },
