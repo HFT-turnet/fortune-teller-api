@@ -328,31 +328,36 @@ class V1::SimulationController < ApplicationController
             return
         end
 
-        cslice = @case.cslices.create!(
-            planitem_id: @planitem.id,
-            cvaluetype: 1,
-            label: "Gesetzliche Rente (DRV)",
-            t: result[:queried_year],
-            source: "autopension",
-            info: "#{result[:rentenpunkte]} Entgeltpunkte, Rentenbeginn #{result[:queried_year]}"
-        )
+        begin
+            cslice = @case.cslices.create!(
+                planitem_id: @planitem.id,
+                cvaluetype: 1,
+                label: "Gesetzliche Rente (DRV)",
+                t: result[:queried_year],
+                source: "autopension",
+                info: "#{result[:rentenpunkte]} Entgeltpunkte, Rentenbeginn #{result[:queried_year]}"
+            )
 
-        cslice.cvalues.create!(
-            case_id: @case.id,
-            cvaluetype: 1,
-            label: "Jährliche Rente (DRV)",
-            cto: result[:annually],
-            ev: 0,
-            t: result[:queried_year],
-            fromt: result[:queried_year],
-            tot: @case.dyear,
-            inflation: 0,
-            interest: 0
-        )
+            cslice.cvalues.create!(
+                case_id: @case.id,
+                cvaluetype: 1,
+                label: "Jährliche Rente (DRV)",
+                cto: result[:annually],
+                ev: 0,
+                t: result[:queried_year],
+                fromt: result[:queried_year],
+                tot: @case.dyear,
+                inflation: 0,
+                interest: 0
+            )
 
-        cslice.sync_cvalues
-        cslice.simulate
-        @case.simulate_cashbalance
+            cslice.sync_cvalues
+            cslice.simulate
+            @case.simulate_cashbalance
+        rescue ActiveRecord::RecordInvalid => e
+            render json: { error: "Failed to create pension data: #{e.message}" }, status: :unprocessable_entity
+            return
+        end
 
         render json: {
             message: "Autopension created.",

@@ -236,6 +236,7 @@ class SimulationControllerTest < ActionDispatch::IntegrationTest
     assert body.key?("cslice_id")
     assert body.key?("monthly")
     assert body.key?("annually")
+    assert body.key?("queried_year")
     assert body.key?("rentenpunkte")
     assert_equal 40, body["rentenpunkte"]
     case_obj.delete_all
