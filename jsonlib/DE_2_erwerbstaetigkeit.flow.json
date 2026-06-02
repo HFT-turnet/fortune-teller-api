@@ -9,6 +9,7 @@
     "icon": "fas fa-briefcase",
     "referenced_items": [
       "cash_start",
+      "expenses",
       "salary_sequence"
       ],
     "items": {

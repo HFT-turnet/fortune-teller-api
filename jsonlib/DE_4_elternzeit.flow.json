@@ -8,7 +8,8 @@
     "planitem_type": 4,
     "icon": "fas fa-baby",
     "referenced_items": [
-      "cash_start"
+      "cash_start",
+      "expenses"
       ],
     "items": {
     }

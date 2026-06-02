@@ -8,7 +8,8 @@
     "planitem_type": 6,
     "icon": "fas fa-user-clock",
     "referenced_items": [
-      "cash_start"
+      "cash_start",
+      "expenses"
       ],
     "items": {
     }

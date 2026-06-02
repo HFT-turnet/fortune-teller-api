@@ -15,11 +15,10 @@
         "description": "Optional: Wenn positive Bargeld-, Konto- oder Depotbestände bestehen.",
         "icon": "fas fa-piggy-bank",
         "checklist_entry": "Vermögen zu Beginn angeben (optional)",
-        "variables": {
-          "var_fromt": 1990,
-          "var_planitem_fromt": 1990,
-          "var_planitem_tot": 2100
-        },
+        "variables": [
+          "var_planitem_id",
+          "var_planitem_fromt"
+        ],
         "actions": {
           "cvalue_cash": {
             "api": {
@@ -31,10 +30,10 @@
                               "cvaluetype": 3,
                               "label": "Bargeld / Giro",
                               "cto": 0,
-                              "planitem_id": "9",
-                              "t": "1990",
-                              "fromt": "1990",
-                              "tot": "2100",
+                              "planitem_id": "var_planitem_id",
+                              "t": "var_planitem_fromt",
+                              "fromt": "var_planitem_fromt",
+                              "tot": "var_planitem_fromt",
                               "interest": 0
                           }
                 }
@@ -56,12 +55,12 @@
               "payload": {
                   "cvalue": {
                               "cvaluetype": 3,
-                              "label": "Bargeld / Giro",
+                              "label": "Bargeld / Tagesgeld",
                               "cto": 0,
-                              "planitem_id": "9",
-                              "t": 1990,
-                              "fromt": 2025,
-                              "tot": 2090
+                              "planitem_id":"var_planitem_id",
+                              "t": "var_planitem_fromt",
+                              "fromt": "var_planitem_fromt",
+                              "tot": "var_planitem_fromt"
                           }
                 }
               },
@@ -87,12 +86,12 @@
               "payload": {
                   "cvalue": {
                               "cvaluetype": 3,
-                              "label": "Bargeld / Giro",
+                              "label": "Bargeld / Depot",
                               "cto": 0,
-                              "planitem_id": "9",
-                              "t": "var_fromt",
+                              "planitem_id": "var_planitem_id",
+                              "t": "var_planitem_fromt",
                               "fromt": "var_planitem_fromt",
-                              "tot": "var_planitem_tot",
+                              "tot": "var_planitem_fromt",
                               "interest": 0
                           }
                 }
@@ -102,9 +101,161 @@
                 "type": "decimal",
                 "label": "Depotbestand",
                 "help": "Bargeldbestand eingeben bitte."
+              },             
+              "interest": {
+                "type": "decimal",
+                "label": "Rendite Depot (netto)",
+                "help": "Rendite für Depot eingeben bitte."
               }
             },
             "include_fields_in_payload_within": "cvalue"
+          }
+        }
+      },
+      "expenses": {
+        "name": "expenses",
+        "label": "Laufende Ausgaben",
+        "required": false,
+        "description": "Erfassen Sie Ausgabenblöcke mit jeweils eigener Inflation.",
+        "icon": "fas fa-receipt",
+        "checklist_entry": "Laufende Ausgaben erfassen (optional)",
+        "variables": [
+          "var_planitem_id",
+          "var_planitem_fromt",
+          "var_planitem_tot"
+        ],
+        "actions": {
+          "cslice_expenses": {
+            "api": {
+              "version": "v1",
+              "path": "/entry?type=Cslice",
+              "method": "POST",
+              "payload": {
+                "cslice": {
+                  "cvaluetype": 2,
+                  "label": "Lebenshaltungskosten",
+                  "planitem_id": "var_planitem_id",
+                  "t": "var_planitem_fromt",
+                  "source": "Flow: expenses",
+                  "info": "Created by generic expenses flow",
+                  "cvalues": [
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Miete und Nebenkosten",
+                      "cto": "field_housing_cto",
+                      "ev": 0,
+                      "t": "var_planitem_fromt",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_housing_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Verpflegung",
+                      "cto": "field_food_cto",
+                      "ev": 0,
+                      "t": "var_planitem_fromt",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_food_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Transport",
+                      "cto": "field_transport_cto",
+                      "ev": 0,
+                      "t": "var_planitem_fromt",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_transport_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Kommunikation",
+                      "cto": "field_communication_cto",
+                      "ev": 0,
+                      "t": "var_planitem_fromt",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_communication_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Versicherungen",
+                      "cto": "field_insurance_cto",
+                      "ev": 0,
+                      "t": "var_planitem_fromt",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_insurance_inflation"
+                    }
+                  ]
+                }
+              }
+            },
+            "fields": {
+              "housing_cto": {
+                "type": "decimal",
+                "label": "Miete und Nebenkosten (jährlich)",
+                "default": 0
+              },
+              "housing_inflation": {
+                "type": "decimal",
+                "label": "Inflation Miete und Nebenkosten",
+                "default": 0.018,
+                "secondary_field": true
+              },
+              "food_cto": {
+                "type": "decimal",
+                "label": "Verpflegung (jährlich)",
+                "default": 0
+              },
+              "food_inflation": {
+                "type": "decimal",
+                "label": "Inflation Verpflegung",
+                "default": 0.015,
+                "secondary_field": true
+              },
+              "transport_cto": {
+                "type": "decimal",
+                "label": "Transport (jährlich)",
+                "default": 0
+              },
+              "transport_inflation": {
+                "type": "decimal",
+                "label": "Inflation Transport",
+                "default": 0.02,
+                "secondary_field": true
+              },
+              "communication_cto": {
+                "type": "decimal",
+                "label": "Kommunikation (jährlich)",
+                "default": 0
+              },
+              "communication_inflation": {
+                "type": "decimal",
+                "label": "Inflation Kommunikation",
+                "default": -0.007,
+                "secondary_field": true
+              },
+              "insurance_cto": {
+                "type": "decimal",
+                "label": "Versicherungen (jährlich)",
+                "default": 0
+              },
+              "insurance_inflation": {
+                "type": "decimal",
+                "label": "Inflation Versicherungen",
+                "default": 0,
+                "secondary_field": true
+              }
+            },
+            "include_fields_in_payload_within": "fields_var"
           }
         }
       },

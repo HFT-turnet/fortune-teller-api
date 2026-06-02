@@ -8,7 +8,8 @@
     "planitem_type": 5,
     "icon": "fas fa-user-nurse",
     "referenced_items": [
-      "cash_start"
+      "cash_start",
+      "expenses"
       ],
     "items": {
     }
