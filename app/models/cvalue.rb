@@ -66,7 +66,7 @@ class Cvalue < ApplicationRecord
         self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
 
         if self.cvaluetype < 3
-            # Types 1 and 2: inflate-adjusted annual entries
+            # Types 1 (Income) and 2 (Expense): inflate-adjusted annual entries
             (self.fromt..self.tot).each do |t|
                 self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
             end
@@ -179,7 +179,8 @@ class Cvalue < ApplicationRecord
         # Start the simulation
         puts "Simulating CValue: #{self.id}"
         # Only simulate standalone entries (not embedded in a Cslice or Planitem).
-        # Types 1–3 delegate to simulate; type 4 is a direct cash-buffer override.
+        # Types 1 (Income), 2 (Expense), and 3 (Cashbalance) delegate to simulate;
+        # type 4 (Cash balance adjustment) is handled separately below.
         if self.cvaluetype < 4 and self.cslice_id.nil? and self.planitem_id.nil?
             self.simulate
         end
