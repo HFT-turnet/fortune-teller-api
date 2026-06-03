@@ -259,113 +259,113 @@
             },
             "fields": {
               "food_tobacco_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Nahrungsmittel, Getränke und Tabakwaren (jährlich)",
                 "default": 3048
               },
               "food_tobacco_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Nahrungsmittel, Getränke und Tabakwaren",
-                "default": 0.026,
+                "default": 2.6,
                 "secondary_field": true
               },
               "clothing_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Bekleidung und Schuhe (jährlich)",
                 "default": 720
               },
               "clothing_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Bekleidung und Schuhe",
-                "default": 0.008,
+                "default": 0.8,
                 "secondary_field": true
               },
               "housing_energy_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Wohnung, Wasser, Strom, Gas und andere Brennstoffe (jährlich)",
                 "default": 9804
               },
               "housing_energy_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Wohnung, Wasser, Strom, Gas und andere Brennstoffe",
-                "default": 0.014,
+                "default": 1.4,
                 "secondary_field": true
               },
               "home_goods_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Einrichtungsgegenstände (Möbel), Hausrat, Instandhaltung (jährlich)",
                 "default": 924
               },
               "home_goods_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Einrichtungsgegenstände (Möbel), Hausrat, Instandhaltung",
                 "default": 0,
                 "secondary_field": true
               },
               "health_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Gesundheit (jährlich)",
                 "default": 732
               },
               "health_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Gesundheit",
-                "default": 0.028,
+                "default": 2.8,
                 "secondary_field": true
               },
               "transport_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Verkehr (jährlich)",
                 "default": 2340
               },
               "transport_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Verkehr",
-                "default": 0.018,
+                "default": 1.8,
                 "secondary_field": true
               },
               "information_communication_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Information und Kommunikation (jährlich)",
                 "default": 1296
               },
               "information_communication_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Information und Kommunikation",
-                "default": -0.007,
+                "default": -0.7,
                 "secondary_field": true
               },
               "leisure_culture_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Freizeit, Sport und Kultur (jährlich)",
                 "default": 1788
               },
               "leisure_culture_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Freizeit, Sport und Kultur",
-                "default": 0.013,
+                "default": 1.3,
                 "secondary_field": true
               },
               "hospitality_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Gastronomie- und Beherbergungsdienstleistungen (jährlich)",
                 "default": 1356
               },
               "hospitality_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Gastronomie- und Beherbergungsdienstleistungen",
-                "default": 0.038,
+                "default": 3.8,
                 "secondary_field": true
               },
               "education_insurance_other_cto": {
-                "type": "decimal",
+                "type": "decimal-negative",
                 "label": "Bildung, Versicherungen und sonstige Waren und DL (jährlich)",
                 "default": 996
               },
               "education_insurance_other_inflation": {
-                "type": "decimal",
+                "type": "percent",
                 "label": "Inflation Bildung, Versicherungen und sonstige Waren und DL",
-                "default": 0.05,
+                "default": 5.0,
                 "secondary_field": true
               }
             }
