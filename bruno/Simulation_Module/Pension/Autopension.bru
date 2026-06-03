@@ -1,0 +1,20 @@
+meta {
+  name: Autopension
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/planitem/{{sim_planitem_id}}/run_autopension
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  sim_planitem_id: 20
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

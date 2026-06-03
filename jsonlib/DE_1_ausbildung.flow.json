@@ -8,8 +8,7 @@
     "planitem_type": 1,
     "icon": "fas fa-graduation-cap",
     "referenced_items": [
-      "cash_start",
-      "expenses"
+      "salary_sequence"
       ],
     "items": {
     }

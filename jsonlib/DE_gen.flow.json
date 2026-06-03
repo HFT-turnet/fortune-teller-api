@@ -23,7 +23,7 @@
           "cvalue_cash": {
             "api": {
               "version": "v1",
-              "path": "/entry?type=Cvalue",
+              "path": "*case*/entry?type=Cvalue",
               "method": "POST",
               "payload": {
                   "cvalue": {
@@ -50,7 +50,7 @@
           "cvalue_tagesgeld": {
             "api": {
               "version": "v1",
-              "path": "/entry?type=Cvalue",
+              "path": "*case*/entry?type=Cvalue",
               "method": "POST",
               "payload": {
                   "cvalue": {
@@ -83,7 +83,7 @@
           "cvalue_depot": {
             "api": {
               "version": "v1",
-              "path": "/entry?type=Cvalue",
+              "path": "*case*/entry?type=Cvalue",
               "method": "POST",
               "payload": {
                   "cvalue": {
@@ -132,7 +132,7 @@
           "cslice_expenses": {
             "api": {
               "version": "v1",
-              "path": "/entry?type=Cslice",
+              "path": "*case*/entry?type=Cslice",
               "method": "POST",
               "payload": {
                 "cslice": {
@@ -378,6 +378,12 @@
         "description": "Zuerst Bruttogehalt eingeben, dann Ergebnisse speichern",
         "icon": "fas fa-coins",
         "checklist_entry": "Gehalt berechnen und einplanen",
+        "variables": [
+          "var_current_year",
+          "var_planitem_id",
+          "var_planitem_fromt",
+          "var_planitem_tot"
+        ],
         "actions": {
           "a_grossnet": {
             "order": 1,
@@ -412,71 +418,61 @@
           "b_save": {
             "order": 2,
             "label": "Schritt 2: Einkommen einplanen",
-            "description": "Speichern Sie die berechneten Werte mit Zeitraum und Inflation",
+            "description": "Speichern Sie die berechneten Werte mit Zeitraum und Steigerung.",
             "api": {
               "version": "v1",
-              "path": "/entry",
+              "path": "*case*/entry?type=Cslice",
               "method": "POST",
               "payload": {
                 "cslice": {
                   "cvaluetype": 1,
                   "label": "Arbeitseinkommen",
-                  "planitem_id": "1",
+                  "planitem_id": "var_planitem_id",
                   "t": "var_current_year",
                   "source": "Flow: Salary",
                   "info": "Created by flow sequence",
                   "cvalues": [
                     {
-                      "planitem_id": "1",
+                      "planitem_id": "var_planitem_id",
                       "cvaluetype": 1,
                       "label": "Bruttoeinkommen",
-                      "cto": "var_gross",
+                      "cto": "api_bruttogehalt",
                       "ev": 0,
                       "t": "var_current_year",
-                      "fromt": "var_fromt",
-                      "tot": "var_tot",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
                       "inflation": "var_inflation"
                     },
                     {
-                      "planitem_id": "1",
+                      "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
                       "label": "Sozialversicherung",
-                      "cto": "var_sum_sv",
+                      "cto": "-api_sv_alv12 - api_sv_gkv_an12 - api_sv_pv_an12 - api_sv_drv12",
                       "ev": 0,
                       "t": "var_current_year",
-                      "fromt": "var_fromt",
-                      "tot": "var_tot",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
                       "inflation": "var_inflation"
                     },
                     {
-                      "planitem_id": "1",
+                      "planitem_id": "var_planitem_id",
                       "cvaluetype": 2,
                       "label": "Steuern",
-                      "cto": "var_sum_tax",
+                      "cto": "-api_est - api_soli",
                       "ev": 0,
                       "t": "var_current_year",
-                      "fromt": "var_fromt",
-                      "tot": "var_tot",
-                      "inflation": "var_inflation"
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_inflation"
                     }
                   ]
                 }
               }
             },
             "fields": {
-              "fromt": {
-                "type": "integer",
-                "label": "Berufsbeginn (Jahr)",
-                "default": 2025
-              },
-              "tot": {
-                "type": "integer",
-                "label": "Berufsende (Jahr)",
-                "default": 2060
-              },
               "inflation": {
-                "type": "decimal",
-                "label": "Gehaltserhöhung (%)",
+                "type": "percent",
+                "label": "Erw. Gehaltserhöhung (%)",
                 "default": 2.0
               }
             }
