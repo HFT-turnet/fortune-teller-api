@@ -59,4 +59,46 @@ class CvalueTest < ActiveSupport::TestCase
     cv = Cvalue.new(cto: 1000.to_d, inflation: 0.02.to_d, t: 2025, fromt: 2020, tot: 2040)
     assert_equal "0.00", cv.timemorph_cto(2041)
   end
+
+  # simulate: creates Simulation records for types 1 and 2 when called directly (requires DB)
+  test "simulate creates simulation records for type 1 cvalue" do
+    c = Case.create!(byear: 2025, dyear: 2027, sex: 1)
+    cv = c.cvalues.create!(
+      cvaluetype: 1,
+      label: "Salary",
+      cto: 1000.to_d,
+      ev: 0.to_d,
+      fromt: 2025,
+      tot: 2027,
+      t: 2025,
+      inflation: 0.to_d,
+      interest: 0.to_d
+    )
+    # Wipe auto-created simulation entries and re-run manually.
+    c.simulations.where(sourcetype: 1, sourceid: cv.id).destroy_all
+    cv.simulate
+    sim_count = c.simulations.where(sourcetype: 1, sourceid: cv.id).count
+    assert_equal 3, sim_count
+    c.delete_all
+  end
+
+  test "simulate creates simulation records for type 2 cvalue" do
+    c = Case.create!(byear: 2025, dyear: 2026, sex: 1)
+    cv = c.cvalues.create!(
+      cvaluetype: 2,
+      label: "Rent",
+      cto: 500.to_d,
+      ev: 0.to_d,
+      fromt: 2025,
+      tot: 2026,
+      t: 2025,
+      inflation: 0.to_d,
+      interest: 0.to_d
+    )
+    c.simulations.where(sourcetype: 1, sourceid: cv.id).destroy_all
+    cv.simulate
+    sim_count = c.simulations.where(sourcetype: 1, sourceid: cv.id).count
+    assert_equal 2, sim_count
+    c.delete_all
+  end
 end

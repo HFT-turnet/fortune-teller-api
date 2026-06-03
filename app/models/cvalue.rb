@@ -56,16 +56,24 @@ class Cvalue < ApplicationRecord
     end
     
     # Simulation depending on valuetype
-    def simulate #type 3 only.
-        # This module was called "simulate_cashbalance" before.
-        # The purpose of this is to simulate the type3 values. All other values are either taken into the simulation via their overarching module.
-        # or are added with the "before_save" write_to_simulation. Function. 
-        # The type 3 is capable of simple investment flows (i.e. savings account, simple debt, a kind of financial asset).
+    def simulate
+        # Handles types 1, 2 (timemorph-based) and type 3 (cashbalance).
+        # Type 3 is capable of simple investment flows (i.e. savings account, simple debt, a kind of financial asset).
 
-        return unless self.cvaluetype==3
+        return unless [1, 2, 3].include?(self.cvaluetype)
 
         # Clear existing simulation values
         self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
+
+        if self.cvaluetype < 3
+            # Types 1 (Income) and 2 (Expense): inflate-adjusted annual entries
+            (self.fromt..self.tot).each do |t|
+                self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
+            end
+            return
+        end
+
+        # Type 3: cashbalance simulation
         # Create new simulation values
         (self.fromt..self.tot).each do |t|
             vt_interest=1 if self.ev>0
@@ -170,18 +178,10 @@ class Cvalue < ApplicationRecord
     def write_to_simulation
         # Start the simulation
         puts "Simulating CValue: #{self.id}"
-        # This is only being executed for type 1 and 2 automatically. Type 3 is being executed in the simulate function.
-        # It is also limited to those entries, that are not embedded in something bigger like a Cslice or a Planitem.
-        # Clear existing simulation values
-        if self.cvaluetype<3 and self.cslice_id.nil? and self.planitem_id.nil?
-            self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
-            # Create new simulation values
-            (self.fromt..self.tot).each do |t|
-                self.case.simulations.create(valuetype: self.cvaluetype, sourcetype: 1, sourceid: self.id, t: t, value: self.timemorph_cto(t))
-            end
-        end
-        if self.cvaluetype==3 and self.cslice_id.nil? and self.planitem_id.nil?
-            # This is for cash_balance amounts only.
+        # Only simulate standalone entries (not embedded in a Cslice or Planitem).
+        # Types 1 (Income), 2 (Expense), and 3 (Cashbalance) delegate to simulate;
+        # type 4 (Cash balance adjustment) is handled separately below.
+        if self.cvaluetype < 4 and self.cslice_id.nil? and self.planitem_id.nil?
             self.simulate
         end
         if self.cvaluetype==4
