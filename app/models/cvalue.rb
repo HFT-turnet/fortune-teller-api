@@ -13,7 +13,8 @@ class Cvalue < ApplicationRecord
 
     # Simulation integration
     # Only done for stand-alone CValues.
-    before_save :write_to_simulation
+    before_save :simulate
+    after_save :simulate_cash_balance
 
     # Quick-Checks
     def independent?
@@ -47,7 +48,7 @@ class Cvalue < ApplicationRecord
         when 1
             return "cto contains interest" # Typical for an annuity debt.
         when 2
-            return "cto and interest lead to cash" # Typical for a debt balance.
+            return "cto and interest lead to cash" # Typical for a debt balance. But it also covers a savings account that pays out interest.
         when 3
             return "cto is cash, interest is accumulated" # Typical for a savings account.
         else
@@ -73,7 +74,14 @@ class Cvalue < ApplicationRecord
             return
         end
 
-        # Type 3: cashbalance simulation
+        # Type 3: financial instrument simulation
+        # This is complicated, because many concepts in one model, these are the examples:
+        # - A savings account, that pays interest on a current account if cf-type 2, regular savings would be cto.
+        # - Any savings account that accumulates interest is cf-type 3, with or without additional savings.
+        # - A fund or depot would use the inflation for value development and the interest for dividends (cf-type 3)
+        # - A loan would either be a negative savings account (see above) or have an annuity (i.e. cto includes interest and repayment).
+        # - Any financial instrument with varying repayments or savings would need to be a cslice-fi type.
+       
         # Create new simulation values
         (self.fromt..self.tot).each do |t|
             vt_interest=1 if self.ev>0
@@ -82,7 +90,7 @@ class Cvalue < ApplicationRecord
             vt_balance=12 if self.ev<0
             # Write first year movement (Cash out / Cash in depending on type.)
             #byebug
-            puts t
+            #puts t
             if t==self.fromt
                 # The Balance move is treated with inverse value to the balance: i.e. to have a cashbalance on something, it goes against the cashflow.
                 # It is generally assumed, that the cashflows producing the ev are aggregated towards the end of the year.
@@ -115,12 +123,16 @@ class Cvalue < ApplicationRecord
                     # CTO generates additional movement:
                     self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: self.cto) unless self.cto==0
                     newvalue=newvalue-self.cto # The CTO effect on the ev is adverse. i.e. Cash to Owner decreases the savings balance.
-                    # Interest is accumulated in balance:
+                    # Interest is shown as type 1 or 2 (valuetype depends on kind of interest):
+                    self.case.simulations.create(valuetype: vt_interest, sourcetype: 1, sourceid: self.id, t: t, value: interest)
+                    # But as this triggers an automatic cash_move (type 3), we need to compensate that and increase the newvalue.
+                    self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: -1*interest)
+                    # But this interest flow is immediately compensated, by accumulation in the balance:
                     newvalue=newvalue+interest # both correct for savings and debt.
                 end
                 # At this stage we have generate the every year's movements and determined a newvalue after cto and interest.
             end
-            puts newvalue
+            #puts newvalue
             # Very special case, but technically possible: Inflation is set like a market development on a fund.
             if self.inflation!=0 and not t==self.fromt
                 # The "inflation" / market movement is applied to the endvalue, but not to the movement cash.
@@ -132,6 +144,7 @@ class Cvalue < ApplicationRecord
             if t==self.tot
                 # The endvalue is transferred into movement cash.
                 self.case.simulations.create(valuetype: 3, sourcetype: 1, sourceid: self.id, t: t, value: newvalue)
+
                 # Endvalue is zero
                 self.case.simulations.create(valuetype: vt_balance, sourcetype: 1, sourceid: self.id, t: t, value: 0)
             else
@@ -189,5 +202,8 @@ class Cvalue < ApplicationRecord
             self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
             self.case.simulations.create(valuetype: 10, sourcetype: 1, sourceid: self.id, t: t, value: self.ev)
         end
+    end
+    def simulate_cash_balance
+      self.case.simulate_cashbalance
     end
 end
