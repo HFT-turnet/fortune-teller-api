@@ -10,17 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_02_210317) do
-  create_table "api_keys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.integer "bearer_id", null: false
-    t.string "bearer_type", null: false
-    t.datetime "created_at", null: false
-    t.string "token_digest", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bearer_id", "bearer_type"], name: "index_api_keys_on_bearer_id_and_bearer_type"
-    t.index ["token_digest"], name: "index_api_keys_on_token_digest", unique: true
-  end
-
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_101000) do
   create_table "cases", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "byear"
     t.boolean "chat_active"
@@ -86,15 +76,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_02_210317) do
     t.string "subgroup"
     t.decimal "value", precision: 10, scale: 2
     t.integer "year"
-  end
-
-  create_table "persistaccounts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.date "lastaction"
-    t.string "password_digest"
-    t.string "randname", null: false
-    t.datetime "updated_at", null: false
-    t.index ["randname"], name: "index_persistaccounts_on_randname", unique: true
   end
 
   create_table "planitems", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

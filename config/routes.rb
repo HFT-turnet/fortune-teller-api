@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     match 'cs/(:countrycode)/(:schemetype)/(:scheme)/(:version)', to: 'cs#run_scheme', via: :post
 	
 	  # Temporary: CalcSchemes Admin
-	  match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
+	  #match 'csadmin/(:countrycode)/(:schemetype)', to: 'csadmin#get_schemetype', via: :get
 
     # Pension Calculator
     namespace :pension do
@@ -78,14 +78,6 @@ Rails.application.routes.draw do
         get ':case_id', action: 'case_status'
     end
 
-    # Manage APIKeys
-    # Currently there is no need to manage API-Keys, the function is deactivated.
-    #post '/persist/api-keys', to: 'api_keys#create'
-    #delete '/persist/api-keys', to: 'api_keys#destroy'
-    #get '/persist/api-keys', to: 'api_keys#index'
-    
-    #resources :api_keys, path: '/persist/api-keys', only: %i[index create destroy]
-    
     #namespace :beta, defaults: { format: :json }  do
       #match 'timeslice', to: 'public#get_timeslice', via: :get
     #end

@@ -9,7 +9,8 @@ class V1::PublicController < ApplicationController
   def timemorph
     # Inflation and Deflation
     #information = request.raw_post
-    data_parsed = JSON.parse(request.raw_post)
+    data_parsed = parse_json_body!
+    return unless data_parsed
     #p data_parsed
     jsonout=[]
     data_parsed.each do |json|
@@ -69,17 +70,25 @@ class V1::PublicController < ApplicationController
   end
   
   def summary_report
+    public_payload = public_payload!
+    return unless public_payload
+    environment_payload = public_payload[:environment]
+    if environment_payload.blank?
+      render_bad_request("public.environment is required.")
+      return
+    end
+
     @expensename="Ausgaben"
     @incomename="Einnahmen"
     @info="Hallo Info"
     @disclaimer=""
     # Instantiate Header as per JSON
-    @envelope=envelope_head    
-    expenses=Timeslice.new(envelope_expenses_head) unless params[:public][:expenses].blank?
-    incomes=Timeslice.new(envelope_incomes_head) unless params[:public][:incomes].blank?    
+    @envelope=envelope_head(environment_payload)
+    expenses=Timeslice.new(envelope_expenses_head(public_payload)) unless public_payload[:expenses].blank?
+    incomes=Timeslice.new(envelope_incomes_head(public_payload)) unless public_payload[:incomes].blank?
     # Load named TVs into Timeslice
-    expenses.tvs_attributes=envelope_expenses_tvs unless params[:public][:expenses].blank?
-    incomes.tvs_attributes=envelope_incomes_tvs unless params[:public][:incomes].blank?    
+    expenses.tvs_attributes=envelope_expenses_tvs(public_payload) unless public_payload[:expenses].blank?
+    incomes.tvs_attributes=envelope_incomes_tvs(public_payload) unless public_payload[:incomes].blank?
     # Add an info box that allows to review API comments
     # Backup (if needed: find a specific label in entries)
     #a=expenses.tvs.select {|tv| tv.label == e.label}
@@ -306,14 +315,32 @@ class V1::PublicController < ApplicationController
   end
   
   private
-  # Params definition  
-  def timeslice_head_params
-    #params.require(:tvs).permit!
-    params[:public].permit(:t,:i,:tvs)
+  def parse_json_body!
+    JSON.parse(request.raw_post)
+  rescue JSON::ParserError
+    render_bad_request("Invalid JSON body.")
+    nil
   end
-  def timeslice_tvs_params
+
+  def public_payload!
+    params.require(:public)
+  rescue ActionController::ParameterMissing
+    render_bad_request("public payload is required.")
+    nil
+  end
+
+  def render_bad_request(message)
+    render json: { error: message }, status: :bad_request
+  end
+
+  # Params definition  
+  def timeslice_head_params(public_payload = params[:public])
     #params.require(:tvs).permit!
-    params[:public].permit(tvs: [
+    public_payload.permit(:t,:i,:tvs)
+  end
+  def timeslice_tvs_params(public_payload = params[:public])
+    #params.require(:tvs).permit!
+    public_payload.permit(tvs: [
      :label,
      :cto, 
      :fromt,
@@ -321,13 +348,13 @@ class V1::PublicController < ApplicationController
      :inflation]
      ).require(:tvs)#.permit(:sv, :tax, :fee, :interest, :valuation, :cto, :t, :ev)
   end
-  def valueflow_head_params
+  def valueflow_head_params(public_payload = params[:public])
     #params.require(:tvs).permit!
-    params[:public].permit(:label, :type, :r, :rm, :rf, :annuity,:from,:to,:periods,:tvs)
+    public_payload.permit(:label, :type, :r, :rm, :rf, :annuity,:from,:to,:periods,:tvs)
   end
-  def valueflow_tvs_params
+  def valueflow_tvs_params(public_payload = params[:public])
     #params.require(:tvs).permit!
-    params[:public].permit(tvs: [
+    public_payload.permit(tvs: [
      :sv,
      :tax, 
      :fee, 
@@ -338,17 +365,17 @@ class V1::PublicController < ApplicationController
      :ev]
      ).require(:tvs)
   end
-  def envelope_head
-    params[:public][:environment].permit(:from,:to,:i)
+  def envelope_head(public_payload = params[:public])
+    public_payload[:environment].permit(:from,:to,:i)
   end
-  def envelope_expenses_head
-    params[:public][:expenses].permit(:t,:i,:tvs) 
+  def envelope_expenses_head(public_payload = params[:public])
+    public_payload[:expenses].permit(:t,:i,:tvs) 
   end
-  def envelope_incomes_head
-    params[:public][:incomes].permit(:t,:i,:tvs)
+  def envelope_incomes_head(public_payload = params[:public])
+    public_payload[:incomes].permit(:t,:i,:tvs)
   end
-  def envelope_expenses_tvs
-    params[:public][:expenses].permit(tvs: [
+  def envelope_expenses_tvs(public_payload = params[:public])
+    public_payload[:expenses].permit(tvs: [
      :label,
      :cto, 
      :fromt,
@@ -356,8 +383,8 @@ class V1::PublicController < ApplicationController
      :inflation]
      ).require(:tvs)
   end
-  def envelope_incomes_tvs
-    params[:public][:incomes].permit(tvs: [
+  def envelope_incomes_tvs(public_payload = params[:public])
+    public_payload[:incomes].permit(tvs: [
       :label,
       :cto, 
       :fromt,
