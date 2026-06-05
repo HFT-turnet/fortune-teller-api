@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         # Simulation Results and details
         get 'case/(:case_id)/simulate', action: "simulate"
         get 'case/(:case_id)/simulate_detail', action: "simulate_detail"
+        get 'case/(:case_id)/re_simulate_all', action: "re_simulate_all"
         #match 'case/(:id)/simulate', to: :simulate, via: :get
         #match 'case/(:id)/simulate_cashbalance', to: :simulate_cashbalance, via: :get
         # Planitems

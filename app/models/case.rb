@@ -88,6 +88,7 @@ class Case < ApplicationRecord
                 # Cslices contain a number of cvalues that are aggregated when executing the simulation of them.
                 # Get Cslice
                 cslice=Cslice.find_by_id(simvalue.sourceid)
+                line[:label]=cslice.label
                 log << "---------------"
                 log << "Cslice: " + cslice.label + " | " + simvalue.value.to_s
                 cslice_details={}
@@ -152,6 +153,20 @@ class Case < ApplicationRecord
                 self.simulations.create(valuetype: 10, sourcetype: 0, t: t, value: auto_cash_balance)
             end
         end
+    end
+    def re_simulate_all
+        # Destroy simulations
+        self.simulations.destroy_all
+        # Re-simulate Cslices
+        self.cslices.each do |cslice|
+            cslice.simulate
+        end
+        # Re-simulate Cvalues
+        self.cvalues.where(:cslice_id => nil).each do |cvalue|
+            cvalue.simulate
+        end
+        # Re-calc unmanaged cash
+        self.simulate_cashbalance
     end
 
     # Deletion of case and all data

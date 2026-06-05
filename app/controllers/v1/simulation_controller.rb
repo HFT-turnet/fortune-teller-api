@@ -230,8 +230,13 @@ class V1::SimulationController < ApplicationController
 
     def simulate_detail
         # If frequency is provided, take the value, otherwise in steps of 5 years.
-        render json: "No year provided for detail" if params[:t].to_i==0
+        render json: "No year provided for detail" if params[:t].to_i==0 
         render json: @case.details(params[:t].to_i)
+    end
+
+    def re_simulate_all
+        @case.re_simulate_all
+        render json: { message: "Case #{params[:case_id]} re-simulated." }
     end
 
     # Planitem actions

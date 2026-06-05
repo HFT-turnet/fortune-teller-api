@@ -26,6 +26,7 @@ json.cslices do
 		json.fromt csl_cv.fromt
 		json.tot csl_cv.tot
 		json.interest csl_cv.interest
+		json.cf_type csl_cv.cf_type
 		json.inflation csl_cv.inflation
 	end
 end

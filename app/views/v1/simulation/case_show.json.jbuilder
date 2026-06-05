@@ -20,6 +20,7 @@ json.cvalues @case.cvalues.where(:cslice_id=>nil).each do |cv|
 	json.fromt cv.fromt
 	json.tot cv.tot
 	json.interest cv.interest
+	json.cf_type cv.cf_type
 	json.inflation cv.inflation
 end
 
@@ -41,6 +42,7 @@ json.cslices @case.cslices.each do |csl|
 		json.fromt csl_cv.fromt
 		json.tot csl_cv.tot
 		json.interest csl_cv.interest
+		json.cf_type csl_cv.cf_type
 		json.inflation csl_cv.inflation
 	end
 end

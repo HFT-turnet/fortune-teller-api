@@ -1,0 +1,11 @@
+meta {
+  name: Re-Simulate Case
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{ftapi_server}}/v1/simulation/case/{{sim_caseid}}/re_simulate_all
+  body: none
+  auth: none
+}

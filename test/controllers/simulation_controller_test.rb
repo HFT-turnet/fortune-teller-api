@@ -196,6 +196,15 @@ class SimulationControllerTest < ActionDispatch::IntegrationTest
     case_obj.delete_all
   end
 
+  test "POST re_simulate_all returns success and confirmation message" do
+    case_obj = Case.create!(byear: 1980, dyear: 2050, sex: 1)
+    post "/v1/simulation/case/#{case_obj.external_id}/re_simulate_all"
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_match(/re-simulated/i, body["message"])
+    case_obj.delete_all
+  end
+
   # POST .../planitem/:planitem_id/run_autopension
   test "POST run_autopension on a non-ruhestand planitem returns unprocessable_entity" do
     case_obj = Case.create!(byear: 1970, dyear: 2040, sex: 1)

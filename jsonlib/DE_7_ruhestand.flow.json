@@ -12,6 +12,114 @@
       "expenses"
       ],
     "items": {
+      "rente_manual": {
+        "name": "rente_manual",
+        "label": "Rente manuell berechnen & speichern",
+        "description": "Zuerst Bruttorente eingeben, dann Ergebnisse speichern",
+        "icon": "fas fa-coins",
+        "checklist_entry": "Rente manuell berechnen und einplanen",
+        "variables": [
+          "var_current_year",
+          "var_planitem_id",
+          "var_planitem_fromt",
+          "var_planitem_tot"
+        ],
+        "actions": {
+          "a_grossnet": {
+            "order": 1,
+            "label": "Schritt 1: Bruttorente berechnen",
+            "description": "Berechnet Netto aus Brutto (SV + Steuern)",
+            "api": {
+              "version": "v1",
+              "path": "/public/grossnet",
+              "method": "POST",
+              "payload": {
+                "gross_salary": "var_gross_salary",
+                "sv-westost": "sv-west"
+              }
+            },
+            "fields": {
+              "gross_salary": {
+                "type": "decimal",
+                "label": "Bruttorente (Jährlich)",
+                "help": "Geben Sie Ihre jährliche Bruttorente ein",
+                "required": true
+              }
+            },
+            "result_presentation": {
+              "bruttogehalt": "Bruttorente",
+              "sv_gkv_an12": "Gesetzliche Krankenversicherung",
+              "sv_pv_an12": "Pflegeversicherung",
+              "est": "Einkommensteuer",
+              "soli": "Solidaritätszuschlag"
+            },
+            "show_results": true,
+            "next_action": "b_save"
+          },
+          "b_save": {
+            "order": 2,
+            "label": "Schritt 2: Rente einplanen",
+            "description": "Speichern Sie die berechneten Werte mit Zeitraum und Steigerung.",
+            "api": {
+              "version": "v1",
+              "path": "*case*/entry?type=Cslice",
+              "method": "POST",
+              "payload": {
+                "cslice": {
+                  "cvaluetype": 1,
+                  "label": "Rente (manuell)",
+                  "planitem_id": "var_planitem_id",
+                  "t": "var_current_year",
+                  "source": "Flow: rente_manual",
+                  "info": "Created by rente_manual flow sequence",
+                  "cvalues": [
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 1,
+                      "label": "Bruttorente",
+                      "cto": "api_bruttogehalt",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "var_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Sozialversicherung",
+                      "cto": " - api_sv_gkv_an12 - api_sv_pv_an12 ",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "var_inflation"
+                    },
+                    {
+                      "planitem_id": "var_planitem_id",
+                      "cvaluetype": 2,
+                      "label": "Steuern",
+                      "cto": "-api_est - api_soli",
+                      "ev": 0,
+                      "t": "var_current_year",
+                      "fromt": "var_planitem_fromt",
+                      "tot": "var_planitem_tot",
+                      "inflation": "field_inflation"
+                    }
+                  ]
+                }
+              }
+            },
+            "fields": {
+              "inflation": {
+                "type": "percent",
+                "label": "Erw. Rentensteigerung (%)",
+                "default": 2.0
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

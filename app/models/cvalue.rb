@@ -57,12 +57,19 @@ class Cvalue < ApplicationRecord
     end
     
     # Simulation depending on valuetype
-    def simulate
+    def simulate(cslice_override=false)
+        # We do not simulate if we are part of a cslice, unless explicitly overridden.
+        if self.cslice_id.present? && !cslice_override
+          return
+        end
+        
         # Handles types 1, 2 (timemorph-based) and type 3 (cashbalance).
         # Type 3 is capable of simple investment flows (i.e. savings account, simple debt, a kind of financial asset).
 
         return unless [1, 2, 3].include?(self.cvaluetype)
-
+        # Start the simulation
+            puts "Simulating CValue: #{self.id}"
+        
         # Clear existing simulation values
         self.case.simulations.where(:sourcetype => 1).where(:sourceid => self.id).destroy_all
 
@@ -190,7 +197,7 @@ class Cvalue < ApplicationRecord
     end
     def write_to_simulation
         # Start the simulation
-        puts "Simulating CValue: #{self.id}"
+        #puts "Simulating CValue: #{self.id}"
         # Only simulate standalone entries (not embedded in a Cslice or Planitem).
         # Types 1 (Income), 2 (Expense), and 3 (Cashbalance) delegate to simulate;
         # type 4 (Cash balance adjustment) is handled separately below.
